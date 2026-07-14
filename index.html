@@ -36,7 +36,7 @@ html[data-theme="dark"]{
   --sh2:0 12px 44px rgba(0,0,0,.55);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--ff);background:var(--bg);color:var(--t1);font-size:14.5px;line-height:1.5;min-height:100vh;
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);font-size:15.5px;line-height:1.5;min-height:100vh;
   background-image:radial-gradient(circle at 12% 0%,rgba(58,92,170,.05),transparent 42%),radial-gradient(circle at 92% 8%,rgba(255,225,0,.05),transparent 40%);}
 html[data-theme="dark"] body{background-image:radial-gradient(circle at 12% 0%,rgba(110,143,214,.07),transparent 42%),radial-gradient(circle at 92% 8%,rgba(255,225,0,.04),transparent 40%);}
 .mono{font-variant-numeric:tabular-nums;}
@@ -60,7 +60,7 @@ html[data-theme="dark"] body{background-image:radial-gradient(circle at 12% 0%,r
 .sk-hdr{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 22px;gap:14px;}
 .sk-logo{width:132px;height:32px;border-radius:8px;}
 .sk-nav{background:var(--blue);height:42px;}
-.sk-main{padding:18px 22px;max-width:1640px;margin:0 auto;}
+.sk-main{padding:18px 30px;max-width:none;margin:0;}
 .sk-row{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:16px;}
 .sk-card{background:var(--sf);border-radius:var(--r);border:1px solid var(--br);height:104px;}
 .sk-box{background:var(--sf);border-radius:var(--r);border:1px solid var(--br);height:320px;}
@@ -99,7 +99,7 @@ html[data-theme="dark"] .shimmer::after{background:linear-gradient(105deg,transp
 .nt.on{color:var(--yellow);border-bottom-color:var(--yellow);background:rgba(255,255,255,.06);}
 
 /* ════ MAIN ════ */
-.main{padding:16px 22px 40px;max-width:1640px;margin:0 auto;}
+.main{padding:16px 30px 40px;max-width:none;margin:0;width:100%;}
 .sec{display:none;}
 .sec.on{display:block;animation:secIn .42s cubic-bezier(.22,.61,.36,1);}
 @keyframes secIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -381,8 +381,26 @@ html[data-theme="dark"] .tdcard{background:var(--sf2);}
 @media print{.timebar{background:#f0f4fa;}.timebar .tlbl,.tchip{color:#003047;}}
 
 /* ════ v12 — left sidebar layout · compact timebar · language toggle ════ */
-.applayout{display:flex;align-items:flex-start;}
-.sidebar{width:194px;flex-shrink:0;background:var(--sf);border-right:1px solid var(--br);position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;padding:14px 11px 26px;scrollbar-width:thin;}
+.applayout{display:block;}
+/* ════ SIDEBAR = DRAWER (ẩn mặc định) ════ */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:290px;z-index:9200;
+  background:var(--sf);border-right:1px solid var(--br);overflow-y:auto;
+  padding:22px 18px 30px;scrollbar-width:thin;
+  transform:translateX(-104%);transition:transform .26s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 0 rgba(0,0,0,0);}
+.sidebar.open{transform:translateX(0);box-shadow:18px 0 50px rgba(0,48,71,.22);}
+#sbBackdrop{position:fixed;inset:0;z-index:9100;background:rgba(0,32,52,.45);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;visibility:hidden;transition:opacity .26s ease,visibility .26s ease;}
+#sbBackdrop.on{opacity:1;visibility:visible;}
+.sb-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:8px;
+  border:1px solid var(--br);background:var(--sf2);color:var(--t2);cursor:pointer;
+  font-size:15px;font-weight:800;line-height:1;}
+.sb-x:hover{background:var(--neg);color:#fff;border-color:var(--neg);}
+/* nút mở drawer trên header */
+.sb-open-btn{display:inline-flex;align-items:center;gap:7px;}
+.sb-open-btn .sbdot{width:7px;height:7px;border-radius:50%;background:var(--yellow);
+  box-shadow:0 0 0 3px rgba(255,225,0,.22);}
 .sidebar::-webkit-scrollbar{width:7px;}
 .sidebar::-webkit-scrollbar-thumb{background:var(--br);border-radius:5px;}
 .sb-tabttl{font-size:12px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;margin:2px 3px 4px;line-height:1.25;}
@@ -401,15 +419,8 @@ html[data-theme="dark"] .sb-tabttl{color:var(--sky);}
 .sb-postgl{display:flex;align-items:flex-start;gap:7px;font-size:12px;font-weight:600;color:var(--t2);padding:4px;cursor:pointer;line-height:1.4;}
 .sb-postgl input{margin-top:2px;flex-shrink:0;}
 .maincol{flex:1;min-width:0;}
-.maincol .main{max-width:1480px;}
-@media(max-width:1080px){
-  .applayout{flex-direction:column;}
-  .sidebar{width:auto;position:static;height:auto;border-right:none;border-bottom:1px solid var(--br);display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;}
-  .sb-grp{margin-bottom:0;flex:1;min-width:170px;}
-  .sb-side{flex-direction:row;flex-wrap:wrap;}
-  .sb-side .chip{width:auto;}
-  .sb-tabttl,.sb-tabsub{flex-basis:100%;}
-}
+.maincol .main{max-width:none;}
+@media(max-width:520px){.sidebar{width:86vw;}}
 /* sidebar panes — only the active tab's controls show */
 .sb-pane{display:block;}
 .ctrl.sb-host{display:flex;flex-direction:column;align-items:stretch;gap:7px;background:transparent;border:none;box-shadow:none;padding:0;margin:0;}
@@ -739,6 +750,46 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
   padding:11px 14px;font-size:12.5px;color:var(--t2);line-height:1.6;margin-bottom:14px;}
 .hvwarn b{color:var(--t1);}
 
+
+/* ════ FULL-BLEED READABILITY BOOST ════ */
+.acstb{font-size:13.5px;}
+.acstb th{font-size:11px;padding:11px 14px;}
+.acstb td{padding:13px 14px;}
+.hvtb{font-size:13.5px;}
+.hvtb th{font-size:11px;padding:11px 13px;}
+.hvtb td{padding:12px 13px;}
+.acsline{font-size:13.5px;}
+.acshosp{font-size:13.5px;}
+/* tận dụng màn rộng: 3 cột trên màn lớn */
+@media(min-width:1700px){
+  .g2{grid-template-columns:1fr 1fr;}
+  .kr{grid-template-columns:repeat(4,1fr);}
+}
+@media(min-width:2100px){
+  .main{padding-left:46px;padding-right:46px;}
+}
+
+
+/* ════ FC · drill + clickable ════ */
+.hvclick{cursor:pointer;}
+.hvclick:hover{background:var(--pale)!important;}
+.hvst{display:inline-block;padding:3px 9px;border-radius:20px;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.04em;}
+.hvchip{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:700;
+  background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 34%,transparent);}
+.hvdr-wrap{display:flex;flex-direction:column;gap:11px;padding:4px 0;}
+.hvdr{background:var(--sf2);border:1px solid var(--br);border-radius:11px;padding:13px 15px;}
+.hvdr-h{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.hvdr-n{width:22px;height:22px;border-radius:6px;background:var(--br);color:var(--t2);
+  font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hvdr-nm{font-weight:800;font-size:14px;color:var(--t1);flex:1;min-width:0;}
+.hvdr-st{padding:3px 10px;border-radius:20px;color:#fff;font-size:10.5px;font-weight:800;flex-shrink:0;}
+.hvdr-m{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--t2);margin-bottom:8px;}
+.hvdr-c{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.hvdr-f{display:flex;gap:18px;font-size:12.5px;color:var(--t2);border-top:1px solid var(--br);padding-top:8px;}
+.hvdr-f b{color:var(--t1);font-variant-numeric:tabular-nums;}
+.kpi{transition:transform .14s ease,box-shadow .14s ease;}
+.kr>div[onclick] .kpi:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+
 /* ─ Price panel ─ */
 .fc-price-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 @media(max-width:1100px){.fc-hero-r{grid-column:1/-1;}}
@@ -884,6 +935,7 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
         <option value="USD">USD</option>
         <option value="JPY">JPY</option>
       </select>
+      <button class="hbtn sb-open-btn" id="sb-toggle" onclick="sbToggle()" title="Filters &amp; settings"><span class="sbdot"></span><span>☰</span> <span id="sb-toggle-tx">Filters</span></button>
       <button class="hbtn" onclick="openTierModal()" title="Price-tier settings"><span>⚙</span> <span data-i18n="btn.tiers">Tiers</span></button>
       <button class="hbtn gold" id="ppt-btn" onclick="exportPPT()" title="Export current tab to PowerPoint (MMH template)"><span>📊</span> <span data-i18n="btn.ppt">Export PPT</span></button>
       <a class="hbtn" href="https://docs.google.com/spreadsheets/d/1lI1s1nEyRtSluQiCJu2sdkgZdP38A35qYFdzOvVXE7I/edit?gid=1603394577#gid=1603394577" target="_blank" rel="noopener" title="Open source spreadsheet" style="text-decoration:none"><span>📋</span> <span data-i18n="btn.source">Data source</span></a>
@@ -903,8 +955,10 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
   <div class="timebar compact" id="time-bar"></div>
 </div>
 
+<div id="sbBackdrop" onclick="sbClose()"></div>
 <div class="applayout">
   <aside class="sidebar" id="sidebar">
+    <button class="sb-x" onclick="sbClose()" title="Close">✕</button>
     <div class="sb-pane" id="sbp-market">
       <div class="sb-tabttl" data-i18n="nav.market">Market Overview</div>
       <div class="sb-tabsub" data-i18n="sec.market.sub"></div>
@@ -1973,7 +2027,25 @@ function setCurrency(c){
 }
 
 /* ── Nav ── */
+/* ════ DRAWER ════ */
+function sbOpen(){
+  document.getElementById("sidebar").classList.add("open");
+  document.getElementById("sbBackdrop").classList.add("on");
+  document.body.style.overflow="hidden";
+}
+function sbClose(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sbBackdrop").classList.remove("on");
+  document.body.style.overflow="";
+}
+function sbToggle(){
+  var o=document.getElementById("sidebar").classList.contains("open");
+  if(o) sbClose(); else sbOpen();
+}
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") sbClose(); });
+
 function goTab(tb){
+  sbClose();
   S.tab=tb;document.querySelectorAll(".sec").forEach(function(s){s.classList.remove("on");});document.querySelectorAll(".nt").forEach(function(n){n.classList.remove("on");});
   var sec=document.getElementById("sec-"+tb);if(sec)sec.classList.add("on");var nt=document.getElementById("nt-"+tb);if(nt)nt.classList.add("on");
   document.querySelectorAll(".sb-pane").forEach(function(p){p.style.display="none";});
@@ -2291,10 +2363,11 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeDrill(
    ════════════════════════════════════════════════════════════════════ */
 function renderMarket(){
   /* Controls: Region + Product Type (Value/Quantity toggle hidden on this tab) */
-  var rChips='<span class="cl">'+t("sb.region")+'</span>'+["ALL"].concat(REGIONS).map(function(r){return '<button class="chip '+(S.mkRegion===r?"on":"")+'" onclick="S.mkRegion=\''+r+'\';renderMarket()">'+tRegion(r)+'</button>';}).join("");
+  /* ⛔ Bộ lọc REGION đã Bỏ: dashboard này 100% là miền Bắc (Hùng Vĩ) — lọc vùng vô nghĩa. */
+  S.mkRegion="ALL";
   var tChips='<span class="cl">'+t("sb.ptype")+'</span>'+["ALL"].concat(PTYPES).map(function(p){return '<button class="chip '+(S.mkType===p?"on":"")+'" onclick="S.mkType=\''+esc(p)+'\';renderMarket()">'+esc(tPtype(p))+'</button>';}).join("");
-  document.getElementById("mk-ctrl").innerHTML=rChips+'<span class="rowbk"></span>'+tChips;
-  document.getElementById("mk-period").textContent=timeLabel()+(S.mkType==="ALL"?"":" · "+S.mkType)+(S.mkRegion==="ALL"?"":" · "+(S.mkRegion==="North"?"North":"South"));
+  document.getElementById("mk-ctrl").innerHTML=tChips;
+  document.getElementById("mk-period").textContent="North · Hùng Vĩ · "+timeLabel()+(S.mkType==="ALL"?"":" · "+S.mkType);
 
   var R=filterRows({ptype:S.mkType,region:S.mkRegion});
   var totQ=0,totV=0,pk={},by={};R.forEach(function(r){totQ+=r.qty;totV+=r.val;pk[r.kqtt]=1;by[r.buyer]=1;});
@@ -4795,7 +4868,7 @@ S.fc = {
   target: { HUNGVI:385000, ICARE:320000 },   // $ target theo NPP (chỉnh ở Setup)
   edits: {},           // chỉnh sửa (khôi phục từ LOG + user sửa runtime)
   dirty: {},           // rowKey đã sửa nhưng chưa lưu lên Sheet
-  saving:false, chart: null, setupOpen:false
+  saving:false, chart: null, setupOpen:true
 };
 
 /* nạp edits từ LOG do 2 webapp trả về (gọi trong fcLoadNPP) */
@@ -4814,32 +4887,6 @@ function fcMergeLog(feedRows, logMap){
 }
 
 /* ════ FY LIST +3 năm ════ */
-function fcFyListExtended(){
-  var base = buildFyList().slice();
-  if(!base.length) base = ["FY67"];
-  var lastN = Math.max.apply(null, base.map(function(f){ return +String(f).replace("FY",""); }));
-  var out = base.slice();
-  for(var i=1;i<=3;i++){ var f="FY"+(lastN+i); if(out.indexOf(f)<0) out.push(f); }
-  return out;
-}
-function fcFY(){
-  if(S.fc.fys && S.fc.fys.length) return S.fc.fys.slice().sort(function(a,b){return (+a.replace("FY",""))-(+b.replace("FY",""));});
-  var base = buildFyList();
-  return [base[base.length-1] || "FY67"];
-}
-function fcFyRange(fy){
-  if(typeof fyRange==="function"){ try{ return fyRange(fy); }catch(e){} }
-  var n=+String(fy).replace("FY",""); var endY=1959+n, startY=endY-1;
-  return {fromKey:startY*100+9, toKey:endY*100+8};
-}
-function fcWinKeys(){
-  var fys=fcFY(); var r0=fcFyRange(fys[0]), r1=fcFyRange(fys[fys.length-1]);
-  var fromKey=r0.fromKey, toKey=r1.toKey;
-  var months=[], y=Math.floor(fromKey/100), m=fromKey%100, g=0;
-  while((y*100+m)<=toKey && g<400){ months.push(y*100+m); m++; if(m>12){m=1;y++;} g++; }
-  return {fromKey:fromKey, toKey:toKey, months:months, label:(fys.length>1?(fys[0]+"→"+fys[fys.length-1]):fys[0])};
-}
-
 /* ── key math ── */
 function fcKeyOrd(k){ return Math.floor(k/100)*12 + (k%100); }
 function fcOverlap(aF,aT,bF,bT){ var lo=Math.max(fcKeyOrd(aF),fcKeyOrd(bF)), hi=Math.min(fcKeyOrd(aT),fcKeyOrd(bT)); return hi>=lo?(hi-lo+1):0; }
@@ -4916,229 +4963,12 @@ function fcNormNPP(r, npp){
 }
 
 /* ════ BUILD 4 NHÓM → mảng node phẳng ════ */
-function fcBuild(){
-  var win=fcWinKeys();
-  var regOK=function(rg){ return S.fc.region==="ALL"||rg===S.fc.region; };
-  var nppRows=[];
-  ["HUNGVI"].forEach(function(k){ var arr=NPP_FEED[k]; if(!arr) return; arr.forEach(function(r){ nppRows.push(fcNormNPP(r,k)); }); });
-
-  function normTb(t){ return String(t||"").replace(/[\s\r\n]+/g,"").replace(/-\d+$/,""); }
-  function pkKey(r){ var tb=normTb(r.tbmt); return (tb||("H:"+r.hospital))+"|"+r.npp; }
-  var pkg={};
-  nppRows.forEach(function(r){
-    if(!regOK(r.region)) return;
-    var k=pkKey(r);
-    if(!pkg[k]) pkg[k]={key:k,tbmt:normTb(r.tbmt),npp:r.npp,region:r.region,hospital:r.hospital,prov:r.prov,results:{},startKey:0,dur:12,expKey:0,byGroup:{MST:0,MSL:0,MCU:0},priceByGroup:{},rows:[]};
-    var p=pkg[k];
-    p.results[r.result]=(p.results[r.result]||0)+1;
-    if(r.startKey && (!p.startKey||r.startKey>p.startKey)) p.startKey=r.startKey;
-    if(r.dur) p.dur=r.dur;
-    if(r.expKey && r.expKey>p.expKey) p.expKey=r.expKey;
-    // cộng SL theo nhóm — dùng phân bổ chuẩn từ backend (qMST/qMSL/qMCU)
-    p.byGroup.MST += r.qMST||0;
-    p.byGroup.MSL += r.qMSL||0;
-    p.byGroup.MCU += r.qMCU||0;
-    if(r.price>0){
-      if(r.qMST) p.priceByGroup.MST=r.price;
-      if(r.qMSL) p.priceByGroup.MSL=r.price;
-      if(r.qMCU) p.priceByGroup.MCU=r.price;
-    }
-    p.rows.push(r);
-  });
-  var pkgArr=Object.keys(pkg).map(function(k){return pkg[k];});
-  var nppTBMT={}; pkgArr.forEach(function(p){ if(p.tbmt) nppTBMT[p.tbmt]=1; });
-
-  var nodes=[];
-  pkgArr.forEach(function(p){
-    var isWin=!!p.results["Win"], isPending=!!p.results["Pending"]&&!isWin;
-    if(isPending){ nodes.push(fcPkgToNode(p,"pending",win)); return; }
-    if(!isWin) return;
-    // ① EXISTING = MỌI gói Win (giá trị trúng hiện tại = SL×giá, không lọc kỳ)
-    nodes.push(fcPkgToNode(p,"existing",win));
-    // ③ REMAINING = chuỗi kỳ renew NỐI TIẾP sau khi gói hiện tại hết hạn,
-    //    mỗi kỳ = duration gói gốc, SL giữ nguyên; phủ tới hết kỳ FY đang xem.
-    fcRenewSeries(p, win).forEach(function(nd){ nodes.push(nd); });
-  });
-
-  var byBuyerTBMT={};
-  ROWS.forEach(function(r){
-    if(!regOK(r.region)) return;
-    var tt=(r.kqtt||"").replace(/[\s\r\n]+/g,"").replace(/-\d+$/,"");
-    if(tt && nppTBMT[tt]) return;
-    var key=(r.buyer||"")+"|"+tt;
-    if(!byBuyerTBMT[key]) byBuyerTBMT[key]={buyer:r.buyer,prov:r.prov,region:r.region,tbmt:tt,startKey:0,dur:12,expKey:0,byGroup:{MST:0,MSL:0,MCU:0},brands:{},winner:{},rows:[]};
-    var o=byBuyerTBMT[key]; var g=fcKnifeGroup(r.ptype);
-    o.byGroup[g]=(o.byGroup[g]||0)+r.qty;
-    o.brands[r.brand]=(o.brands[r.brand]||0)+r.qty;
-    if(!o.winner[g]||r.qty>o.winner[g].qty) o.winner[g]={brand:r.brand,price:r.price,qty:r.qty};
-    var sk=fcMoStrToKey(r.month); if(sk>o.startKey) o.startKey=sk;
-    o.dur=12; o.rows.push(r);
-  });
-  Object.keys(byBuyerTBMT).forEach(function(k){
-    var o=byBuyerTBMT[k];
-    var lead=Object.keys(o.brands).sort(function(a,b){return o.brands[b]-o.brands[a];})[0];
-    if(lead==="Mani") return;
-    o.expKey=o.startKey? fcAddMonths(o.startKey,o.dur-1):0;
-    nodes.push(fcNewNode(o,win));
-  });
-  return {win:win, nodes:nodes};
-}
-
-function fcPkgToNode(p, group, win){
-  var rowKey=group+"|"+p.key; var e=S.fc.edits[rowKey]||{};
-  var demandY=fcDemandPerYear(p.byGroup,p.dur);
-  // Quyền sửa SL: existing=KHÔNG, pending=KHÔNG (chỉ sửa potential/dur/expiry), remaining/new=CÓ
-  var slLocked = (group==="existing" || group==="pending");
-  var node={ rowKey:rowKey, group:group, src:"NPP", npp:p.npp, region:p.region,
-    account:p.hospital, prov:p.prov, tbmt:p.tbmt,
-    result:p.results["Win"]?"Win":(p.results["Pending"]?"Pending":"—"),
-    startKey:p.startKey, dur:(e.dur||p.dur||12),
-    expKey:(e.expMonth? fcMoStrToKey(e.expMonth):(p.expKey||0)),
-    mst: slLocked?(p.byGroup.MST||0):(e.mst!=null?e.mst:(p.byGroup.MST||0)),
-    msl: slLocked?(p.byGroup.MSL||0):(e.msl!=null?e.msl:(p.byGroup.MSL||0)),
-    mcu: slLocked?(p.byGroup.MCU||0):(e.mcu!=null?e.mcu:(p.byGroup.MCU||0)),
-    demandY:demandY, winnerTxt:fcWinnerText(p),
-    potential:e.potential||fcAutoPotential(demandY),
-    resultMonth:e.resultMonth||(group==="pending"?fcKeyToMoStr(win.fromKey):""),
-    editable:(group!=="existing"), slEditable:!slLocked };
-  if(group==="pending"){ var rm=node.resultMonth? fcMoStrToKey(node.resultMonth):win.fromKey; node.startKey=rm; node.expKey=fcAddMonths(rm,(node.dur||12)-1); }
-  return node;
-}
 /* RENEW (Remaining): CHUỖI kỳ nối tiếp sau khi gói gốc hết hạn.
    Ví dụ gói gốc 08/2025–07/2026 (dur 12) → renew 08/2026–07/2027, 08/2027–07/2028…
    Mỗi kỳ: duration = gói gốc, SL = gói gốc (đều editable). Chỉ sinh các kỳ CÓ OVERLAP
    với kỳ FY đang xem (để không tạo vô hạn). */
-function fcRenewSeries(p, win){
-  var out=[];
-  if(!p.expKey) return out;
-  var baseDur = p.dur || 12; if(baseDur<1||baseDur>36) baseDur=12;
-  var startKey = fcAddMonths(p.expKey, 1);         // bắt đầu ngay sau gói gốc
-  var guard=0;
-  while(guard++ < 40){
-    var expKey = fcAddMonths(startKey, baseDur-1);
-    // nếu kỳ renew này đã vượt hẳn qua bên phải cửa sổ → dừng
-    if(fcKeyOrd(startKey) > fcKeyOrd(win.toKey)) break;
-    // chỉ thêm nếu overlap cửa sổ
-    if(fcOverlap(startKey, expKey, win.fromKey, win.toKey) > 0){
-      out.push(fcRenewNodeAt(p, startKey, expKey, baseDur, out.length));
-    }
-    startKey = fcAddMonths(expKey, 1);             // kỳ kế tiếp
-  }
-  return out;
-}
-function fcRenewNodeAt(p, startKey, expKey, baseDur, seq){
-  var rowKey="remaining|"+p.key+"|"+startKey;   // mỗi kỳ 1 rowKey riêng (edit độc lập)
-  var e=S.fc.edits[rowKey]||{};
-  var dur = e.dur||baseDur; if(dur<1||dur>36) dur=baseDur;
-  var sK = e.expMonth ? fcMoStrToKey(e.expMonth) : startKey;
-  var eK = fcAddMonths(sK, dur-1);
-  var byG={ MST:(e.mst!=null?e.mst:(p.byGroup.MST||0)), MSL:(e.msl!=null?e.msl:(p.byGroup.MSL||0)), MCU:(e.mcu!=null?e.mcu:(p.byGroup.MCU||0)) };
-  return { rowKey:rowKey, group:"remaining", src:"NPP", npp:p.npp, region:p.region,
-    account:p.hospital, prov:p.prov, tbmt:p.tbmt, result:"Renew"+(seq>0?(" +"+(seq+1)):""),
-    startKey:sK, dur:dur, expKey:eK, prevExpKey:p.expKey,
-    mst:byG.MST, msl:byG.MSL, mcu:byG.MCU,
-    demandY:fcDemandPerYear(byG,dur), winnerTxt:fcWinnerText(p),
-    potential:e.potential||fcAutoPotential(fcDemandPerYear(byG,dur)),
-    resultMonth:"", editable:true, slEditable:true };
-}
-function fcNewNode(o, win){
-  var rowKey="new|"+o.buyer+"|"+o.tbmt; var e=S.fc.edits[rowKey]||{};
-  var demandY=fcDemandPerYear(o.byGroup,o.dur);
-  var startKey=e.expMonth? fcMoStrToKey(e.expMonth):(o.expKey? fcAddMonths(o.expKey,1):win.fromKey);
-  var dur=e.dur||o.dur||12;
-  return { rowKey:rowKey, group:"new", src:"MARKET", npp:"", region:o.region,
-    account:o.buyer, prov:o.prov, tbmt:o.tbmt, result:"Convert",
-    startKey:startKey, dur:dur, expKey:fcAddMonths(startKey,dur-1),
-    mst:e.mst!=null?e.mst:(o.byGroup.MST||0), msl:e.msl!=null?e.msl:(o.byGroup.MSL||0), mcu:e.mcu!=null?e.mcu:(o.byGroup.MCU||0),
-    demandY:demandY, winnerTxt:fcWinnerTextNew(o),
-    potential:e.potential||fcAutoPotential(demandY), resultMonth:"", editable:true };
-}
-function fcDemandPerYear(byGroup, dur){ var tot=(byGroup.MST||0)+(byGroup.MSL||0)+(byGroup.MCU||0); var yrs=(dur||12)/12; if(yrs<=0)yrs=1; return Math.round(tot/yrs); }
-function fcAutoPotential(d){ return d>=2000?"High":(d>=500?"Medium":"Low"); }
-function fcWinnerText(p){ var parts=[]; ["MSL","MST","MCU"].forEach(function(g){ if(p.priceByGroup[g]) parts.push(g+": Mani-"+nf(p.priceByGroup[g])); }); return parts.join(" · ")||"Mani"; }
-function fcWinnerTextNew(o){ var parts=[]; ["MSL","MST","MCU"].forEach(function(g){ var w=o.winner[g]; if(w) parts.push(g+": "+w.brand+"-"+nf(w.price)); }); return parts.join(" · ")||"—"; }
-function fcNodeRevenue(node, win){
-  var ov=fcOverlap(node.startKey||win.fromKey, node.expKey||win.toKey, win.fromKey, win.toKey);
-  var dur=node.dur||12;
-  var totVND=(node.mst||0)*fcPriceOf("MST")+(node.msl||0)*fcPriceOf("MSL")+(node.mcu||0)*fcPriceOf("MCU");
-  var perMonth=totVND/dur;
-  return { vnd: ov>0?perMonth*ov:0, months:ov, perMonthVND:perMonth, contractVND:totVND };
-}
-
 /* ════ BANNER ════ */
-function fcBannerItems(){
-  var now=fcNowKey(); var items=[]; var seenExp={};
-  ["ICARE","HUNGVI"].forEach(function(k){
-    var arr=NPP_FEED[k]; if(!arr) return;
-    var pkg={};
-    arr.forEach(function(r0){
-      var r=fcNormNPP(r0,k); var pk=(r.tbmt||("H:"+r.hospital));
-      if(!pkg[pk]) pkg[pk]={hospital:r.hospital,expKey:0,results:{},qty:0};
-      if(r.expKey>pkg[pk].expKey) pkg[pk].expKey=r.expKey;
-      pkg[pk].results[r.result]=(pkg[pk].results[r.result]||0)+1; pkg[pk].qty+=r.qty;
-    });
-    Object.keys(pkg).forEach(function(pk){
-      var p=pkg[pk];
-      if(p.results["Win"] && p.expKey){
-        var left=fcMonthsBetween(now,p.expKey);
-        if(left>0 && left<=3){ var kk=p.hospital+"|"+p.expKey; if(!seenExp[kk]){ seenExp[kk]=1; items.push({type:"exp",left:left,name:p.hospital}); } }
-      }
-    });
-  });
-  ["ICARE","HUNGVI"].forEach(function(k){
-    var arr=NPP_FEED[k]; if(!arr) return;
-    var pkg={};
-    arr.forEach(function(r0){
-      var r=fcNormNPP(r0,k);
-      // "cập nhật tháng này" = tháng phê duyệt (ưu tiên) hoặc hiệu lực == tháng data mới nhất
-      var updKey = r.approveKey || r.effKey || r.startKey;
-      if(updKey!==now) return;
-      if(r.result!=="Win" && r.result!=="Fail") return;   // chỉ Win/Fail
-      var pk=(r.tbmt||("H:"+r.hospital))+"|"+r.result;
-      if(!pkg[pk]) pkg[pk]={hospital:r.hospital,result:r.result,qty:0};
-      pkg[pk].qty+=r.qty;   // chỉ cộng dao (feed đã lọc dao)
-    });
-    Object.keys(pkg).forEach(function(pk){
-      var p=pkg[pk];
-      if(p.result==="Win") items.push({type:"win",name:p.hospital,qty:p.qty});
-      else if(p.result==="Fail") items.push({type:"lose",name:p.hospital,qty:p.qty});
-    });
-  });
-  items.sort(function(a,b){ var pr={exp:0,win:1,lose:1}; if(pr[a.type]!==pr[b.type]) return pr[a.type]-pr[b.type]; return (a.left||0)-(b.left||0); });
-  return items;
-}
-function fcBannerHTML(){
-  var items=fcBannerItems(); if(!items.length) return "";
-  var seg=items.map(function(it){
-    if(it.type==="exp"){ var cls=it.left<=1?"crit":(it.left<=2?"warn":"soft");
-      return '<span class="fc-mq-item '+cls+'"><span class="fc-mq-ic">⏳</span>'+esc(it.name)+': '+t("fc.ban.left")+' <b>'+it.left+' '+t("fc.months")+'</b></span>'; }
-    if(it.type==="win"){ return '<span class="fc-mq-item win"><span class="fc-mq-ic">✅</span>'+esc(it.name)+': <b>'+t("fc.ban.win")+' '+nf(it.qty)+' '+t("fc.ban.pcs")+'</b></span>'; }
-    return '<span class="fc-mq-item lose"><span class="fc-mq-ic">❌</span>'+esc(it.name)+': <b>'+t("fc.ban.lose")+' '+nf(it.qty)+' '+t("fc.ban.pcs")+'</b></span>';
-  }).join('<span class="fc-mq-sep">•</span>');
-  var track=seg+'<span class="fc-mq-sep">•</span>'+seg;
-  var dur=Math.max(24, items.length*6);
-  return '<div class="fc-marquee"><div class="fc-mq-tag">📣</div>'
-    +'<div class="fc-mq-view"><div class="fc-mq-track" style="animation-duration:'+dur+'s">'+track+'</div></div></div>';
-}
-
 /* Cảnh báo feed NPP không tải được (giúp chẩn đoán "$0, 0 gói") */
-function fcFeedWarn(){
-  var bad=[];
-  if(NPP_FEED.ICARE===null)  bad.push("Icare (Nam)");
-  if(NPP_FEED.HUNGVI===null) bad.push("Hùng Vĩ (Bắc)");
-  // rỗng (fetch OK nhưng 0 dòng) cũng đáng lưu ý
-  var empty=[];
-  if(Array.isArray(NPP_FEED.ICARE)  && NPP_FEED.ICARE.length===0)  empty.push("Icare (Nam)");
-  if(Array.isArray(NPP_FEED.HUNGVI) && NPP_FEED.HUNGVI.length===0) empty.push("Hùng Vĩ (Bắc)");
-  if(!bad.length && !empty.length) return "";
-  var msg="";
-  if(bad.length)   msg+=(LANG==="vi"?"Không tải được dữ liệu: ":"Failed to load: ")+bad.join(", ")+". ";
-  if(empty.length) msg+=(LANG==="vi"?"Feed rỗng (0 dòng dao): ":"Empty feed: ")+empty.join(", ")+". ";
-  return '<div class="fc-feedwarn">⚠️ '+esc(msg)
-    +(LANG==="vi"?"Kiểm tra URL webapp & quyền truy cập \u201cAnyone\u201d của Apps Script."
-                 :"Check the webapp URL & Apps Script \u201cAnyone\u201d access.")+'</div>';
-}
-
 /* ════ RENDER ════ */
 
 /* ════════════════════════════════════════════════════════════════════════════════════════════
@@ -5178,21 +5008,6 @@ function hvRevUSD(byK){
 /* Tổng hợp từ rows thô của HV (để áp bộ lọc tỉnh/loại dao ở FE). */
 function hvRows(){ return NPP_FEED.HUNGVI || []; }
 
-function hvAggFY(fy){
-  var rows=hvRows().filter(function(r){ return r.demandOK && r.m && r.m[fy] && r.m[fy].overlap>0; });
-  var A={qty:0,usage:0,MST:0,MSL:0,MCU:0,pkgs:{},hosps:{},lines:rows.length};
-  rows.forEach(function(r){
-    var m=r.m[fy];
-    A.qty+=r.qty; A.usage+=m.usage;
-    A.MST+=m.usageMST; A.MSL+=m.usageMSL; A.MCU+=m.usageMCU;
-    A.pkgs[r.pkgKey]=1; if(r.hospitalStd) A.hosps[r.hospitalStd.toUpperCase()]=1;
-  });
-  A.packages=Object.keys(A.pkgs).length;
-  A.hospitals=Object.keys(A.hosps).length;
-  A.revUSD=hvRevUSD(A);
-  return A;
-}
-
 /* Funnel theo cột FY (gồm cả Fail/Pending) — gộp lên cấp GÓI. */
 function hvFunnel(fy){
   var pk={};
@@ -5215,395 +5030,352 @@ function hvFunnel(fy){
   return st;
 }
 
-/* Theo địa bàn (tỉnh) trong 1 kỳ */
-function hvByProvince(fy){
+/* ════════════════════════════════════════════════════════════════════════════════════════════
+   ①  FY67 PERFORMANCE  —  bản dựng lại (Hùng Vĩ · miền Bắc)
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   ĐÃ BỎ: Pipeline & Gantt, FY68 Forecast, các bộ lọc FY/Region/Group/Potential.
+   Sidebar chỉ còn SETUP (giá bán NPP · tỉ giá · target).
+
+   4 CON SỐ CHÍNH TRONG KỲ FY67:
+     ① Tổng số gói thầu THAM DỰ   → kèm ĐỘ PHỦ = gói HV tham dự / tổng gói dao toàn thị trường
+                                     (lấy từ ROWS = data KQTT tổng, cửa sổ T09/2025 → hết T05/2026)
+     ② Tỉ lệ TRÚNG thầu           → gói Win / gói tham dự  (gộp lên cấp GÓI)
+     ③ Tổng SỐ LƯỢNG trúng thầu   → Σ qty của dòng Win
+     ④ Doanh số dự kiến trong kỳ  → Σ usage × giá bán Mani→NPP  (KHÔNG phải giá trúng thầu)
+   (Est. usage đã BỎ khỏi KPI theo yêu cầu — vẫn dùng nội bộ để tính doanh số.)
+
+   MỌI cardbox / cột biểu đồ / dòng bảng đều BẤM ĐƯỢC → mở drill panel bên phải.
+   ════════════════════════════════════════════════════════════════════════════════════════════ */
+
+var HV_KCOL  = { MST:"#5B7DB1", MSL:"#2E7D32", MCU:"#8E44AD", MVR:"#C9824E" };
+var HV_KNAME = { MST:"MST · Stab", MSL:"MSL · Slit", MCU:"MCU · Crescent", MVR:"MVR" };
+var HV_RCOL  = { Win:"#2E7D32", Fail:"#C0392B", Pending:"#F57C00", Cancel:"#B8C2D0" };
+
+/* Cửa sổ đối chiếu độ phủ: T09/2025 → hết T05/2026 (theo yêu cầu). */
+var HV_COVER = { from:"09/2025", to:"05/2026" };
+
+function hvRows(){ return NPP_FEED.HUNGVI || []; }
+function hvUSD(v){ v=+v||0; if(v>=1e6) return "$"+(v/1e6).toFixed(2)+"M"; if(v>=1e3) return "$"+(v/1e3).toFixed(1)+"K"; return "$"+Math.round(v); }
+function hvNum(v){ return nf(Math.round(+v||0)); }
+function hvPrice(g){ return +S.fc.price[g] || 0; }
+function hvFx(){ return +S.fc.fxFC || 26400; }
+/* Doanh số USD từ usage theo từng nhóm dao (giá bán Mani→NPP, KHÔNG dùng giá trúng). */
+function hvRevUSD(o){
+  return ((o.MST||0)*hvPrice("MST") + (o.MSL||0)*hvPrice("MSL") + (o.MCU||0)*hvPrice("MCU")) / hvFx();
+}
+
+/* ── Gom dòng HV theo GÓI (pkgKey), trong kỳ FY67 (theo cột FY) ── */
+function hvPkgsFY(fy){
   var P={};
   hvRows().forEach(function(r){
-    if(!r.demandOK || !r.m[fy] || r.m[fy].overlap<=0) return;
-    var k=r.city||"(Không rõ)";
-    if(!P[k]) P[k]={province:k,qty:0,usage:0,MST:0,MSL:0,MCU:0,pkgs:{},hosps:{}};
-    var m=r.m[fy];
-    P[k].qty+=r.qty; P[k].usage+=m.usage;
-    P[k].MST+=m.usageMST; P[k].MSL+=m.usageMSL; P[k].MCU+=m.usageMCU;
-    P[k].pkgs[r.pkgKey]=1; if(r.hospitalStd) P[k].hosps[r.hospitalStd.toUpperCase()]=1;
+    if(r.fy!==fy) return;
+    if(!P[r.pkgKey]) P[r.pkgKey]={key:r.pkgKey,tbmt:r.tbmt,hospital:r.hospitalStd||r.hospital,
+      city:r.city,results:[],rows:[],qtyWon:0,MST:0,MSL:0,MCU:0,usage:0,uMST:0,uMSL:0,uMCU:0};
+    var p=P[r.pkgKey];
+    p.results.push(r.result);
+    p.rows.push(r);
+    if(r.result==="Win"){
+      p.qtyWon += r.qty;
+      p.MST += r.qtyMST||0; p.MSL += r.qtyMSL||0; p.MCU += r.qtyMCU||0;
+      var m = r.m && r.m[fy];
+      if(r.demandOK && m){
+        p.usage += m.usage; p.uMST += m.usageMST; p.uMSL += m.usageMSL; p.uMCU += m.usageMCU;
+      }
+    }
+  });
+  return Object.keys(P).map(function(k){
+    var p=P[k];
+    p.status = p.results.indexOf("Win")>=0 ? "Win"
+             : p.results.indexOf("Fail")>=0 ? "Fail"
+             : p.results.indexOf("Pending")>=0 ? "Pending" : "Cancel";
+    p.revUSD = hvRevUSD({MST:p.uMST,MSL:p.uMSL,MCU:p.uMCU});
+    return p;
+  });
+}
+
+/* ── Tổng gói dao TOÀN THỊ TRƯỜNG trong cửa sổ T09/2025–T05/2026 (từ ROWS = KQTT tổng) ── */
+function hvMarketPkgs(){
+  var f=moKey(HV_COVER.from), t=moKey(HV_COVER.to), S_={};
+  ROWS.forEach(function(r){
+    var k=moKey(r.month);
+    if(k<f||k>t) return;
+    var tb=String(r.kqtt||"").replace(/[\s\r\n]+/g,"").replace(/-\d+$/,"");
+    if(tb) S_[tb.toUpperCase()]=1;
+  });
+  return S_;
+}
+function hvCoverage(pkgs){
+  var mk=hvMarketPkgs(), tot=Object.keys(mk).length;
+  var hit=0;
+  pkgs.forEach(function(p){
+    var tb=String(p.tbmt||"").replace(/[\s\r\n]+/g,"").replace(/-\d+$/,"").toUpperCase();
+    if(tb && mk[tb]) hit++;
+  });
+  return { marketTotal:tot, joined:pkgs.length, matched:hit,
+           pct: tot? (pkgs.length/tot*100) : 0 };
+}
+
+/* ── Thống kê tổng hợp FY67 ── */
+function hvStats(fy){
+  var pkgs=hvPkgsFY(fy);
+  var st={ pkgs:pkgs, joined:pkgs.length, Win:0, Fail:0, Pending:0, Cancel:0,
+           qtyWon:0, usage:0, MST:0, MSL:0, MCU:0, uMST:0, uMSL:0, uMCU:0, hosp:{} };
+  pkgs.forEach(function(p){
+    st[p.status]++;
+    st.qtyWon+=p.qtyWon; st.usage+=p.usage;
+    st.MST+=p.MST; st.MSL+=p.MSL; st.MCU+=p.MCU;
+    st.uMST+=p.uMST; st.uMSL+=p.uMSL; st.uMCU+=p.uMCU;
+    if(p.hospital) st.hosp[p.hospital.toUpperCase()]=1;
+  });
+  st.hospitals=Object.keys(st.hosp).length;
+  st.winRate = st.joined ? (st.Win/st.joined*100) : 0;
+  st.revUSD  = hvRevUSD({MST:st.uMST,MSL:st.uMSL,MCU:st.uMCU});
+  st.cover   = hvCoverage(pkgs);
+  return st;
+}
+
+/* ════ DRILL — panel chi tiết cho gói thầu HV ════ */
+function hvDrill(pkgs, title, sub){
+  if(!pkgs || !pkgs.length){ showToast("No packages in this selection","warn"); return; }
+  var totQ=0, totR=0, hosp={};
+  pkgs.forEach(function(p){ totQ+=p.qtyWon; totR+=p.revUSD; if(p.hospital) hosp[p.hospital.toUpperCase()]=1; });
+
+  var head='<div class="drill-kpi">'
+    +'<div class="dk"><div class="dkl">Packages</div><div class="dkv">'+pkgs.length+'</div></div>'
+    +'<div class="dk"><div class="dkl">Hospitals</div><div class="dkv">'+Object.keys(hosp).length+'</div></div>'
+    +'<div class="dk"><div class="dkl">Won qty</div><div class="dkv">'+hvNum(totQ)+'</div></div>'
+    +'<div class="dk"><div class="dkl">Est. revenue</div><div class="dkv">'+hvUSD(totR)+'</div></div>'
+    +'</div>';
+
+  var body=pkgs.slice().sort(function(a,b){return b.qtyWon-a.qtyWon;}).map(function(p,i){
+    var chips=["MST","MSL","MCU"].filter(function(g){return p[g]>0;}).map(function(g){
+      return '<span class="hvchip" style="--c:'+HV_KCOL[g]+'">'+HV_KNAME[g]+': <b>'+hvNum(p[g])+'</b></span>';
+    }).join(" ");
+    var codes={};
+    p.rows.forEach(function(r){ if(r.pcodeRaw) codes[r.pcodeRaw]=1; });
+    return '<div class="hvdr">'
+      +'<div class="hvdr-h"><span class="hvdr-n">'+(i+1)+'</span>'
+        +'<span class="hvdr-nm">'+esc(p.hospital||"—")+'</span>'
+        +'<span class="hvdr-st" style="background:'+HV_RCOL[p.status]+'">'+p.status+'</span></div>'
+      +'<div class="hvdr-m">'
+        +'<span>📍 '+esc(p.city||"—")+'</span>'
+        +'<span class="mono">🔖 '+esc(p.tbmt||"— no TBMT —")+'</span>'
+        +'<span>🔪 '+esc(Object.keys(codes).join(", ")||"—")+'</span>'
+      +'</div>'
+      +(chips?'<div class="hvdr-c">'+chips+'</div>':'')
+      +'<div class="hvdr-f">'
+        +'<span>Won: <b>'+hvNum(p.qtyWon)+' pcs</b></span>'
+        +'<span>Est. revenue: <b>'+hvUSD(p.revUSD)+'</b></span>'
+      +'</div>'
+    +'</div>';
+  }).join("");
+
+  S.drill={rows:[],title:title,sub:sub,kind:"hv",exclude:[],bd:null,hvPkgs:pkgs};
+  S.expanded=false;
+  var pn=document.getElementById("drill-pn");
+  pn.classList.remove("expanded");
+  document.getElementById("drill-exp").textContent="⛶";
+  document.getElementById("drill-t").textContent=title;
+  document.getElementById("drill-s").textContent=sub;
+  document.getElementById("drill-body").innerHTML=head+'<div class="hvdr-wrap">'+body+'</div>';
+  document.getElementById("drill").classList.add("on");
+}
+
+/* Bấm KPI / cột chart / dòng bảng → lọc gói rồi mở drill */
+function hvDrillBy(kind, val){
+  var st=hvStats("FY67"), P=st.pkgs;
+  var sel, ttl, sub;
+  if(kind==="all"){        sel=P; ttl="FY67 · All packages joined"; sub=P.length+" packages · Hùng Vĩ · North"; }
+  else if(kind==="status"){sel=P.filter(function(p){return p.status===val;}); ttl="FY67 · "+val; sub=sel.length+" packages"; }
+  else if(kind==="won"){   sel=P.filter(function(p){return p.status==="Win";}); ttl="FY67 · Won packages"; sub=hvNum(st.qtyWon)+" pcs awarded"; }
+  else if(kind==="rev"){   sel=P.filter(function(p){return p.revUSD>0;}); ttl="FY67 · Revenue contributors"; sub=hvUSD(st.revUSD)+" expected"; }
+  else if(kind==="knife"){ sel=P.filter(function(p){return p[val]>0;}); ttl="FY67 · "+HV_KNAME[val]; sub=sel.length+" packages with "+val; }
+  else if(kind==="prov"){  sel=P.filter(function(p){return (p.city||"(Không rõ)")===val;}); ttl="FY67 · "+val; sub=sel.length+" packages"; }
+  else if(kind==="hosp"){  sel=P.filter(function(p){return (p.hospital||"")===val;}); ttl=val; sub="FY67 · all packages at this hospital"; }
+  else { sel=P; ttl="FY67"; sub=""; }
+  hvDrill(sel, ttl, sub);
+}
+
+/* ── Theo tỉnh ── */
+function hvByProvince(fy){
+  var P={};
+  hvPkgsFY(fy).forEach(function(p){
+    var k=p.city||"(Không rõ)";
+    if(!P[k]) P[k]={province:k,joined:0,Win:0,qtyWon:0,MST:0,MSL:0,MCU:0,revUSD:0,hosp:{}};
+    var o=P[k];
+    o.joined++;
+    if(p.status==="Win") o.Win++;
+    o.qtyWon+=p.qtyWon; o.MST+=p.MST; o.MSL+=p.MSL; o.MCU+=p.MCU; o.revUSD+=p.revUSD;
+    if(p.hospital) o.hosp[p.hospital.toUpperCase()]=1;
   });
   return Object.keys(P).map(function(k){
     var o=P[k];
-    o.packages=Object.keys(o.pkgs).length;
-    o.hospitals=Object.keys(o.hosps).length;
-    o.revUSD=hvRevUSD(o);
+    o.hospitals=Object.keys(o.hosp).length;
+    o.winRate=o.joined?(o.Win/o.joined*100):0;
     return o;
-  }).sort(function(a,b){ return b.usage-a.usage; });
+  }).sort(function(a,b){ return b.qtyWon-a.qtyWon; });
 }
 
-/* Gói sắp hết hiệu lực (≤ N tháng) → cơ hội renew */
-function hvExpiring(months){
-  months=months||6;
-  var now=new Date(), lim=new Date(now.getFullYear(), now.getMonth()+months, now.getDate());
-  var seen={}, out=[];
-  hvRows().forEach(function(r){
-    if(!r.demandOK || !r.expirationSerial) return;
-    if(seen[r.pkgKey]) return;
-    var ed=new Date(r.expirationSerial);
-    if(ed>=now && ed<=lim){
-      seen[r.pkgKey]=1;
-      out.push({pkg:r.pkgKey,tbmt:r.tbmt,hosp:r.hospitalStd||r.hospital,city:r.city,
-                exp:r.expirationISO,qty:r.qty,dur:r.durationMonths,
-                left:Math.max(0,Math.round((ed-now)/2592000000))});
-    }
-  });
-  return out.sort(function(a,b){ return a.left-b.left; });
-}
-
-/* ── Sub-nav ── */
-function fcSubNav(){
-  var subs=[["perf", LANG==="vi"?"① Hiệu quả FY67":"① FY67 Performance"],
-            ["fcst", LANG==="vi"?"② Dự báo FY68":"② FY68 Forecast"],
-            ["pipe", LANG==="vi"?"③ Pipeline & Gantt":"③ Pipeline & Gantt"]];
-  return '<div class="subnav" style="margin-bottom:14px">'+subs.map(function(s){
-    return '<button class="subt '+(S.fc.sub===s[0]?"on":"")+'" onclick="S.fc.sub=\''+s[0]+'\';renderFC()">'+s[1]+'</button>';
-  }).join("")+'</div>';
-}
-
-/* ════ ① PERFORMANCE — FY67 ════ */
-function fcPerf(){
-  var A67=hvAggFY("FY67"), A66=hvAggFY("FY66");
-  var F67=hvFunnel("FY67"), F66=hvFunnel("FY66"), F65=hvFunnel("FY65");
-  var growth = A66.usage ? ((A67.usage-A66.usage)/A66.usage*100) : 0;
-
-  var H='';
-  /* KPI — "đang cung ứng" (overlap-based) */
-  H+='<div class="kr">'
-    + kpiCard({lbl:LANG==="vi"?"SL trúng thầu (gói còn hiệu lực FY67)":"Awarded qty (live in FY67)",
-               val:A67.qty,mode:"n",cls:"y",note:A67.packages+" packages · "+A67.hospitals+" hospitals"})
-    + kpiCard({lbl:LANG==="vi"?"SL sử dụng ước tính FY67":"Est. usage FY67",
-               val:Math.round(A67.usage),mode:"n",cls:"pos",
-               note:(growth>=0?"▲ ":"▼ ")+Math.abs(growth).toFixed(1)+"% vs FY66"})
-    + kpiCard({lbl:LANG==="vi"?"Doanh số kỳ vọng FY67 (Mani→NPP)":"Expected revenue FY67 (Mani→NPP)",
-               val:hvRevUSD(A67),mode:"$",cls:"y",note:LANG==="vi"?"theo giá bán cho NPP, KHÔNG phải giá trúng":"at Mani→NPP price, not award price"})
-    + kpiCard({lbl:LANG==="vi"?"Tỷ lệ thắng thầu FY67":"Win-rate FY67",
-               val:F67.winRate,mode:"%",cls:F67.winRate>=60?"pos":"neg",
-               note:F67.Win+" win / "+F67.joined+" joined"})
-    +'</div>';
-
-  /* Funnel — "kết quả dự thầu trong kỳ" (KHÁC với "đang cung ứng" ở trên) */
-  H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">🎯 '+(LANG==="vi"?"Kết quả dự thầu trong kỳ (theo cột FY)":"Tender results in period (by FY column)")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"
-       ? "Gói ĐẤU THẦU phát sinh trong kỳ · gộp lên cấp gói · KHÁC với “gói đang cung ứng” ở KPI trên"
-       : "Packages TENDERED in the period · rolled up to package level · different from “live packages” in KPIs above")+'</div></div>'
-    +'<div class="cb"><table class="hvtb"><thead><tr>'
-    +'<th>FY</th><th>'+(LANG==="vi"?"Gói tham dự":"Joined")+'</th><th>Win</th><th>Fail</th><th>Pending</th><th>Cancel</th>'
-    +'<th>'+(LANG==="vi"?"BV":"Hosp.")+'</th><th>Win-rate</th><th style="width:190px">'+(LANG==="vi"?"Cơ cấu":"Mix")+'</th>'
-    +'</tr></thead><tbody>'
-    + [["FY65",F65],["FY66",F66],["FY67",F67]].map(function(x){
-        var fy=x[0], s=x[1];
-        if(!s.joined) return '';
-        var w=s.joined?(s.Win/s.joined*100):0, f=s.joined?(s.Fail/s.joined*100):0,
-            p=s.joined?(s.Pending/s.joined*100):0, c=s.joined?(s.Cancel/s.joined*100):0;
-        return '<tr'+(fy==="FY67"?' class="hvcur"':'')+'>'
-          +'<td><b>'+fy+'</b></td><td class="num">'+s.joined+'</td>'
-          +'<td class="num" style="color:var(--pos);font-weight:800">'+s.Win+'</td>'
-          +'<td class="num" style="color:var(--neg)">'+s.Fail+'</td>'
-          +'<td class="num" style="color:var(--warn)">'+s.Pending+'</td>'
-          +'<td class="num" style="color:var(--t3)">'+s.Cancel+'</td>'
-          +'<td class="num">'+s.hospitals+'</td>'
-          +'<td class="num"><b>'+s.winRate.toFixed(1)+'%</b></td>'
-          +'<td><div class="distbar" style="height:14px">'
-            +'<div class="distseg" style="background:#2E7D32;flex:'+w+'"></div>'
-            +'<div class="distseg" style="background:#C0392B;flex:'+f+'"></div>'
-            +'<div class="distseg" style="background:#F57C00;flex:'+p+'"></div>'
-            +'<div class="distseg" style="background:#B8C2D0;flex:'+c+'"></div>'
-          +'</div></td></tr>';
-      }).join("")
-    +'</tbody></table></div></div>';
-
-  /* Theo loại dao + theo địa bàn */
-  H+='<div class="g2">'
-    +'<div class="card reveal"><div class="ch"><div class="ct">🔪 '+(LANG==="vi"?"Doanh số FY67 theo loại dao":"FY67 revenue by knife type")+'</div>'
-      +'<div class="cs">'+(LANG==="vi"?"SL sử dụng ước tính × giá bán NPP":"est. usage × Mani→NPP price")+'</div></div>'
-      +'<div class="cb"><div class="cw s" style="height:250px"><canvas id="c-hv-knife"></canvas></div></div></div>'
-    +'<div class="card reveal"><div class="ch"><div class="ct">📊 '+(LANG==="vi"?"FY66 → FY67":"FY66 → FY67")+'</div>'
-      +'<div class="cs">'+(LANG==="vi"?"SL sử dụng ước tính theo kỳ":"est. usage by period")+'</div></div>'
-      +'<div class="cb"><div class="cw s" style="height:250px"><canvas id="c-hv-trend"></canvas></div></div></div>'
-    +'</div>';
-
-  /* Bảng địa bàn */
-  var prov=hvByProvince("FY67");
-  H+='<div class="card reveal"><div class="ch"><div class="ct">📍 '+(LANG==="vi"?"Hiệu quả theo địa bàn — FY67":"Performance by territory — FY67")+'</div>'
-    +'<div class="cs">'+prov.length+' '+(LANG==="vi"?"tỉnh/thành đang có gói còn hiệu lực":"provinces with live packages")+'</div></div>'
-    +'<div class="cb"><table class="hvtb"><thead><tr>'
-    +'<th>#</th><th>'+(LANG==="vi"?"Tỉnh/TP":"Province")+'</th><th>'+(LANG==="vi"?"Gói":"Pkgs")+'</th><th>'+(LANG==="vi"?"BV":"Hosp.")+'</th>'
-    +'<th>'+(LANG==="vi"?"SL trúng":"Awarded")+'</th><th>'+(LANG==="vi"?"SL sử dụng":"Est. usage")+'</th>'
-    +'<th>MST</th><th>MSL</th><th>MCU</th><th>'+(LANG==="vi"?"Doanh số":"Revenue")+'</th></tr></thead><tbody>'
-    + (prov.length? prov.map(function(o,i){
-        return '<tr><td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
-          +'<td><b>'+esc(o.province)+'</b></td>'
-          +'<td class="num">'+o.packages+'</td><td class="num">'+o.hospitals+'</td>'
-          +'<td class="num">'+hvNum(o.qty)+'</td>'
-          +'<td class="num"><b>'+hvNum(o.usage)+'</b></td>'
-          +'<td class="num" style="color:'+HV_KCOL.MST+'">'+hvNum(o.MST)+'</td>'
-          +'<td class="num" style="color:'+HV_KCOL.MSL+'">'+hvNum(o.MSL)+'</td>'
-          +'<td class="num" style="color:'+HV_KCOL.MCU+'">'+hvNum(o.MCU)+'</td>'
-          +'<td class="num"><b>'+hvUSD(o.revUSD)+'</b></td></tr>';
-      }).join("") : '<tr><td colspan="10" style="text-align:center;color:var(--t3);padding:22px">'+t("fc.noRow")+'</td></tr>')
-    +'</tbody></table></div></div>';
-
-  document.getElementById("fc-body").innerHTML = fcSubNav()+H;
-
-  barChart("c-hv-knife",{labels:["MST","MSL","MCU"],
-    datasets:[{label:"USD",data:[
-        A67.MST*(+S.fc.price.MST||0)/(+S.fc.fxFC||26400),
-        A67.MSL*(+S.fc.price.MSL||0)/(+S.fc.fxFC||26400),
-        A67.MCU*(+S.fc.price.MCU||0)/(+S.fc.fxFC||26400)],
-      backgroundColor:[HV_KCOL.MST,HV_KCOL.MSL,HV_KCOL.MCU],borderRadius:5,
-      datalabels:{display:true,anchor:"end",align:"top",color:axisColor(),
-        font:{family:FF,size:11,weight:"800"},formatter:function(v){return hvUSD(v);}}}],
-    legend:false,fmt:function(v){return hvUSD(v);},padTop:24});
-
-  barChart("c-hv-trend",{labels:["FY66","FY67"],
-    datasets:[
-      {label:"MST",data:[A66.MST,A67.MST],backgroundColor:HV_KCOL.MST,stack:"s",datalabels:{display:false}},
-      {label:"MSL",data:[A66.MSL,A67.MSL],backgroundColor:HV_KCOL.MSL,stack:"s",datalabels:{display:false}},
-      {label:"MCU",data:[A66.MCU,A67.MCU],backgroundColor:HV_KCOL.MCU,stack:"s",datalabels:{display:false}}],
-    stacked:true,fmt:function(v){return nf(Math.round(v));},padTop:10});
-}
-
-/* ════ ② FORECAST — FY68 ════ */
-function fcFcst(){
-  var A67=hvAggFY("FY67"), A68=hvAggFY("FY68");
-  var exp=hvExpiring(12);
-
-  /* Renew opportunity: gói hết hạn trong FY68 → nếu tái trúng, SL/năm giữ nguyên. */
-  var renewQty = exp.reduce(function(s,o){ return s + (o.dur? o.qty*12/o.dur : o.qty); }, 0);
-  var carryUSD = hvRevUSD(A68);                       /* đã chắc chắn: gói còn hiệu lực bắc cầu sang FY68 */
-  var renewUSD = (function(){
-    /* SL renew phân bổ theo cơ cấu loại dao FY67 (không có cách nào biết trước → dùng mix hiện tại) */
-    var tot=A67.MST+A67.MSL+A67.MCU || 1;
-    return hvRevUSD({MST:renewQty*A67.MST/tot, MSL:renewQty*A67.MSL/tot, MCU:renewQty*A67.MCU/tot});
-  })();
-
-  var H='';
-  H+='<div class="hvwarn">⚠️ '+(LANG==="vi"
-    ? "<b>Dự báo, không phải số bán thật.</b> Giả định tiêu thụ đều theo tháng. “Bắc cầu” = phần hợp đồng ĐÃ TRÚNG còn hiệu lực sang FY68 (chắc chắn). “Renew” = gói hết hạn trong kỳ, CHỈ thành doanh số nếu tái trúng thầu — SL phân bổ theo cơ cấu loại dao FY67."
-    : "<b>Forecast, not actual sales.</b> Assumes even monthly consumption. “Carry-over” = already-won contracts still valid into FY68 (certain). “Renew” = packages expiring in the period — revenue only if re-won; qty split by FY67 knife mix.")+'</div>';
-
-  H+='<div class="kr">'
-    + kpiCard({lbl:LANG==="vi"?"Bắc cầu sang FY68 (đã trúng)":"Carry-over into FY68 (already won)",
-               val:Math.round(A68.usage),mode:"n",cls:"pos",
-               note:A68.packages+" packages still valid · "+hvUSD(carryUSD)})
-    + kpiCard({lbl:LANG==="vi"?"Gói cần renew (12 tháng tới)":"Packages to renew (next 12 mo)",
-               val:exp.length,mode:"n",cls:"neg",
-               note:hvNum(renewQty)+" pcs/yr at risk · "+hvUSD(renewUSD)})
-    + kpiCard({lbl:LANG==="vi"?"Tổng cơ hội FY68":"Total FY68 opportunity",
-               val:carryUSD+renewUSD,mode:"$",cls:"y",
-               note:(LANG==="vi"?"bắc cầu + renew (nếu giữ 100%)":"carry-over + renew (if 100% retained)")})
-    + kpiCard({lbl:LANG==="vi"?"Target NPP Hùng Vĩ":"NPP target (Hùng Vĩ)",
-               val:+S.fc.target.HUNGVI||0,mode:"$",cls:"y",
-               note:(function(){ var tg=+S.fc.target.HUNGVI||0;
-                     return tg? ((carryUSD+renewUSD)/tg*100).toFixed(0)+"% covered by pipeline" : "set in Setup"; })()})
-    +'</div>';
-
-  /* Bảng gói cần renew */
-  H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">⏳ '+(LANG==="vi"?"Gói sắp hết hiệu lực — cần đấu lại":"Expiring packages — must re-tender")+'</div>'
-    +'<div class="cs">'+exp.length+' '+(LANG==="vi"?"gói hết hạn trong 12 tháng tới · sắp theo thời gian còn lại":"packages expiring in next 12 months · sorted by time left")+'</div></div>'
-    +'<div class="cb"><table class="hvtb"><thead><tr>'
-    +'<th>#</th><th>'+(LANG==="vi"?"Bệnh viện":"Hospital")+'</th><th>'+(LANG==="vi"?"Tỉnh":"Province")+'</th>'
-    +'<th>TBMT</th><th>'+(LANG==="vi"?"Hết hạn":"Expires")+'</th><th>'+(LANG==="vi"?"Còn":"Left")+'</th>'
-    +'<th>'+(LANG==="vi"?"SL gói":"Pkg qty")+'</th><th>'+(LANG==="vi"?"Hiệu lực":"Duration")+'</th>'
-    +'<th>'+(LANG==="vi"?"SL/năm":"Qty/yr")+'</th></tr></thead><tbody>'
-    + (exp.length? exp.map(function(o,i){
-        var cls = o.left<=2?"hvcrit":(o.left<=4?"hvwarnr":"");
-        var perYr = o.dur? Math.round(o.qty*12/o.dur) : o.qty;
-        return '<tr class="'+cls+'"><td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
-          +'<td><b>'+esc(o.hosp)+'</b></td><td>'+esc(o.city||"—")+'</td>'
-          +'<td class="mono" style="font-size:11.5px;color:var(--t2)">'+esc(o.tbmt||"—")+'</td>'
-          +'<td class="num">'+esc(o.exp)+'</td>'
-          +'<td class="num"><b>'+o.left+' '+t("fc.months")+'</b></td>'
-          +'<td class="num">'+hvNum(o.qty)+'</td>'
-          +'<td class="num">'+o.dur+' '+t("fc.months")+'</td>'
-          +'<td class="num"><b>'+hvNum(perYr)+'</b></td></tr>';
-      }).join("") : '<tr><td colspan="9" style="text-align:center;color:var(--t3);padding:22px">'+(LANG==="vi"?"Không có gói nào hết hạn trong 12 tháng tới":"No package expiring in the next 12 months")+'</td></tr>')
-    +'</tbody></table></div></div>';
-
-  /* FY68 theo địa bàn (phần bắc cầu — số CHẮC CHẮN) */
-  var prov=hvByProvince("FY68");
-  H+='<div class="card reveal"><div class="ch"><div class="ct">📍 '+(LANG==="vi"?"FY68 bắc cầu theo địa bàn":"FY68 carry-over by territory")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"chỉ gồm hợp đồng ĐÃ TRÚNG còn hiệu lực sang FY68 — chưa gồm renew":"only already-won contracts valid into FY68 — excludes renewals")+'</div></div>'
-    +'<div class="cb"><table class="hvtb"><thead><tr>'
-    +'<th>#</th><th>'+(LANG==="vi"?"Tỉnh/TP":"Province")+'</th><th>'+(LANG==="vi"?"Gói":"Pkgs")+'</th><th>'+(LANG==="vi"?"BV":"Hosp.")+'</th>'
-    +'<th>'+(LANG==="vi"?"SL sử dụng FY68":"Est. usage FY68")+'</th><th>'+(LANG==="vi"?"Doanh số":"Revenue")+'</th>'
-    +'<th style="width:170px">'+(LANG==="vi"?"So FY67":"vs FY67")+'</th></tr></thead><tbody>'
-    + (prov.length? (function(){
-        var p67={}; hvByProvince("FY67").forEach(function(o){ p67[o.province]=o.usage; });
-        var mx=prov[0].usage||1;
-        return prov.map(function(o,i){
-          var base=p67[o.province]||0;
-          var d = base? ((o.usage-base)/base*100) : null;
-          return '<tr><td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
-            +'<td><b>'+esc(o.province)+'</b></td>'
-            +'<td class="num">'+o.packages+'</td><td class="num">'+o.hospitals+'</td>'
-            +'<td class="num"><b>'+hvNum(o.usage)+'</b></td>'
-            +'<td class="num"><b>'+hvUSD(o.revUSD)+'</b></td>'
-            +'<td><div class="hvbarw"><div class="hvbar" style="width:'+(o.usage/mx*100).toFixed(1)+'%;background:'+(d==null?"#B8C2D0":(d>=0?"var(--pos)":"var(--neg)"))+'"></div></div>'
-            +'<span class="hvdlt" style="color:'+(d==null?"var(--t3)":(d>=0?"var(--pos)":"var(--neg)"))+'">'
-            +(d==null?"new":((d>=0?"▲":"▼")+Math.abs(d).toFixed(0)+"%"))+'</span></td></tr>';
-        }).join("");
-      })() : '<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:22px">'+t("fc.noRow")+'</td></tr>')
-    +'</tbody></table></div></div>';
-
-  document.getElementById("fc-body").innerHTML = fcSubNav()+H;
-}
-
-/* ── Router ── */
+/* ════ RENDER ════ */
 function renderFC(){
   if(!NPP_FEED.loaded){
-    document.getElementById("fc-body").innerHTML = fcSubNav()+'<div class="fc-load">⏳ '+t("fc.loadingNPP")+'</div>';
+    document.getElementById("fc-body").innerHTML='<div class="fc-load">⏳ '+t("fc.loadingNPP")+'</div>';
     fcRenderCtrl();
     fcLoadNPP().then(function(){ if(S.tab==="fc") renderFC(); });
     return;
   }
   if(NPP_FEED.error==="both"){
-    document.getElementById("fc-body").innerHTML = fcSubNav()+'<div class="fc-load err">⚠️ '+t("fc.nppErr")+'</div>';
+    document.getElementById("fc-body").innerHTML='<div class="fc-load err">⚠️ '+t("fc.nppErr")+'</div>';
     fcRenderCtrl();
     return;
   }
   fcRenderCtrl();
-  document.getElementById("fc-name").textContent = "Hùng Vĩ · North · "+(S.fc.fys.length? S.fc.fys.join(" + ") : "FY67");
-
-  if(S.fc.sub==="perf"){ fcPerf(); }
-  else if(S.fc.sub==="fcst"){ fcFcst(); }
-  else { fcPipe(); }
-
+  fcPerf();
   setTimeout(function(){
     var s=document.getElementById("sec-fc");
     if(!s) return;
     s.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});
-    try{runCountUp(s);animateBars(s);}catch(e){}
+    try{ runCountUp(s); animateBars(s); }catch(e){}
   },40);
 }
 
-/* ③ PIPELINE — engine Gantt + bảng editable CŨ, giữ nguyên 100% */
-function fcPipe(){
-  fcRenderCtrl();
-  if(!NPP_FEED.loaded){
-    document.getElementById("fc-body").innerHTML='<div class="emptynote" style="margin:20px 0">'+t("fc.loadingNPP")+'</div>';
-    fcLoadNPP().then(function(){ if(S.tab==="fc") renderFC(); });
-    return;
-  }
-  var B=fcBuild(), win=B.win;
-  var _SUBNAV = fcSubNav();   /* prepend vào fc-body của pipeline view */
-  document.getElementById("fc-name").textContent=win.label+" · "+
-    (S.fc.region==="ALL"?t("fc.allRegions"):(S.fc.region==="North"?t("region.North"):S.fc.region==="South"?t("region.South"):S.fc.region));
+function fcPerf(){
+  var st=hvStats("FY67");
+  var cov=st.cover;
+  var tgt=+S.fc.target.HUNGVI||0;
+  var ach=tgt? (st.revUSD/tgt*100) : 0;
 
-  var q=norm(S.fc.q||"");
-  var nodes=B.nodes.filter(function(n){
-    if(S.fc.group!=="all" && n.group!==S.fc.group) return false;
-    if(S.fc.potential!=="all" && n.potential!==S.fc.potential) return false;
-    n._rev=fcNodeRevenue(n,win);
-    // Existing: LUÔN hiện với "giá trị trúng hiện tại" (contract) — không lọc theo kỳ.
-    // Các nhóm khác: chỉ hiện nếu có doanh số overlap kỳ.
-    if(n.group==="existing"){
-      if((n._rev.contractVND||0)<=0) return false;
-    } else {
-      if(n._rev.months<=0 || n._rev.vnd<=0) return false;
-    }
-    if(q){ var hay=norm((n.account||"")+" "+(n.prov||"")+" "+(n.tbmt||"")); if(hay.indexOf(q)<0) return false; }
-    return true;
-  });
+  document.getElementById("fc-name").textContent="FY67 · Hùng Vĩ · North";
 
-  // giá trị hiển thị: Existing = contract (trúng hiện tại); còn lại = doanh số kỳ
-  function nodeShowVND(n){ return n.group==="existing" ? (n._rev.contractVND||0) : n._rev.vnd; }
-  nodes.forEach(function(n){ n._show = nodeShowVND(n); });
+  var H='';
 
-  var grandVND=nodes.reduce(function(s,n){return s+nodeShowVND(n);},0);
-  var byGroupVND={existing:0,pending:0,remaining:0,new:0}, byGroupCnt={existing:0,pending:0,remaining:0,new:0};
-  nodes.forEach(function(n){ byGroupVND[n.group]+=nodeShowVND(n); byGroupCnt[n.group]++; });
+  /* ── 4 KPI chính — BẤM ĐƯỢC ── */
+  H+='<div class="kr">'
+    + '<div onclick="hvDrillBy(\'all\')" style="cursor:pointer">'
+      + kpiCard({lbl:(LANG==="vi"?"Gói thầu tham dự (FY67)":"Packages joined (FY67)"),
+                 val:st.joined,mode:"n",cls:"y",
+                 note:(LANG==="vi"?"Độ phủ: <b>":"Coverage: <b>")+cov.pct.toFixed(1)+'%</b> — '
+                      +cov.joined+"/"+cov.marketTotal+(LANG==="vi"?" gói dao toàn thị trường":" market knife pkgs")
+                      +'<br><span style="opacity:.7">'+(LANG==="vi"?"cửa sổ ":"window ")+HV_COVER.from+" → "+HV_COVER.to+'</span>'})
+    + '</div>'
+    + '<div onclick="hvDrillBy(\'status\',\'Win\')" style="cursor:pointer">'
+      + kpiCard({lbl:(LANG==="vi"?"Tỉ lệ trúng thầu":"Win-rate"),
+                 val:st.winRate,mode:"%",cls:st.winRate>=60?"pos":"neg",
+                 note:'<b>'+st.Win+'</b> win · '+st.Fail+' fail · '+st.Pending+' pending · '+st.Cancel+' cancel'})
+    + '</div>'
+    + '<div onclick="hvDrillBy(\'won\')" style="cursor:pointer">'
+      + kpiCard({lbl:(LANG==="vi"?"Tổng SL trúng thầu":"Total awarded qty"),
+                 val:st.qtyWon,mode:"n",cls:"pos",suf:" pcs",
+                 note:st.hospitals+(LANG==="vi"?" bệnh viện · ":" hospitals · ")+st.Win+(LANG==="vi"?" gói trúng":" won pkgs")})
+    + '</div>'
+    + '<div onclick="hvDrillBy(\'rev\')" style="cursor:pointer">'
+      + kpiCard({lbl:(LANG==="vi"?"Doanh số dự kiến trong kỳ":"Expected revenue in period"),
+                 val:st.revUSD,mode:"$",cls:"y",
+                 note:tgt? ('<b>'+ach.toFixed(0)+'%</b> '+(LANG==="vi"?"đạt target ":"of target ")+hvUSD(tgt))
+                         : (LANG==="vi"?"đặt target ở Setup":"set target in Setup")})
+    + '</div>'
+    +'</div>';
 
-  /* doanh số theo NPP (để so target) */
-  var byNppUSD={ICARE:0,HUNGVI:0};
-  nodes.forEach(function(n){
-    var npp = n.region==="North"?"HUNGVI":(n.region==="South"?"ICARE":(n.npp||""));
-    if(byNppUSD[npp]!=null) byNppUSD[npp]+=fcUSD(nodeShowVND(n));
-  });
+  /* ── Ghi chú phương pháp ── */
+  H+='<div class="hvwarn">ℹ️ '+(LANG==="vi"
+    ? "<b>Độ phủ</b> = số gói Hùng Vĩ tham dự ÷ tổng số gói dao toàn thị trường (data KQTT, cửa sổ "+HV_COVER.from+"–"+HV_COVER.to+"). <b>Doanh số</b> tính theo <b>giá bán Mani→NPP</b> (Setup), KHÔNG dùng giá trúng thầu (đó là giá bệnh viện mua từ NPP). Gói thiếu <i>Ngày phê duyệt</i> hoặc <i>Thời gian thực hiện</i> vẫn được đếm ở phần tham dự/Win/Fail nhưng KHÔNG tính vào doanh số."
+    : "<b>Coverage</b> = HV packages joined ÷ all market knife packages (KQTT data, window "+HV_COVER.from+"–"+HV_COVER.to+"). <b>Revenue</b> uses the <b>Mani→NPP selling price</b> (Setup), not the award price (that's what the hospital pays the distributor). Packages missing <i>approval date</i> or <i>duration</i> still count in joined/Win/Fail but are excluded from revenue.")
+    +'</div>';
 
-  /* ── Thống kê thầu (theo khu vực đang lọc) ── */
-  var st=fcWinStats(win);
+  /* ── Funnel + biểu đồ loại dao (đều bấm được) ── */
+  H+='<div class="g2">'
+    +'<div class="card reveal"><div class="ch"><div class="ct">🎯 '+(LANG==="vi"?"Kết quả dự thầu FY67":"FY67 tender results")+'</div>'
+      +'<div class="cs">'+(LANG==="vi"?"gộp lên cấp gói · bấm để xem chi tiết":"rolled up to package level · click to drill")+'</div></div>'
+      +'<div class="cb"><div class="cw s" style="height:270px"><canvas id="c-hv-funnel"></canvas></div></div></div>'
+    +'<div class="card reveal"><div class="ch"><div class="ct">🔪 '+(LANG==="vi"?"Doanh số theo loại dao":"Revenue by knife type")+'</div>'
+      +'<div class="cs">'+(LANG==="vi"?"giá bán Mani→NPP · bấm để xem gói":"Mani→NPP price · click to drill")+'</div></div>'
+      +'<div class="cb"><div class="cw s" style="height:270px"><canvas id="c-hv-knife"></canvas></div></div></div>'
+    +'</div>';
 
-  var H="";
-  H+=fcFeedWarn();
-  H+=fcBannerHTML();
-  H+='<div class="fc-hero reveal in">'
-    +'<div class="fc-hero-l"><div class="fc-hero-lbl">'+t("fc.expected")+'</div>'
-    +  '<div class="fc-hero-val">'+fcMoneyUSD(grandVND)+'</div>'
-    +  '<div class="fc-hero-sub">'+fcMoneyVND(grandVND)+' · '+win.label+' · '+nodes.length+' '+t("fc.pkgs")+'</div></div>'
-    +  fcStatsPanel(st)
-    +'<div class="fc-hero-r">'+fcAchievePanel(byNppUSD)+'</div></div>';
+  /* ── Bảng theo địa bàn ── */
+  var prov=hvByProvince("FY67");
+  H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
+    +'<div class="ct">📍 '+(LANG==="vi"?"Hiệu quả theo địa bàn — FY67":"Performance by territory — FY67")+'</div>'
+    +'<div class="cs">'+prov.length+(LANG==="vi"?" tỉnh/thành · bấm dòng để xem gói":" provinces · click a row to drill")+'</div></div>'
+    +'<div class="cb"><table class="hvtb"><thead><tr>'
+    +'<th>#</th><th>'+(LANG==="vi"?"Tỉnh/TP":"Province")+'</th><th>'+(LANG==="vi"?"BV":"Hosp.")+'</th>'
+    +'<th>'+(LANG==="vi"?"Tham dự":"Joined")+'</th><th>Win</th><th>Win-rate</th>'
+    +'<th>'+(LANG==="vi"?"SL trúng":"Won qty")+'</th>'
+    +'<th>MST</th><th>MSL</th><th>MCU</th>'
+    +'<th>'+(LANG==="vi"?"Doanh số":"Revenue")+'</th></tr></thead><tbody>'
+    + (prov.length? prov.map(function(o,i){
+        return '<tr class="hvclick" onclick="hvDrillBy(\'prov\',\''+esc(o.province).replace(/'/g,"\\'")+'\')">'
+          +'<td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
+          +'<td><b>'+esc(o.province)+'</b></td>'
+          +'<td class="num">'+o.hospitals+'</td>'
+          +'<td class="num">'+o.joined+'</td>'
+          +'<td class="num" style="color:var(--pos);font-weight:800">'+o.Win+'</td>'
+          +'<td class="num"><b>'+o.winRate.toFixed(0)+'%</b></td>'
+          +'<td class="num"><b>'+hvNum(o.qtyWon)+'</b></td>'
+          +'<td class="num" style="color:'+HV_KCOL.MST+'">'+hvNum(o.MST)+'</td>'
+          +'<td class="num" style="color:'+HV_KCOL.MSL+'">'+hvNum(o.MSL)+'</td>'
+          +'<td class="num" style="color:'+HV_KCOL.MCU+'">'+hvNum(o.MCU)+'</td>'
+          +'<td class="num"><b>'+hvUSD(o.revUSD)+'</b></td></tr>';
+      }).join("") : '<tr><td colspan="11" style="text-align:center;color:var(--t3);padding:24px">'+t("fc.noRow")+'</td></tr>')
+    +'</tbody></table></div></div>';
 
-  H+='<div class="card reveal fc-gantt-card">'
-    +'<div class="ch"><div><div class="ct">'+t("fc.gantt")+'</div><div class="cs">'+t("fc.ganttSub")+'</div></div>'
-    +'<div class="fc-gantt-total">'+t("fc.total")+' <b>'+fcMoneyUSD(grandVND)+'</b></div></div>'
-    +'<div class="cb">'+fcLegend(byGroupVND,byGroupCnt)
-    +'<div class="fc-gantt-scroll"><div class="fc-gantt-wrap"><canvas id="c-fc-gantt"></canvas></div></div></div></div>';
-
-  H+=fcTable(nodes, win);
+  /* ── Bảng chi tiết từng gói ── */
+  var pk=st.pkgs.slice().sort(function(a,b){ return b.qtyWon-a.qtyWon; });
+  H+='<div class="card reveal"><div class="ch">'
+    +'<div class="ct">📋 '+(LANG==="vi"?"Chi tiết gói thầu FY67":"FY67 package detail")+'</div>'
+    +'<div class="cs">'+pk.length+(LANG==="vi"?" gói · bấm dòng để xem chi tiết":" packages · click a row to drill")+'</div></div>'
+    +'<div class="cb"><table class="hvtb"><thead><tr>'
+    +'<th>#</th><th>'+(LANG==="vi"?"Bệnh viện":"Hospital")+'</th><th>'+(LANG==="vi"?"Tỉnh":"Province")+'</th>'
+    +'<th>TBMT</th><th>'+(LANG==="vi"?"Kết quả":"Result")+'</th>'
+    +'<th>'+(LANG==="vi"?"SL trúng":"Won qty")+'</th>'
+    +'<th>MST</th><th>MSL</th><th>MCU</th>'
+    +'<th>'+(LANG==="vi"?"Doanh số":"Revenue")+'</th></tr></thead><tbody>'
+    + (pk.length? pk.map(function(p,i){
+        return '<tr class="hvclick" onclick="hvDrillBy(\'hosp\',\''+esc(p.hospital).replace(/'/g,"\\'")+'\')">'
+          +'<td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
+          +'<td><b>'+esc(p.hospital||"—")+'</b></td>'
+          +'<td>'+esc(p.city||"—")+'</td>'
+          +'<td class="mono" style="font-size:12px;color:var(--t2)">'+esc(p.tbmt||"—")+'</td>'
+          +'<td><span class="hvst" style="background:'+HV_RCOL[p.status]+'">'+p.status+'</span></td>'
+          +'<td class="num"><b>'+hvNum(p.qtyWon)+'</b></td>'
+          +'<td class="num" style="color:'+HV_KCOL.MST+'">'+(p.MST?hvNum(p.MST):"—")+'</td>'
+          +'<td class="num" style="color:'+HV_KCOL.MSL+'">'+(p.MSL?hvNum(p.MSL):"—")+'</td>'
+          +'<td class="num" style="color:'+HV_KCOL.MCU+'">'+(p.MCU?hvNum(p.MCU):"—")+'</td>'
+          +'<td class="num"><b>'+(p.revUSD?hvUSD(p.revUSD):"—")+'</b></td></tr>';
+      }).join("") : '<tr><td colspan="10" style="text-align:center;color:var(--t3);padding:24px">'+t("fc.noRow")+'</td></tr>')
+    +'</tbody></table></div></div>';
 
   document.getElementById("fc-body").innerHTML=H;
-  if(nodes.length) fcDrawGantt(nodes, win);
-  afterRender("sec-fc");
-}
 
-function fcLegend(byG, byC){
-  var GN=FC_GNAME(); var order=["existing","pending","remaining","new"];
-  var chips=order.map(function(g){
-    var act=(S.fc.group==="all"||S.fc.group===g);
-    return '<button class="fc-lg '+(act?"":"off")+'" onclick="fcToggleGroup(\''+g+'\')" style="--gc:'+FC_GCOL[g]+'">'
-      +'<span class="fc-lg-dot"></span><span class="fc-lg-nm">'+esc(GN[g])+'</span>'
-      +'<span class="fc-lg-val">'+fcMoneyUSD(byG[g]||0)+'</span>'
-      +'<span class="fc-lg-cnt">'+(byC[g]||0)+' '+t("fc.pkgs")+'</span></button>';
-  }).join("");
-  return '<div class="fc-legend">'+chips+'</div>';
+  /* Funnel chart — click cột → drill theo trạng thái */
+  var FS=["Win","Fail","Pending","Cancel"];
+  barChart("c-hv-funnel",{labels:FS,
+    datasets:[{label:"Packages",data:FS.map(function(k){return st[k];}),
+      backgroundColor:FS.map(function(k){return HV_RCOL[k];}),borderRadius:6,
+      datalabels:{display:true,anchor:"end",align:"top",color:axisColor(),
+        font:{family:FF,size:13,weight:"800"},formatter:function(v){return v;}}}],
+    legend:false,fmt:function(v){return v;},padTop:26,
+    onClick:function(i){ hvDrillBy("status",FS[i]); }});
+
+  /* Knife chart — click cột → drill theo loại dao */
+  var KS=["MST","MSL","MCU"];
+  barChart("c-hv-knife",{labels:KS.map(function(k){return HV_KNAME[k];}),
+    datasets:[{label:"USD",data:KS.map(function(k){ var o={}; o[k]=st["u"+k]; return hvRevUSD(o); }),
+      backgroundColor:KS.map(function(k){return HV_KCOL[k];}),borderRadius:6,
+      datalabels:{display:true,anchor:"end",align:"top",color:axisColor(),
+        font:{family:FF,size:12,weight:"800"},formatter:function(v){return hvUSD(v);}}}],
+    legend:false,fmt:function(v){return hvUSD(v);},padTop:26,
+    onClick:function(i){ hvDrillBy("knife",KS[i]); }});
 }
-function fcToggleGroup(g){ S.fc.group=(S.fc.group===g?"all":g); renderFC(); }
 
 function fcRenderCtrl(){
-  var fys=fcFyListExtended(), sel=fcFY();
-  var base=buildFyList(); var baseSet={}; base.forEach(function(f){baseSet[f]=1;});
-  var fyChips=fys.map(function(fy){
-    var on=sel.indexOf(fy)>=0; var future=!baseSet[fy];
-    return '<button class="chip '+(on?"on":"")+(future?" fut":"")+'" onclick="fcToggleFY(\''+fy+'\',event)" title="'+t("fc.selectFY")+'">'+fy+(future?" ✦":"")+'</button>';
-  }).join("");
-  var regs=["ALL"].concat(typeof REGIONS!=="undefined"?REGIONS:["South","North"]);
-  var regChips=regs.map(function(rg){
-    var lbl=rg==="ALL"?t("fc.allRegions"):(rg==="North"?t("region.North"):rg==="South"?t("region.South"):rg);
-    return '<button class="chip '+(S.fc.region===rg?"on":"")+'" onclick="S.fc.region=\''+rg+'\';renderFC()">'+esc(lbl)+'</button>';
-  }).join("");
-  // Loại địa bàn (nhóm gói thầu)
-  var grps=[["all",t("fc.allGroups")],["existing",t("fc.g.existing")],["pending",t("fc.g.pending")],["remaining",t("fc.g.remaining")],["new",t("fc.g.new")]];
-  var grpChips=grps.map(function(x){ return '<button class="chip '+(S.fc.group===x[0]?"on":"")+'" onclick="S.fc.group=\''+x[0]+'\';renderFC()">'+esc(x[1])+'</button>'; }).join("");
-  var pots=[["all",t("fc.allGroups")],["High",t("fc.high")],["Medium",t("fc.mid")],["Low",t("fc.low")]];
-  var potChips=pots.map(function(x){ return '<button class="chip '+(S.fc.potential===x[0]?"on":"")+'" onclick="S.fc.potential=\''+x[0]+'\';renderFC()">'+esc(x[1])+'</button>'; }).join("");
-
-  var dirtyN=Object.keys(S.fc.dirty).length;
-  var saveBtn='<button class="chip fc-save'+(dirtyN?" has":"")+'" '+(S.fc.saving?"disabled":"")+' onclick="fcSaveAll()">'
-    +(S.fc.saving?"⏳ ":"💾 ")+t("fc.save")+(dirtyN?' ('+dirtyN+')':'')+'</button>';
-
-  document.getElementById("fc-ctrl").innerHTML=
-      '<span class="cl">'+t("fc.window")+'</span><div class="sb-side">'+fyChips+'</div>'
-    + fcDiv()
-    + '<span class="cl">'+t("fc.region")+'</span><div class="sb-side">'+regChips+'</div>'
-    + fcDiv()
-    + '<span class="cl">'+t("fc.group")+'</span><div class="sb-side">'+grpChips+'</div>'
-    + fcDiv()
-    + '<span class="cl">'+t("fc.potential")+'</span><div class="sb-side">'+potChips+'</div>'
-    + fcDiv()
-    + '<span class="cl">⚙ '+t("fc.setup")+'</span>'
-    + '<button class="chip fc-setup-toggle" onclick="S.fc.setupOpen=!S.fc.setupOpen;fcRenderCtrl()">'+(S.fc.setupOpen?"▲ ":"▼ ")+t("fc.setupEdit")+'</button>'
-    + (S.fc.setupOpen? fcSetupPanel() : "")
-    + fcDiv()
-    + '<div class="sb-side">'+saveBtn
-    + '<button class="chip" onclick="fcExportExcel()" style="background:rgba(255,225,0,.14);border-color:rgba(255,225,0,.5);color:#B8860B;font-weight:800">📥 '+t("fc.export")+'</button></div>';
+  /* Sidebar tab FC: CHỈ còn SETUP (giá bán NPP · tỉ giá · target).
+     Đã BỎ: Forecast window (FY), Region, Tender group, Potential, Search, Save-to-Sheet. */
+  document.getElementById("fc-ctrl").innerHTML =
+      '<span class="cl">⚙ '+t("fc.setup")+'</span>'
+    + '<button class="chip fc-setup-toggle on" style="margin-bottom:8px" onclick="S.fc.setupOpen=!S.fc.setupOpen;fcRenderCtrl()">'
+      + (S.fc.setupOpen?"▲ ":"▼ ")+t("fc.setupEdit")+'</button>'
+    + (S.fc.setupOpen? fcSetupPanel() : "");
 }
 function fcDiv(){ return '<div class="divx" style="width:auto;height:1px;background:var(--br);margin:8px 2px"></div>'; }
 
@@ -5618,60 +5390,15 @@ function fcSetupPanel(){
     + priceRow("MSL",t("fc.msl"))+priceRow("MST",t("fc.mst"))+priceRow("MCU",t("fc.mcu"))
     + '<div class="fc-set-row"><span>'+t("fc.fx")+'</span><input class="fc-set-i" value="'+nf(S.fc.fxFC)+'" onchange="fcSetFx(this.value)" onfocus="this.select()"><span class="u">₫/$</span></div>'
     + '<div class="fc-set-h">'+t("fc.target")+'</div>'
-    + tgtRow("HUNGVI","Hùng Vĩ")+tgtRow("ICARE","I-Care")
+    + tgtRow("HUNGVI","Hùng Vĩ")   /* I-Care (miền Nam) đã bỏ — dashboard này chỉ miền Bắc */
     + '</div>';
 }
 function fcSetTarget(k,v){ var n=+String(v).replace(/[^\d]/g,""); if(!isFinite(n)||n<0)n=0; S.fc.target[k]=n; try{localStorage.setItem("mmh_fc_target",JSON.stringify(S.fc.target));}catch(e){} renderFC(); }
-function fcToggleFY(fy, ev){
-  var multi=ev&&(ev.shiftKey||ev.ctrlKey||ev.metaKey);
-  if(multi){ if(!S.fc.fys.length) S.fc.fys=fcFY(); var i=S.fc.fys.indexOf(fy); if(i>=0) S.fc.fys.splice(i,1); else S.fc.fys.push(fy); if(!S.fc.fys.length) S.fc.fys=[fy]; }
-  else S.fc.fys=[fy];
-  renderFC();
-}
-
 /* Thống kê thầu DAO trong kỳ (theo khu vực đang lọc):
    - winPkgs   : số gói TRÚNG (Win) còn overlap kỳ
    - winHosps  : số bệnh viện có ít nhất 1 gói trúng
    - failPkgs  : số gói TRƯỢT (trong toàn feed, khu vực lọc)
    - pendPkgs  : số gói Pending */
-function fcWinStats(win){
-  var regOK=function(rg){ return S.fc.region==="ALL"||rg===S.fc.region; };
-  var winPkgSet={}, winHospSet={}, failSet={}, pendSet={};
-  ["ICARE","HUNGVI"].forEach(function(k){
-    var arr=NPP_FEED[k]; if(!arr) return;
-    // gom theo gói
-    var pkg={};
-    arr.forEach(function(r0){
-      var r=fcNormNPP(r0,k); if(!regOK(r.region)) return;
-      var pk=(r.tbmt||("H:"+r.hospital))+"|"+r.npp;
-      if(!pkg[pk]) pkg[pk]={hospital:r.hospital,results:{},startKey:0,expKey:0};
-      pkg[pk].results[r.result]=(pkg[pk].results[r.result]||0)+1;
-      if(r.startKey>pkg[pk].startKey) pkg[pk].startKey=r.startKey;
-      if(r.expKey>pkg[pk].expKey) pkg[pk].expKey=r.expKey;
-    });
-    Object.keys(pkg).forEach(function(pk){
-      var p=pkg[pk];
-      if(p.results["Fail"]) failSet[pk]=1;
-      if(p.results["Pending"]) pendSet[pk]=1;
-      if(p.results["Win"]){
-        var ov=fcOverlap(p.startKey||win.fromKey, p.expKey||win.toKey, win.fromKey, win.toKey);
-        if(ov>0){ winPkgSet[pk]=1; winHospSet[norm(p.hospital)]=1; }
-      }
-    });
-  });
-  return { winPkgs:Object.keys(winPkgSet).length, winHosps:Object.keys(winHospSet).length,
-           failPkgs:Object.keys(failSet).length, pendPkgs:Object.keys(pendSet).length };
-}
-function fcStatsPanel(st){
-  function cell(val,label,cls){ return '<div class="fc-stat '+(cls||"")+'"><div class="fc-stat-v">'+nf(val)+'</div><div class="fc-stat-l">'+label+'</div></div>'; }
-  return '<div class="fc-stats">'
-    + cell(st.winPkgs, t("fc.st.winPkgs"), "win")
-    + cell(st.winHosps, t("fc.st.winHosps"), "hosp")
-    + cell(st.pendPkgs, t("fc.st.pend"), "pend")
-    + cell(st.failPkgs, t("fc.st.fail"), "fail")
-    + '</div>';
-}
-
 /* Achievement vs Target theo NPP + tổng MMH */
 function fcAchievePanel(byNppUSD){
   var tHV=+S.fc.target.HUNGVI||0, tIC=+S.fc.target.ICARE||0;
@@ -5780,15 +5507,6 @@ function fcMetaAttr(n){
   return JSON.stringify(m).replace(/"/g,"&quot;");
 }
 var _fcSearchT=null;
-function fcSearch(v){
-  S.fc.q=v;
-  if(_fcSearchT) clearTimeout(_fcSearchT);
-  _fcSearchT=setTimeout(function(){
-    renderFC();
-    var el=document.getElementById("fc-search-in");
-    if(el){ el.focus(); var L=el.value.length; try{el.setSelectionRange(L,L);}catch(e){} }
-  },160);
-}
 function fcMonthBtn(rowKey, field, value, metaAttr){
   var minMo=(typeof MONTHS_SORTED!=="undefined"&&MONTHS_SORTED.length)?MONTHS_SORTED[0]:"01/2023";
   var lastK=(typeof MONTHS_SORTED!=="undefined"&&MONTHS_SORTED.length)?fcMoStrToKey(MONTHS_SORTED[MONTHS_SORTED.length-1]):202608;
@@ -5810,48 +5528,6 @@ function fcEdit(rowKey, field, val, meta){
 }
 
 /* ════ SAVE LOG lên Sheet (theo NPP/region) + ghi ngược tender tổng cho New/Convert ════ */
-function fcSaveAll(){
-  if(S.fc.saving) return;
-  var keys=Object.keys(S.fc.dirty);
-  if(!keys.length){ showToast(LANG==="vi"?"Không có thay đổi để lưu":"Nothing to save","info"); return; }
-  S.fc.saving=true; fcRenderCtrl();
-  showToast(LANG==="vi"?"Đang lưu lên Google Sheet…":"Saving to Google Sheet…","load");
-
-  // gom theo NPP đích: South→ICARE, North→HUNGVI (theo region đã lưu ở edit)
-  var byNpp={ICARE:[],HUNGVI:[]};
-  var contractEdits=[];   // ghi ngược tender tổng (chỉ New/Convert)
-  keys.forEach(function(rk){
-    var e=S.fc.edits[rk]||{};
-    var region=e._region||""; var npp = region==="North"?"HUNGVI":(region==="South"?"ICARE":(rk.indexOf("|HUNGVI")>=0?"HUNGVI":"ICARE"));
-    var rec={ rowKey:rk, group:e._group||"", account:e._account||"", tbmt:e._tbmt||"", region:region,
-      potential:e.potential||"", dur:(e.dur!=null?e.dur:""), expMonth:e.expMonth||"",
-      mst:(e.mst!=null?e.mst:""), msl:(e.msl!=null?e.msl:""), mcu:(e.mcu!=null?e.mcu:""), note:e.note||"" };
-    byNpp[npp].push(rec);
-    // New/Convert có TBMT + expMonth → ghi ngược AE/AF của tender tổng
-    if((e._group==="new") && e._tbmt){
-      var durM=(e.dur!=null?e.dur:null);
-      var expISO=e.expMonth? fcMoStrToISO(e.expMonth):"";
-      contractEdits.push({ kqtt:e._tbmt, durMonths:durM, expISO:expISO });
-    }
-  });
-
-  var jobs=[];
-  ["ICARE","HUNGVI"].forEach(function(k){
-    if(byNpp[k].length) jobs.push(fcPostJSON(NPP_URL[k], {action:"saveLog", rows:byNpp[k]}));
-  });
-  if(contractEdits.length) jobs.push(fcPostJSON(TENDER_URL, {action:"writeContract", edits:contractEdits}));
-
-  Promise.all(jobs).then(function(res){
-    var ok=res.every(function(r){ return r && r.ok!==false; });
-    S.fc.saving=false;
-    if(ok){ S.fc.dirty={}; showToast((LANG==="vi"?"Đã lưu ":"Saved ")+keys.length+(LANG==="vi"?" thay đổi lên Sheet":" edits"),"success"); }
-    else showToast(LANG==="vi"?"Một số mục lưu chưa thành công — kiểm tra quyền webapp":"Some saves failed — check webapp access","warn");
-    fcRenderCtrl();
-  }).catch(function(err){
-    S.fc.saving=false; console.error(err);
-    showToast((LANG==="vi"?"Lưu thất bại: ":"Save failed: ")+(err&&err.message||err),"warn"); fcRenderCtrl();
-  });
-}
 /* POST JSON (no-cors fallback nếu bị CORS: dùng text/plain để Apps Script vẫn nhận) */
 function fcPostJSON(url, body){
   return fetch(url, { method:"POST", redirect:"follow",
@@ -5866,195 +5542,6 @@ function fcMoStrToISO(mo){ // "MM/YYYY" → "YYYY-MM-01"
 }
 
 /* ════ GANTT liền mạch, phân màu theo nhóm ════ */
-function fcDrawGantt(nodes, win){
-  var id="c-fc-gantt";
-  if(S.fc.chart){ try{S.fc.chart.destroy();}catch(e){} S.fc.chart=null; }
-  var el=document.getElementById(id); if(!el) return;
-  var order={existing:0,pending:1,remaining:2,new:3};
-  var arr=nodes.slice().sort(function(a,b){ if(order[a.group]!==order[b.group]) return order[a.group]-order[b.group]; return (a.startKey||0)-(b.startKey||0); });
-  arr=arr.slice(0,60);
-  var labels=arr.map(function(n){ return n.account.length>30?n.account.slice(0,29)+"…":n.account; });
-
-  // ── Trục thời gian TỰ GIÃN: bao trùm cả cửa sổ FY LẪN mọi hợp đồng có trong danh sách ──
-  // (Existing hiển thị theo giá trị hợp đồng, nhiều gói nằm ngoài cửa sổ FY → phải nới trục.)
-  var minOrd=fcKeyOrd(win.fromKey), maxOrd=fcKeyOrd(win.toKey);
-  arr.forEach(function(n){
-    var sK=n.startKey||win.fromKey, eK=n.expKey||win.toKey;
-    if(eK<sK){ var tmp=sK; sK=eK; eK=tmp; }         // phòng đảo ngược
-    minOrd=Math.min(minOrd, fcKeyOrd(sK));
-    maxOrd=Math.max(maxOrd, fcKeyOrd(eK));
-  });
-  var totalMonths=maxOrd-minOrd+1;
-  if(totalMonths<1) totalMonths=win.months.length;
-  // nhãn trục X từ minOrd
-  var xLabels=[]; for(var mi=0; mi<totalMonths; mi++){ var o=minOrd+mi; var y=Math.floor((o-1)/12), m=((o-1)%12)+1; xLabels.push(pad2FC(m)+"/"+String(y).slice(2)); }
-  // vùng tô nền cửa sổ FY (để phân biệt phần trong kỳ)
-  var winStartIdx=fcKeyOrd(win.fromKey)-minOrd;
-  var winEndIdx=fcKeyOrd(win.toKey)-minOrd+1;
-
-  var barData=arr.map(function(n,idx){
-    var sK=n.startKey||win.fromKey, eK=n.expKey||win.toKey;
-    if(eK<sK){ var tmp=sK; sK=eK; eK=tmp; }
-    var s=fcKeyOrd(sK)-minOrd;
-    var e=fcKeyOrd(eK)-minOrd+1;                    // +1 phủ hết tháng cuối
-    if(e<=s) e=s+1;                                 // đảm bảo LUÔN có bề rộng ≥ 1 tháng
-    return { x:[s, e], y:labels[idx], node:n };
-  });
-  var bg=arr.map(function(n){ return hexA(FC_GCOL[n.group], .62); });
-  var bd=arr.map(function(n){ return FC_GCOL[n.group]; });
-
-  // plugin tô nền cửa sổ FY
-  var winShade={ id:"fcWinShade", beforeDatasetsDraw:function(c){
-    try{
-      var xs=c.scales.x, ya=c.chartArea; if(!xs||!ya) return;
-      var x1=xs.getPixelForValue(Math.max(0,winStartIdx));
-      var x2=xs.getPixelForValue(Math.min(totalMonths,winEndIdx));
-      var ctx=c.ctx; ctx.save();
-      ctx.fillStyle="rgba(58,92,170,0.06)";
-      ctx.fillRect(x1, ya.top, x2-x1, ya.bottom-ya.top);
-      ctx.strokeStyle="rgba(58,92,170,0.25)"; ctx.lineWidth=1;
-      ctx.strokeRect(x1, ya.top, x2-x1, ya.bottom-ya.top);
-      ctx.restore();
-    }catch(e){}
-  }};
-
-  S.fc.chart=new Chart(el,{
-    type:"bar",
-    data:{ labels:labels, datasets:[{
-      data:barData, backgroundColor:bg, borderColor:bd, borderWidth:1.5, borderRadius:6, borderSkipped:false, barPercentage:.78, categoryPercentage:.86,
-      parsing:{xAxisKey:"x",yAxisKey:"y"},
-      datalabels:{ display:true, color:"#0B1524", anchor:"center", align:"center", clamp:true, font:{family:FF,size:10.5,weight:"800"},
-        formatter:function(v,ctx){ var n=barData[ctx.dataIndex].node; var sv=(n._show!=null?n._show:n._rev.vnd); return sv>0? fcMoneyUSD(sv):""; } }
-    }]},
-    plugins:[winShade],
-    options:{
-      indexAxis:"y", responsive:true, maintainAspectRatio:false, animation:{duration:600},
-      plugins:{ legend:{display:false}, datalabels:{},
-        tooltip:{ enabled:false, external:function(ctx){ chartTip(ctx,function(i){
-          var n=barData[i].node; var GN=FC_GNAME();
-          return { title:n.account, rows:[
-            {label:t("fc.group"), val:GN[n.group]},
-            {label:t("fc.exp"), val:fcKeyToMoStr(n.startKey)+" → "+fcKeyToMoStr(n.expKey)},
-            {label:t("fc.dur"), val:n.dur+" "+t("fc.months")},
-            {label:"MST/MSL/MCU", val:nf(n.mst)+"/"+nf(n.msl)+"/"+nf(n.mcu)},
-            {label:t("fc.expected"), val:fcMoneyUSD(n._show!=null?n._show:n._rev.vnd)}
-          ], note:n.winnerTxt };
-        }); } } },
-      scales:{
-        x:{ min:0, max:totalMonths, position:"top", grid:{color:gridColor()},
-            ticks:{font:{family:FF,size:9},color:axisColor(),autoSkip:true,maxTicksLimit:28,stepSize:1,callback:function(v){ return (v>=0&&v<xLabels.length)?xLabels[v]:""; }} },
-        y:{ grid:{display:false}, ticks:{font:{family:FF,size:10.5,weight:"700"},color:axisColor()} }
-      },
-      layout:{padding:{top:6,right:14,left:4,bottom:4}}
-    }
-  });
-  el.parentNode.style.height=Math.max(220, arr.length*38+46)+"px";
-  el.parentNode.style.minWidth=Math.max(720, totalMonths*46)+"px";
-}
-
-/* ════ EXPORT — sheet "DASHBOARD" giống hệt file mẫu ════ */
-function fcExportExcel(){
-  if(typeof XLSX==="undefined"){ showToast(LANG==="vi"?"Thư viện Excel chưa tải":"Excel not loaded","warn"); return; }
-  var B=fcBuild(), win=B.win; var GN=FC_GNAME();
-  showToast(LANG==="vi"?"Đang tạo Excel (Dashboard)…":"Building Dashboard…","load");
-
-  // lọc nodes như trên màn hình
-  var q=norm(S.fc.q||"");
-  var nodes=B.nodes.filter(function(n){
-    if(S.fc.group!=="all"&&n.group!==S.fc.group) return false;
-    if(S.fc.potential!=="all"&&n.potential!==S.fc.potential) return false;
-    n._rev=fcNodeRevenue(n,win);
-    if(n._rev.months<=0||n._rev.vnd<=0) return false;
-    if(q){ var hay=norm((n.account||"")+" "+(n.prov||"")+" "+(n.tbmt||"")); if(hay.indexOf(q)<0) return false; }
-    return true;
-  });
-
-  var months=win.months;                       // cột Gantt
-  var monLabels=months.map(function(k){ var y=Math.floor(k/100),m=k%100; return pad2FC(m)+"/"+String(y).slice(2); });
-  var grand=nodes.reduce(function(s,n){return s+n._rev.vnd;},0);
-  var totalPcs=nodes.reduce(function(s,n){return s+(n.mst||0)+(n.msl||0)+(n.mcu||0);},0);
-  var acctSet={}; nodes.forEach(function(n){ if(n._rev.vnd>0) acctSet[norm(n.account)]=1; });
-
-  // cột cố định (B..R = 17 cột) rồi tiếp cột tháng
-  var head=["Nhóm","Account / Bệnh viện","Potential","TBMT","Hãng trúng + giá trúng /loại",
-            "Expiration\n(MM/YYYY)","Dur\n(th)","Stab knife\n(Đang SD)","Slit knife\n(Đang SD)","Crescent\n(Đang SD)",
-            "Demand\nTB/năm","USD (kỳ)","Doanh thu\nkỳ vọng/tháng","Stab\n- dự tính","Slit\n- dự tính","Crescent\n- dự tính",""];
-  var fixedCols=head.length;                    // 17
-
-  var aoa=[];
-  // R1 tiêu đề
-  aoa.push(["MMH · OPHTHALMIC KNIFE — EXPECTED REVENUE & GANTT ("+win.label+")"]);
-  // R2 filter
-  aoa.push(["Kỳ FY:", win.label, "Loại gói:", (S.fc.group==="all"?"ALL":GN[S.fc.group]||S.fc.group), "Potential:", (S.fc.potential==="all"?"ALL":S.fc.potential), "Khu vực:", S.fc.region]);
-  aoa.push([]);
-  // R4 nhãn khối
-  aoa.push(["EXPECTED REVENUE", null,null,null,null, "Tổng số dao", null, "Account có DS", null,null, "GIÁ MMH BÁN & TỶ GIÁ"]);
-  // R5 số liệu + bảng giá
-  aoa.push([Math.round(fcUSD(grand)), null,null,null,null, totalPcs, null, Object.keys(acctSet).length, null,null, "MSL", "Slit", S.fc.price.MSL]);
-  aoa.push([fcMoneyVND(grand), null,null,null,null,null,null,null,null,null, "MST","Stab",S.fc.price.MST]);
-  aoa.push([null,null,null,null,null,null,null,null,null,null, "MCU","Crescent",S.fc.price.MCU]);
-  aoa.push([null,null,null,null,null,null,null,null,null,null, "Tỷ giá","VND/$",S.fc.fxFC]);
-  aoa.push([]);
-  // Header bảng (R10) — cột cố định + cột tháng
-  var headerRow=head.slice(); headerRow.pop(); // bỏ cột trống cuối
-  headerRow=headerRow.concat([""]).concat(monLabels);
-  aoa.push(headerRow);
-
-  var groupsOrder=[["existing","① EXISTING-WIN — đã trúng, đang hiệu lực (SL cố định)"],
-                   ["pending","② PENDING — chờ KQ · sửa Potential/Dur/Hiệu lực"],
-                   ["remaining","③ REMAINING (duy trì) — trúng lại gói kế · sửa được"],
-                   ["new","④ NEW / CONVERT — đối thủ đang giữ · sửa được"]];
-  var groupRowMarks=[];   // để tô màu
-  groupsOrder.forEach(function(g){
-    var gk=g[0];
-    var list=nodes.filter(function(n){return n.group===gk;})
-      .sort(function(a,b){return b._rev.vnd-a._rev.vnd;});
-    if(!list.length) return;
-    groupRowMarks.push({row:aoa.length, group:gk});
-    aoa.push([g[1]]);   // dòng tiêu đề nhóm
-    list.forEach(function(n){
-      var row=[ GN[n.group], n.account, n.potential, n.tbmt||"", n.winnerTxt,
-        fcKeyToMoStr(n.expKey), n.dur, n.mst, n.msl, n.mcu,
-        n.demandY, Math.round(fcUSD(n._rev.vnd)), Math.round(fcUSD(n._rev.perMonthVND)),
-        n.mst, n.msl, n.mcu, "" ];
-      // cột Gantt: điền DT/tháng ($) vào các tháng overlap
-      var perMoUSD=fcUSD(n._rev.perMonthVND);
-      months.forEach(function(mk){
-        var inRange = fcKeyOrd(mk)>=fcKeyOrd(n.startKey||win.fromKey) && fcKeyOrd(mk)<=fcKeyOrd(n.expKey||win.toKey);
-        row.push(inRange? Math.round(perMoUSD) : null);
-      });
-      aoa.push(row);
-    });
-  });
-
-  try{
-    var ws=XLSX.utils.aoa_to_sheet(aoa);
-    // widths
-    var cols=[{wch:14},{wch:34},{wch:10},{wch:16},{wch:26},{wch:11},{wch:6},{wch:9},{wch:9},{wch:9},{wch:9},{wch:10},{wch:12},{wch:9},{wch:9},{wch:9},{wch:2}];
-    months.forEach(function(){ cols.push({wch:7}); });
-    ws["!cols"]=cols;
-    // merges: tiêu đề R1, nhãn EXPECTED
-    ws["!merges"]=[
-      {s:{r:0,c:0},e:{r:0,c:Math.min(15,fixedCols-1)}},
-      {s:{r:3,c:0},e:{r:4,c:4}}   // EXPECTED REVENUE khối
-    ];
-    // freeze header
-    ws["!freeze"]={xSplit:0,ySplit:9};
-    // tô màu dòng tiêu đề nhóm + header (SheetJS Pro mới áp màu; community giữ giá trị)
-    var GHEX={existing:"FF2E7D32",pending:"FFF57C00",remaining:"FF5B7DB1",new:"FF8E44AD"};
-    groupRowMarks.forEach(function(m){
-      var ref=XLSX.utils.encode_cell({r:m.row,c:0});
-      if(ws[ref]) ws[ref].s={ font:{bold:true,color:{rgb:"FFFFFFFF"}}, fill:{fgColor:{rgb:GHEX[m.group].slice(2)}} };
-    });
-
-    var wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,"DASHBOARD");
-    var fname=("MMH_Dashboard_DuTru_"+win.label+".xlsx").replace(/[^\w.\-]+/g,"_");
-    XLSX.writeFile(wb,fname);
-    showToast((LANG==="vi"?"Đã xuất: ":"Exported: ")+fname,"success");
-  }catch(e){ console.error(e); showToast((LANG==="vi"?"Xuất thất bại: ":"Export failed: ")+(e.message||e),"warn"); }
-}
-
 /* restore prefs */
 (function(){
   try{

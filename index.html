@@ -878,6 +878,76 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .gantt-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--t2);}
 .gantt-legend span{display:flex;align-items:center;gap:7px;}
 .gantt-legend i{width:13px;height:13px;border-radius:4px;display:inline-block;}
+
+/* ── FY68 Plan v2: gantt tabs + clickable rows + detail drawer ── */
+.plan-gtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+/* ── FY68: KPI cardbox tương tác (click ra data) ── */
+.kpi.clk{cursor:pointer;}
+.kpi.clk:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,48,71,.16);}
+.kpi.clk:active{transform:translateY(-1px);}
+.kpi .kpi-more{position:absolute;top:9px;right:12px;font-size:20px;line-height:1;color:var(--blue);opacity:.55;font-weight:900;transition:opacity .15s,transform .15s;}
+.kpi.clk:hover .kpi-more{opacity:1;transform:translateX(2px);}
+/* Sync button (FY68 header) */
+.plan-sync{border:1px solid var(--blue);background:var(--pale);color:var(--navy2);border-radius:10px;
+  padding:8px 14px;font-family:var(--ff);font-size:13px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
+.plan-sync:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.plan-sync:disabled{opacity:.6;cursor:progress;}
+.plan-sync .ps-ic{font-size:15px;}
+.plan-sync.busy .ps-ic{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.plan-synced-note{font-size:12px;color:var(--t3);margin-left:2px;}
+/* KPI drill list (dùng lại drawer #drill) */
+.kd-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.kd-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--br);border-radius:10px;background:var(--sf);cursor:pointer;transition:background .12s,border-color .12s;}
+.kd-row:hover{background:var(--pale);border-color:var(--blue);}
+.kd-row .kd-l{min-width:0;}
+.kd-row .kd-nm{font-weight:700;font-size:13.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;}
+.kd-row .kd-sub{font-size:11.5px;color:var(--t3);margin-top:2px;}
+.kd-row .kd-v{font-weight:800;font-size:14px;color:var(--navy2);white-space:nowrap;}
+.kd-chip{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 8px;border-radius:20px;margin-right:5px;}
+.kd-empty{padding:16px;text-align:center;color:var(--t3);font-size:13px;}
+.kd-head{font-size:12.5px;color:var(--t2);margin:2px 0 10px;line-height:1.5;}
+.kd-head b{color:var(--navy2);}
+.plan-gtab{border:1px solid var(--br);background:var(--sf);color:var(--t2);border-radius:9px;
+  padding:7px 13px;font-family:var(--ff);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.plan-gtab:hover{border-color:var(--blue);color:var(--t1);}
+.plan-gtab.on{background:var(--navy2);color:#fff;border-color:var(--navy2);}
+.plan-gtab .pgc{background:rgba(0,0,0,.12);border-radius:20px;padding:1px 8px;font-size:11px;font-weight:800;}
+.plan-gtab.on .pgc{background:rgba(255,255,255,.22);}
+.gantt-row.grow{cursor:pointer;transition:background .12s;}
+.gantt-row.grow:hover{background:var(--pale);}
+.gantt-row.gsel{background:rgba(255,225,0,.16);box-shadow:inset 3px 0 0 var(--yellow);}
+.gantt-empty,.gantt-wrap .gantt-empty{padding:26px;text-align:center;color:var(--t3);}
+/* detail drawer cards */
+.pd-card{background:var(--sf2);border:1px solid var(--br);border-radius:11px;padding:14px 16px;margin-bottom:12px;}
+.pd-card.pd-empty{color:var(--t3);text-align:center;padding:20px;}
+.pd-h{font-weight:800;font-size:13.5px;color:var(--t1);margin-bottom:10px;}
+.pd-win{font-size:13.5px;color:var(--t2);margin-bottom:8px;}
+.pd-brand{font-weight:800;color:var(--t1);padding:2px 10px;border-radius:20px;background:var(--br);}
+.pd-brand.mani{background:var(--yellow);color:#4A3B00;}
+.pd-knives{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px;}
+.pd-kchip{font-size:12px;padding:4px 10px;border-radius:20px;background:var(--pale);color:var(--t1);}
+.pd-kchip b{font-variant-numeric:tabular-nums;}
+.pd-tbmt{font-size:11.5px;color:var(--t3);}
+.pd-qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:6px;}
+@media(max-width:560px){.pd-qgrid{grid-template-columns:1fr;}}
+.pd-q{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:11px 12px;text-align:center;}
+.pd-ql{font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px;}
+.pd-qv{font-size:22px;font-weight:900;color:var(--t1);font-variant-numeric:tabular-nums;}
+.pd-qh{font-size:10px;color:var(--t3);margin-top:3px;}
+.pd-qi{width:100%;border:1.5px solid var(--br);border-radius:9px;padding:9px;text-align:center;
+  font-family:var(--ff);font-size:19px;font-weight:800;background:var(--sf);color:var(--t1);
+  font-variant-numeric:tabular-nums;}
+.pd-qi:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(58,92,170,.14);}
+.pd-qi.sm{font-size:14px;font-weight:700;}
+.pd-qi.grow{font-size:14px;font-weight:500;text-align:left;}
+.pd-extra{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--br);}
+.pd-fld{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.03em;}
+.pd-fld.grow{flex:1;min-width:180px;}
+.pd-live{margin-top:12px;padding-top:10px;border-top:1px solid var(--br);font-size:13px;color:var(--t2);}
+.pd-live b{color:var(--pos);font-size:15px;font-variant-numeric:tabular-nums;}
+.plan-dirty-tag{font-size:12.5px;font-weight:700;color:var(--t3);margin-right:auto;align-self:center;}
+.plan-dirty-tag.on{color:var(--warn);}
 /* ─ Price panel ─ */
 .fc-price-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 @media(max-width:1100px){.fc-hero-r{grid-column:1/-1;}}
@@ -2963,7 +3033,9 @@ function drawSegLeader(canvasId, ag, tier, metricKey, totMetric){
 
 /* KPI card (flat — no flip, per request: card sizes consistent) */
 function kpiCard(o){
-  return '<div class="kpi '+(o.cls||"")+'">'
+  var clk = o.click ? (' clk kpi-clk" onclick="'+o.click.replace(/"/g,'&quot;')+'"') : '"';
+  return '<div class="kpi '+(o.cls||"")+(o.click?'':'')+clk+' title="'+(o.click?(LANG==="vi"?"Bấm để xem chi tiết":"Click for detail"):"")+'">'
+    + (o.click?'<span class="kpi-more">›</span>':'')
     + '<div class="kl">'+esc(o.lbl)+(o.delta?(' '+o.delta):'')+'</div>'
     + '<div class="kv"><span data-count="'+(o.val||0)+'" data-mode="'+(o.mode||"n")+'" data-pre="'+(o.pre||"")+'" data-suf="'+(o.suf||"")+'">'+(o.pre||"")+'0'+(o.suf||"")+'</span></div>'
     + (o.spark||'')
@@ -5526,7 +5598,7 @@ var PLAN_OPPCOL = { "Cao":"#2E7D32", "Trung bình":"#F0A800", "Thấp":"#E07A2E"
 
 if(!S.plan) S.plan = {
   price: { MST:140000, MSL:240000, MCU:250000 }, fx:26400,
-  oppFilter:"ALL", inclExisting:true, q:"",
+  oppFilter:"ALL", inclExisting:true, q:"", qAdd:"", ganttTab:"all", detail:null,
   manual:{},          // rowKey → {group,account,city,tbmt,mst,msl,mcu,startMonth,dur,opp,note}
   dirty:{}, saving:false, loaded:false, chart:null
 };
@@ -5697,6 +5769,66 @@ function planSetPrice(k,v){ var n=+String(v).replace(/[^\d]/g,"");S.plan.price[k
 function planSetFx(v){ var n=+String(v).replace(/[^\d]/g,"");S.plan.fx=isFinite(n)&&n>0?n:26400; try{localStorage.setItem("mmh_plan_fx",S.plan.fx);}catch(e){} renderPlan(); }
 
 /* ════ RENDER ════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════════
+   FY68 PLAN — RENDER v2 (group-tab Gantt · per-hospital Gantt · click→detail editable)
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   Tương tác mới:
+     • Gantt có TAB nhóm: All / ① Existing / ② Remaining (Duy trì) / ③ New·Convert (Mở mới).
+     • Smart search tên bệnh viện → lọc nhanh dải Gantt.
+     • Mỗi dòng Gantt = 1 bệnh viện; bấm → drawer chi tiết:
+         - Kết quả trúng thầu GẦN NHẤT (hãng nào trúng, loại dao, SL) từ feed HV + KQTT tổng.
+         - Ô EDITABLE: "SL Mani dự kiến" cho MSL / MST / MCU → nhập vào đây.
+     • Sửa nhiều BV rồi bấm "Lưu" 1 lần → ghi FC_LOG. Cardbox nhảy ngay khi gõ.
+   ════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* Nhóm hiển thị: gán "Remaining" cho Duy trì, "New/Convert" cho Mở mới (giữ group gốc trong data). */
+var PLAN_TAB_LABEL = {
+  "all":     function(){ return LANG==="vi"?"Tất cả":"All"; },
+  "Existing":function(){ return "① Existing"; },
+  "Duy trì": function(){ return LANG==="vi"?"② Duy trì":"② Remaining"; },
+  "Mở mới":  function(){ return LANG==="vi"?"③ Mở mới":"③ New / Convert"; }
+};
+if(!S.plan.ganttTab) S.plan.ganttTab="all";
+if(S.plan.detail===undefined) S.plan.detail=null;   // rowKey đang mở detail
+
+/* ── Kết quả trúng thầu GẦN NHẤT của 1 bệnh viện (từ feed HV + KQTT tổng) ── */
+function planLatestResult(account){
+  var an=norm(account||""); if(!an) return null;
+  var cands=[];
+  /* Feed HV: dòng dao (mọi kết quả), lấy ngày phê duyệt/hiệu lực làm mốc */
+  (NPP_FEED.HUNGVI||[]).forEach(function(r){
+    var nm=r.hospitalStd||r.hospital||"";
+    if(norm(nm)!==an) return;
+    var when=r.approveSerial||r.effSerial||0;
+    cands.push({ src:"HV", when:when, brand:"Mani", result:r.result,
+      knife:r.knifeType||planKnifeShort(r.pcodeRaw), qty:r.qty||0, pcode:r.pcodeRaw||"",
+      tbmt:r.tbmt||"", price:r.price||0 });
+  });
+  /* KQTT tổng: toàn thị trường (mọi hãng) tại BV này */
+  ROWS.forEach(function(r){
+    if(norm(r.buyer||"")!==an) return;
+    var when=moKey(r.month);   // month-key làm mốc thô
+    cands.push({ src:"KQTT", when:when*100, brand:r.brand, result:"Win",
+      knife:r.ptype||"", qty:r.qty||0, pcode:r.pcode||"", tbmt:r.kqtt||"", price:r.price||0 });
+  });
+  if(!cands.length) return null;
+  cands.sort(function(a,b){ return (b.when||0)-(a.when||0); });
+  /* gom theo hãng của gói gần nhất */
+  var latest=cands[0];
+  var sameWin=cands.filter(function(c){ return Math.abs((c.when||0)-(latest.when||0))<3200000000; }); // ~cùng đợt (~37 ngày)
+  var byBrand={};
+  sameWin.forEach(function(c){
+    var b=c.brand||"?";
+    if(!byBrand[b]) byBrand[b]={brand:b,qty:0,knives:{},tbmt:c.tbmt};
+    byBrand[b].qty+=c.qty;
+    if(c.knife) byBrand[b].knives[c.knife]=(byBrand[b].knives[c.knife]||0)+c.qty;
+  });
+  var winner=Object.keys(byBrand).map(function(k){return byBrand[k];}).sort(function(a,b){return b.qty-a.qty;})[0];
+  return { winner:winner, all:sameWin, latest:latest };
+}
+function planKnifeShort(code){ var c=String(code||"").toUpperCase(); if(/^MSL|^MSK/.test(c))return"Slit"; if(/^MST/.test(c))return"Stab"; if(/^MCU/.test(c))return"Crescent"; return""; }
+
+/* ════ RENDER ════ */
 function renderPlan(){
   planRenderCtrl();
   if(!NPP_FEED.loaded){
@@ -5713,32 +5845,33 @@ function renderPlan(){
   planEnsurePickHandlers(rows);
   var incl=rows.filter(planInclude);
 
-  /* ── KPI ── */
-  var totUSD=0, exUSD=0, oppUSD=0, exN=0, oppN=0, totKnives=0;
+  /* ── KPI (nhảy theo edit) ── */
+  var totUSD=0, exUSD=0, oppUSD=0, exN=0, oppN=0;
   incl.forEach(function(r){
     if(r._c.total<=0) return;
-    totUSD+=r._c.usdFY68; totKnives+=r._c.total;
+    totUSD+=r._c.usdFY68;
     if(r.group==="Existing"){ exUSD+=r._c.usdFY68; exN++; }
     else { oppUSD+=r._c.usdFY68; oppN++; }
   });
-  var tgt=+S.fc.target.HUNGVI||0;
-  var ach=tgt? (totUSD/tgt*100):0;
-
+  var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(totUSD/tgt*100):0;
   var dirtyN=Object.keys(S.plan.dirty).length;
 
   var H='';
   H+='<div class="kr">'
     + kpiCard({lbl:(LANG==="vi"?"TỔNG doanh số kế hoạch FY68":"TOTAL FY68 planned revenue"),val:totUSD,mode:"$",cls:"y",
+        click:"planKpiDrill('total')",
         note:(LANG==="vi"?"Existing ":"")+hvUSD(exUSD)+" + "+(LANG==="vi"?"Cơ hội ":"opportunity ")+hvUSD(oppUSD)})
     + kpiCard({lbl:(LANG==="vi"?"① Existing (chắc chắn)":"① Existing (certain)"),val:exUSD,mode:"$",cls:"pos",
+        click:"planKpiDrill('existing')",
         note:exN+(LANG==="vi"?" gói đang còn hiệu lực":" packages still valid")})
     + kpiCard({lbl:(LANG==="vi"?"②③ Cơ hội (kỳ vọng)":"②③ Opportunity (expected)"),val:oppUSD,mode:"$",cls:"y",
-        note:oppN+(LANG==="vi"?" dòng · lọc: ":" rows · filter: ")+(S.plan.oppFilter==="ALL"?(LANG==="vi"?"tất cả":"all"):S.plan.oppFilter)})
+        click:"planKpiDrill('opp')",
+        note:oppN+(LANG==="vi"?" dòng đã điền SL Mani":" rows with Mani qty")})
     + kpiCard({lbl:(LANG==="vi"?"Đạt target Hùng Vĩ":"vs Hùng Vĩ target"),val:ach,mode:"%",cls:ach>=100?"pos":ach>=60?"y":"neg",
-        note:tgt?("target "+hvUSD(tgt)):(LANG==="vi"?"đặt target ở Setup tab Forecast":"set target in Forecast Setup")})
+        click:"planKpiDrill('knife')",
+        note:tgt?("target "+hvUSD(tgt)):(LANG==="vi"?"đặt target ở Setup Forecast":"set target in Forecast Setup")})
     +'</div>';
 
-  /* thanh doanh số / target */
   var achC=Math.max(0,Math.min(100,ach));
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="cb"><div class="revbar-wrap">'
     +'<div class="revbar-track"><div class="revbar-fill'+(ach>=100?" full":"")+'" style="width:'+achC+'%"><span class="revbar-in">'+hvUSD(totUSD)+'</span></div>'
@@ -5746,44 +5879,159 @@ function renderPlan(){
     +'<div class="revbar-pct" style="color:'+(ach>=100?"var(--pos)":ach>=60?"var(--warn)":"var(--neg)")+'">'+ach.toFixed(0)+'%</div>'
     +'</div></div></div>';
 
-  /* ── GANTT ── */
-  H+=planGanttHTML(incl.filter(function(r){return r._c.total>0;}));
+  /* ── Toolbar: đồng bộ dao Win Hùng Vĩ → Tender tổng ── */
+  H+='<div class="card reveal" style="margin-bottom:14px"><div class="cb" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between">'
+    +'<div style="min-width:0"><div style="font-weight:800;color:var(--navy2);font-size:14px">🔄 '+(LANG==="vi"?"Đồng bộ dao phẫu thuật TRÚNG THẦU → Tender tổng":"Sync surgical-knife WINS → Total tender")+'</div>'
+    +'<div style="font-size:12px;color:var(--t3);margin-top:3px">'+(LANG==="vi"?"Chỉ gói Win · chỉ dao (MSL/MST/MCU) · đối chiếu TBMT với KQTT Code · dòng mới bôi vàng":"Win only · knives only (MSL/MST/MCU) · match TBMT vs KQTT Code · new rows highlighted")+'</div></div>'
+    +'<div style="display:flex;gap:8px;align-items:center">'
+    +'<button class="plan-sync" onclick="planSyncHungVi(true)" title="'+(LANG==="vi"?"Thử — không ghi":"Dry run")+'"><span class="ps-ic">👁</span>'+(LANG==="vi"?"Kiểm tra":"Preview")+'</button>'
+    +'<button id="plan-sync-btn" class="plan-sync" style="background:var(--navy2);color:#fff;border-color:var(--navy2)" onclick="planSyncHungVi(false)"><span class="ps-ic">🔄</span>'+(LANG==="vi"?"Đồng bộ ngay":"Sync now")+'</button>'
+    +'</div></div></div>';
 
-  /* ── SMART SEARCH ── */
+  /* ── GANTT với TAB nhóm + search ── */
+  var tabs=["all","Existing","Duy trì","Mở mới"];
+  var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
+  incl.forEach(function(r){ if(r._c.total>0){ counts.all++; counts[r.group]++; } });
+  var tabBtns=tabs.map(function(tk){
+    return '<button class="plan-gtab '+(S.plan.ganttTab===tk?"on":"")+'" onclick="planSetGTab(\''+tk+'\')">'
+      +PLAN_TAB_LABEL[tk]()+' <span class="pgc">'+counts[tk]+'</span></button>';
+  }).join("");
+
+  var q=norm(S.plan.q||"");
+  var ganttRows=incl.filter(function(r){
+    if(r._c.total<=0) return false;
+    if(S.plan.ganttTab!=="all" && r.group!==S.plan.ganttTab) return false;
+    if(q && norm((r.account||"")+" "+(r.city||"")).indexOf(q)<0) return false;
+    return true;
+  });
+
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">🔍 '+(LANG==="vi"?"Tra địa bàn → thêm bệnh viện vào kế hoạch":"Find territory → add hospital to plan")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"gõ tên tỉnh hoặc bệnh viện · chọn để thêm dòng Mở mới/Duy trì":"type a province or hospital · pick to add a Renew/New row")+'</div></div>'
-    +'<div class="cb"><div class="ac-search"><span class="ac-search-ic">🔍</span>'
-    +'<input id="plan-q" class="ac-search-i" placeholder="'+(LANG==="vi"?"VD: Nghệ An, Bệnh viện Mắt…":"e.g. Nghệ An, Eye Hospital…")+'" value="'+esc(S.plan.q||"")+'" oninput="planOnSearch(this.value)">'
-    +(S.plan.q?'<button class="ac-search-x" onclick="planOnSearch(\'\')">✕</button>':'')+'</div>'
-    +'<div id="plan-search-res">'+planSearchResHTML()+'</div></div></div>';
+    +'<div class="ct">📅 '+(LANG==="vi"?"Gantt FY68 theo nhóm & bệnh viện":"FY68 Gantt by group & hospital")+'</div>'
+    +'<div class="cs">'+(LANG==="vi"?"chọn nhóm · tìm BV · bấm 1 dòng để xem kết quả trúng gần nhất + điền SL Mani":"pick group · search hospital · click a row for latest award + fill Mani qty")+'</div></div>'
+    +'<div class="cb">'
+      +'<div class="plan-gtabs">'+tabBtns+'</div>'
+      +'<div class="ac-search" style="margin:0 0 12px"><span class="ac-search-ic">🔍</span>'
+        +'<input id="plan-gq" class="ac-search-i" placeholder="'+(LANG==="vi"?"Tìm nhanh bệnh viện / tỉnh…":"Quick-find hospital / province…")+'" value="'+esc(S.plan.q||"")+'" oninput="planOnGSearch(this.value)">'
+        +(S.plan.q?'<button class="ac-search-x" onclick="planOnGSearch(\'\')">✕</button>':'')+'</div>'
+      +planGanttHTML(ganttRows)
+    +'</div></div>';
 
-  /* ── BẢNG EDITABLE (2 nhóm điền tay + nhóm Existing readonly) ── */
-  H+=planTableHTML(rows);
+  /* ── Panel thêm BV (smart search toàn bộ danh sách) ── */
+  H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
+    +'<div class="ct">➕ '+(LANG==="vi"?"Thêm bệnh viện vào kế hoạch (Duy trì / Mở mới)":"Add hospital to plan (Remaining / New)")+'</div>'
+    +'<div class="cs">'+(LANG==="vi"?"gõ tỉnh hoặc BV → chọn để thêm dòng cơ hội":"type province or hospital → pick to add an opportunity row")+'</div></div>'
+    +'<div class="cb"><div class="ac-search"><span class="ac-search-ic">🔍</span>'
+    +'<input id="plan-q" class="ac-search-i" placeholder="'+(LANG==="vi"?"VD: Nghệ An, Bệnh viện Mắt…":"e.g. Nghệ An, Eye Hospital…")+'" value="'+esc(S.plan.qAdd||"")+'" oninput="planOnSearch(this.value)">'
+    +(S.plan.qAdd?'<button class="ac-search-x" onclick="planOnSearch(\'\')">✕</button>':'')+'</div>'
+    +'<div id="plan-search-res">'+planSearchResHTML()+'</div></div></div>';
 
   /* ── Save bar ── */
   H+='<div class="plan-savebar">'
-    +'<button class="chip" onclick="planAddRow(\'Mở mới\')">➕ '+(LANG==="vi"?"Thêm dòng Mở mới":"Add New row")+'</button>'
-    +'<button class="chip" onclick="planAddRow(\'Duy trì\')">➕ '+(LANG==="vi"?"Thêm dòng Duy trì":"Add Renew row")+'</button>'
+    +'<span class="plan-dirty-tag'+(dirtyN?" on":"")+'">'+(dirtyN?(dirtyN+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"))+'</span>'
     +'<button class="chip fc-save'+(dirtyN?" has":"")+'" '+(S.plan.saving?"disabled":"")+' onclick="planSaveAll()">'
-      +(S.plan.saving?"⏳ ":"💾 ")+(LANG==="vi"?"Lưu lên Sheet":"Save to Sheet")+(dirtyN?" ("+dirtyN+")":"")+'</button>'
+      +(S.plan.saving?"⏳ ":"💾 ")+(LANG==="vi"?"Lưu tất cả lên Sheet":"Save all to Sheet")+(dirtyN?" ("+dirtyN+")":"")+'</button>'
     +'</div>';
 
   document.getElementById("plan-body").innerHTML=H;
 
-  /* restore focus + caret after re-render */
-  if(S._planFocus){
-    var el=document.querySelector('[data-focus="'+S._planFocus+'"]');
-    if(el){ el.focus(); try{ el.setSelectionRange(el.value.length,el.value.length); }catch(e){} }
-    S._planFocus=null;
+  /* detail drawer (nếu đang mở) */
+  if(S.plan.detail){
+    var dr=rows.filter(function(r){return r.rowKey===S.plan.detail;})[0];
+    if(dr) planOpenDetail(dr.rowKey); else S.plan.detail=null;
   }
-  var pq=document.getElementById("plan-q");
-  if(pq && S.plan.q){ pq.focus(); pq.setSelectionRange(pq.value.length,pq.value.length); }
+
+  var pq=document.getElementById("plan-q");   if(pq && S.plan.qAdd){ pq.focus(); pq.setSelectionRange(pq.value.length,pq.value.length); }
+  var gq=document.getElementById("plan-gq");  if(gq && S.plan.q){ gq.focus(); gq.setSelectionRange(gq.value.length,gq.value.length); }
 
   setTimeout(function(){var s=document.getElementById("sec-plan");if(s){s.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});try{runCountUp(s);animateBars(s);}catch(e){}}},40);
 }
 
-/* ── Gantt HTML (CSS grid 12 cột) ── */
+function planSetGTab(tk){ S.plan.ganttTab=tk; renderPlan(); }
+function planOnGSearch(v){ S.plan.q=v; renderPlan(); }
+
+/* ════ Cardbox tương tác — click 1 KPI ở tab FY68 → drawer chi tiết (dùng lại #drill) ════ */
+function planGroupLabel(g){
+  return g==="Duy trì"?(LANG==="vi"?"Duy trì":"Remaining"):g==="Mở mới"?(LANG==="vi"?"Mở mới":"New/Convert"):"Existing";
+}
+function planKdRowHTML(r){
+  var col=PLAN_GCOL[r.group]||"#3A5CAA";
+  var mix=[]; if(+r.msl) mix.push("MSL "+hvNum(+r.msl)); if(+r.mst) mix.push("MST "+hvNum(+r.mst)); if(+r.mcu) mix.push("MCU "+hvNum(+r.mcu));
+  return '<div class="kd-row" onclick="closeDrill();setTimeout(function(){planOpenDetail(\''+r.rowKey+'\');},60)">'
+    +'<div class="kd-l"><div class="kd-nm"><span class="kd-chip" style="background:'+col+'22;color:'+col+'">'+planGroupLabel(r.group)+'</span>'+esc(r.account||"—")+'</div>'
+    +'<div class="kd-sub">'+esc(r.city||"")+' · '+hvNum(r._c.total)+' '+(LANG==="vi"?"dao":"knives")+(mix.length?' · '+mix.join(" / "):'')+'</div></div>'
+    +'<div class="kd-v">'+hvUSD(r._c.usdFY68)+'</div></div>';
+}
+function planKpiDrill(which){
+  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude).filter(function(r){return r._c.total>0;});
+  var title,sub,body,exUSD=0,oppUSD=0,totUSD=0;
+  rows.forEach(function(r){ totUSD+=r._c.usdFY68; if(r.group==="Existing")exUSD+=r._c.usdFY68; else oppUSD+=r._c.usdFY68; });
+
+  if(which==="knife"){
+    /* Cơ cấu theo loại dao + tiến độ target */
+    var agg={MSL:{q:0,u:0},MST:{q:0,u:0},MCU:{q:0,u:0}};
+    rows.forEach(function(r){
+      agg.MSL.q+=+r.msl||0; agg.MST.q+=+r.mst||0; agg.MCU.q+=+r.mcu||0;
+      var per=r._c.total?r._c.usdFY68/r._c.total:0;
+      agg.MSL.u+=(+r.msl||0)*per; agg.MST.u+=(+r.mst||0)*per; agg.MCU.u+=(+r.mcu||0)*per;
+    });
+    var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(totUSD/tgt*100):0;
+    title=(LANG==="vi"?"Cơ cấu theo loại dao":"By knife type");
+    sub=(LANG==="vi"?"SL Mani dự kiến & doanh số FY68":"Expected Mani qty & FY68 revenue");
+    var kn=[["MSL",LANG==="vi"?"Slit (khía)":"Slit","MSL · Slit"],["MST",LANG==="vi"?"Straight (đâm)":"Straight","MST · Stab"],["MCU",LANG==="vi"?"Crescent (liềm)":"Crescent","MCU"]];
+    body='<div class="kd-head">'+(LANG==="vi"?"Đạt target Hùng Vĩ":"vs Hùng Vĩ target")+': <b>'+ach.toFixed(0)+'%</b> ('+hvUSD(totUSD)+(tgt?' / '+hvUSD(tgt):'')+')</div>'
+      +'<div class="kd-list">'+kn.map(function(k){
+        var c=HV_KCOL[k[0]]||"#3A5CAA";
+        return '<div class="kd-row" style="cursor:default"><div class="kd-l"><div class="kd-nm"><span class="kd-chip" style="background:'+c+'22;color:'+c+'">'+esc(k[2])+'</span>'+esc(k[1])+'</div>'
+          +'<div class="kd-sub">'+hvNum(agg[k[0]].q)+' '+(LANG==="vi"?"dao dự kiến":"knives")+'</div></div>'
+          +'<div class="kd-v">'+hvUSD(agg[k[0]].u)+'</div></div>';
+      }).join("")+'</div>';
+  } else {
+    var pick, hn;
+    if(which==="existing"){ pick=rows.filter(function(r){return r.group==="Existing";}); title="① Existing"; sub=(LANG==="vi"?"Gói đang còn hiệu lực FY68 (tự động)":"Packages valid in FY68 (auto)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(exUSD)+'</b> · '+pick.length+(LANG==="vi"?" bệnh viện":" hospitals"); }
+    else if(which==="opp"){ pick=rows.filter(function(r){return r.group!=="Existing";}); title=(LANG==="vi"?"②③ Cơ hội":"②③ Opportunity"); sub=(LANG==="vi"?"Duy trì + Mở mới (đã điền SL Mani)":"Remaining + New (Mani qty filled)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(oppUSD)+'</b> · '+pick.length+(LANG==="vi"?" dòng":" rows"); }
+    else { pick=rows; title=(LANG==="vi"?"TỔNG kế hoạch FY68":"TOTAL FY68 plan"); sub=(LANG==="vi"?"Tất cả bệnh viện trong kế hoạch":"All hospitals in plan"); hn=(LANG==="vi"?"Existing":"Existing")+' <b>'+hvUSD(exUSD)+'</b> + '+(LANG==="vi"?"Cơ hội":"Opportunity")+' <b>'+hvUSD(oppUSD)+'</b> = <b>'+hvUSD(totUSD)+'</b>'; }
+    pick.sort(function(a,b){ return b._c.usdFY68-a._c.usdFY68; });
+    body='<div class="kd-head">'+hn+'<br><span style="color:var(--t3)">'+(LANG==="vi"?"Bấm 1 dòng để mở chi tiết & sửa SL Mani":"Click a row to open detail & edit Mani qty")+'</span></div>'
+      +(pick.length?'<div class="kd-list">'+pick.map(planKdRowHTML).join("")+'</div>':'<div class="kd-empty">'+(LANG==="vi"?"Chưa có dòng nào.":"No rows yet.")+'</div>');
+  }
+
+  S.plan.detail=null;
+  S.drill={rows:[],title:title,sub:sub,kind:"plankpi"};
+  var pn=document.getElementById("drill-pn"); pn.classList.remove("expanded");
+  document.getElementById("drill-exp").textContent="⛶";
+  document.getElementById("drill-t").textContent=title;
+  document.getElementById("drill-s").textContent=sub;
+  document.getElementById("drill-body").innerHTML=body;
+  document.getElementById("drill").classList.add("on");
+}
+
+/* ════ Đồng bộ dao Win Hùng Vĩ → Tender tổng (gọi backend Hùng Vĩ action:'syncTender') ════ */
+function planSyncHungVi(dryRun){
+  var btns=Array.prototype.slice.call(document.querySelectorAll(".plan-sync"));
+  btns.forEach(function(b){ b.disabled=true; b.classList.add("busy"); });
+  showToast(dryRun?(LANG==="vi"?"Đang kiểm tra…":"Previewing…"):(LANG==="vi"?"Đang đồng bộ lên Sheet…":"Syncing to Sheet…"),"load");
+  fcPostJSON(NPP_URL.HUNGVI, { action:"syncTender", dryRun:!!dryRun }).then(function(res){
+    btns.forEach(function(b){ b.disabled=false; b.classList.remove("busy"); });
+    if(!res || res.ok===false){
+      showToast((LANG==="vi"?"Lỗi đồng bộ: ":"Sync error: ")+((res&&res.error)||"?"),"warn"); return;
+    }
+    var sc=res.scanned||{};
+    if(dryRun){
+      showToast((LANG==="vi"?"Kiểm tra: sẽ thêm ":"Preview: would add ")+(res.candidates||0)
+        +(LANG==="vi"?" dòng · trùng gói ":" rows · dup ")+(sc.alreadyInTender||0)
+        +(LANG==="vi"?" · thiếu TBMT ":" · no-TBMT ")+(sc.noTBMT||0),"success");
+    } else {
+      showToast((LANG==="vi"?"✓ Đã thêm ":"✓ Added ")+(res.added||0)
+        +(LANG==="vi"?" dòng vào Tender tổng (đã bôi vàng). Đang tải lại dữ liệu…":" rows to Total tender (highlighted). Reloading…"),"success");
+      if(res.added>0) setTimeout(function(){ try{ fetchData(); }catch(e){} }, 700);
+    }
+  }).catch(function(e){
+    btns.forEach(function(b){ b.disabled=false; b.classList.remove("busy"); });
+    showToast(LANG==="vi"?"Lỗi đồng bộ (kiểm tra deploy backend Hùng Vĩ v4)":"Sync failed (check HungVi backend v4 deploy)","warn");
+  });
+}
+
+/* ── Gantt HTML (mỗi dòng bấm được) ── */
 function planGanttHTML(rows){
   var months=[]; for(var k=0;k<12;k++) months.push(planIdxToLabel(PLAN_BASE+k));
   var colTot=new Array(12).fill(0);
@@ -5801,18 +6049,18 @@ function planGanttHTML(rows){
   }).map(function(r){
     var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
     var cells=r._c.gantt.map(function(on){
-      return '<div class="gantt-cell'+(on?" on "+cls:"")+'"'+(on?' title="'+esc(r.account)+' · '+hvUSD(r._c.usdPerMonth)+'/mo"':'')+'>'+(on?'<span class="gdot"></span>':'')+'</div>';
+      return '<div class="gantt-cell'+(on?" on "+cls:"")+'">'+(on?'<span class="gdot"></span>':'')+'</div>';
     }).join("");
-    return '<div class="gantt-row"><div class="gantt-lbl" title="'+esc(r.account)+'">'
-      +'<span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'"></span>'
-      +'<span class="gnm">'+esc(r.account||"—")+'</span>'
-      +'<span class="gcity">'+esc(r.city||"")+'</span></div>'
+    var sel=(S.plan.detail===r.rowKey)?" gsel":"";
+    return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết":"Click for detail")+'">'
+      +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'"></span>'
+      +'<span class="gnm">'+esc(r.account||"—")+'</span><span class="gcity">'+esc(r.city||"")+'</span></div>'
       +cells+'<div class="gantt-tot">'+hvUSD(r._c.usdFY68)+'</div></div>';
-  }).join("");
+  }).join("") || '<div class="gantt-empty">'+(LANG==="vi"?"Không có dòng nào khớp":"No rows match")+'</div>';
 
-  var foot='<div class="gantt-row gantt-foot"><div class="gantt-lbl">'+(LANG==="vi"?"Doanh số USD / tháng":"USD revenue / month")+'</div>'
+  var foot=rows.length?'<div class="gantt-row gantt-foot"><div class="gantt-lbl">'+(LANG==="vi"?"Doanh số USD / tháng":"USD revenue / month")+'</div>'
     +colTot.map(function(v){return '<div class="gantt-cell gf">'+(v>0?hvUSD(v):"")+'</div>';}).join("")
-    +'<div class="gantt-tot gf">'+hvUSD(grand)+'</div></div>';
+    +'<div class="gantt-tot gf">'+hvUSD(grand)+'</div></div>':'';
 
   var legend='<div class="gantt-legend">'
     +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>Existing</span>'
@@ -5821,69 +6069,153 @@ function planGanttHTML(rows){
     +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"Cơ hội thấp":"Low opp.")+'</span>'
     +'</div>';
 
-  return '<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">📅 '+(LANG==="vi"?"Gantt hiệu lực & doanh thu FY68":"FY68 validity & revenue Gantt")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"mỗi ô sáng = gói đang tạo doanh thu tháng đó · màu theo nhóm/cơ hội":"lit cell = package generating revenue that month · colored by group/opportunity")+'</div></div>'
-    +'<div class="cb"><div class="gantt-wrap">'+head+body+foot+'</div>'+legend+'</div></div>';
+  return '<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
 }
 
-/* ── Bảng editable ── */
+/* ════ DETAIL DRAWER — kết quả trúng gần nhất + editable SL Mani ════ */
+function planOpenDetail(rowKey){
+  S.plan.detail=rowKey;
+  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; });
+  var r=rows.filter(function(x){return x.rowKey===rowKey;})[0];
+  if(!r){ closeDrill(); return; }
+  var isAuto=r._auto;   // Existing = auto (readonly SL gói), nhưng vẫn cho xem
+  var lr=planLatestResult(r.account);
+
+  var head='<div class="drill-kpi">'
+    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Nhóm":"Group")+'</div><div class="kv" style="font-size:16px;color:'+PLAN_GCOL[r.group]+'">'+(r.group==="Duy trì"?(LANG==="vi"?"Duy trì":"Remaining"):r.group==="Mở mới"?(LANG==="vi"?"Mở mới":"New/Convert"):"Existing")+'</div></div>'
+    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"SL dao (plan)":"Plan knives")+'</div><div class="kv">'+hvNum(r._c.total)+'</div></div>'
+    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Doanh số FY68":"FY68 revenue")+'</div><div class="kv">'+hvUSD(r._c.usdFY68)+'</div></div>'
+    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Hiệu lực":"Duration")+'</div><div class="kv">'+r.dur+'<span style="font-size:12px"> '+(LANG==="vi"?"tháng":"mo")+'</span></div></div>'
+    +'</div>';
+
+  /* Kết quả trúng gần nhất */
+  var lrHtml;
+  if(lr && lr.winner){
+    var w=lr.winner;
+    var knifeChips=Object.keys(w.knives).map(function(kn){
+      return '<span class="pd-kchip">'+esc(kn)+': <b>'+hvNum(w.knives[kn])+'</b></span>';
+    }).join(" ");
+    var isMani=norm(w.brand)==="mani";
+    lrHtml='<div class="pd-card"><div class="pd-h">🏆 '+(LANG==="vi"?"Kết quả trúng thầu gần nhất":"Latest award result")+'</div>'
+      +'<div class="pd-win">'+(LANG==="vi"?"Hãng trúng":"Winner")+': <span class="pd-brand '+(isMani?"mani":"")+'">'+esc(w.brand)+'</span>'
+        +' · '+(LANG==="vi"?"tổng":"total")+' <b>'+hvNum(w.qty)+'</b> '+(LANG==="vi"?"cái":"pcs")+'</div>'
+      +(knifeChips?'<div class="pd-knives">'+knifeChips+'</div>':'')
+      +(w.tbmt?'<div class="pd-tbmt mono">TBMT: '+esc(w.tbmt)+'</div>':'')
+      +'</div>';
+  } else {
+    lrHtml='<div class="pd-card pd-empty">'+(LANG==="vi"?"Chưa có dữ liệu trúng thầu cho bệnh viện này trong hệ thống.":"No award history found for this hospital.")+'</div>';
+  }
+
+  /* Editable SL Mani dự kiến (MSL/MST/MCU) — cho cả Existing lẫn manual */
+  function qCell(field,label,color){
+    var val=r[field]||0;
+    if(isAuto){
+      return '<div class="pd-q"><div class="pd-ql" style="color:'+color+'">'+label+'</div>'
+        +'<div class="pd-qv">'+hvNum(val)+'</div><div class="pd-qh">'+(LANG==="vi"?"tự động (gói đang trúng)":"auto (current win)")+'</div></div>';
+    }
+    return '<div class="pd-q"><div class="pd-ql" style="color:'+color+'">'+label+'</div>'
+      +'<input class="pd-qi" data-focus="pd_'+field+'" value="'+val+'" onfocus="this.select()" '
+      +'oninput="S._planFocus=\'pd_'+field+'\';planDetailEdit(\''+rowKey+'\',\''+field+'\',this.value)"></div>';
+  }
+  var editHtml='<div class="pd-card"><div class="pd-h">✏️ '+(LANG==="vi"?"SL Mani dự kiến bán (FY68)":"Expected Mani qty (FY68)")+'</div>'
+    +'<div class="pd-qgrid">'
+    + qCell("msl","MSL · Slit",HV_KCOL.MSL)
+    + qCell("mst","MST · Stab",HV_KCOL.MST)
+    + qCell("mcu","MCU · Crescent",HV_KCOL.MCU)
+    +'</div>'
+    +(isAuto?'':'<div class="pd-extra">'
+      +'<label class="pd-fld"><span>'+(LANG==="vi"?"Cơ hội":"Opportunity")+'</span>'
+        +'<select class="plan-sel" onchange="planDetailEdit(\''+rowKey+'\',\'opp\',this.value)">'
+        +["Cao","Trung bình","Thấp"].map(function(o){return '<option '+(r.opp===o?"selected":"")+'>'+o+'</option>';}).join("")+'</select></label>'
+      +'<label class="pd-fld"><span>'+(LANG==="vi"?"Bắt đầu":"Start")+'</span>'+mpickBtnHtml("pd-mp-"+rowKey, r.startMonth||planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_END), "planPickStart_"+rowKey)+'</label>'
+      +'<label class="pd-fld"><span>'+(LANG==="vi"?"Hiệu lực (tháng)":"Duration (mo)")+'</span><input class="pd-qi sm" value="'+r.dur+'" onfocus="this.select()" oninput="planDetailEdit(\''+rowKey+'\',\'dur\',this.value)"></label>'
+      +'<label class="pd-fld grow"><span>'+(LANG==="vi"?"Ghi chú / Hành động":"Note / Action")+'</span><input class="pd-qi grow" data-focus="pd_note" value="'+esc(r.note||"")+'" oninput="S._planFocus=\'pd_note\';planDetailEdit(\''+rowKey+'\',\'note\',this.value)"></label>'
+      +'</div>')
+    +'<div class="pd-live">'+(LANG==="vi"?"Doanh số dòng này":"This row revenue")+': <b id="pd-rev">'+hvUSD(r._c.usdFY68)+'</b> '
+      +'<span style="color:var(--t3)">('+(LANG==="vi"?"cardbox tổng cập nhật ngay":"totals update live")+')</span></div>'
+    +'</div>';
+
+  var delBtn=isAuto?'':'<button class="drill-act" style="background:var(--nb);color:var(--neg)" onclick="planDelRow(\''+rowKey+'\');closeDrill();">🗑 '+(LANG==="vi"?"Xoá dòng":"Delete")+'</button>';
+
+  S.drill={rows:[],title:r.account||"—",sub:(r.city||"")+" · FY68 plan",kind:"plan"};
+  var pn=document.getElementById("drill-pn"); pn.classList.remove("expanded");
+  document.getElementById("drill-exp").textContent="⛶";
+  document.getElementById("drill-t").textContent=r.account||"—";
+  document.getElementById("drill-s").textContent=(r.city||"")+" · FY68 plan";
+  document.getElementById("drill-body").innerHTML=head+lrHtml+editHtml;
+  /* nút xoá vào thanh action nếu có chỗ */
+  var actWrap=document.querySelector("#drill-pn .drill-hd");
+  document.getElementById("drill").classList.add("on");
+
+  var fEl=document.querySelector('[data-focus="'+S._planFocus+'"]');
+  if(fEl){ fEl.focus(); try{fEl.setSelectionRange(fEl.value.length,fEl.value.length);}catch(e){} S._planFocus=null; }
+}
+
+/* Sửa trong detail → cập nhật manual/existing-override + cardbox nhảy (không đóng drawer) */
+function planDetailEdit(rowKey, field, val){
+  /* Existing (auto) cũng cho override SL Mani: tạo bản manual "shadow" nếu cần?
+     Theo yêu cầu chỉ cần editable cho SL Mani dự kiến — với Existing ta KHÔNG cho sửa (readonly),
+     nên planDetailEdit chỉ chạm dòng manual. */
+  var m=S.plan.manual[rowKey];
+  if(!m) return;   // Existing auto → bỏ qua (input readonly nên không tới đây)
+  if(field==="msl"||field==="mst"||field==="mcu"||field==="dur"){
+    var num=+String(val).replace(/[^\d]/g,""); m[field]=isFinite(num)?num:0;
+  } else if(field==="startMonth"){ m.startMonth=val; }
+  else { m[field]=val; }
+  S.plan.dirty[rowKey]=true;
+
+  /* cập nhật NGAY: revenue dòng + cardbox, giữ drawer + focus */
+  planUpdateLiveTotals();
+}
+
+/* Cập nhật cardbox + revbar + revenue dòng mà KHÔNG re-render drawer (giữ focus khi gõ) */
+function planUpdateLiveTotals(){
+  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; });
+  var incl=rows.filter(planInclude);
+  var totUSD=0,exUSD=0,oppUSD=0,exN=0,oppN=0;
+  incl.forEach(function(r){ if(r._c.total<=0)return; totUSD+=r._c.usdFY68;
+    if(r.group==="Existing"){exUSD+=r._c.usdFY68;exN++;} else {oppUSD+=r._c.usdFY68;oppN++;} });
+  var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(totUSD/tgt*100):0;
+
+  var kv=document.querySelectorAll("#sec-plan .kr .kpi .kv span");
+  /* KPI: [0]=total [1]=existing [2]=opp [3]=ach% — set trực tiếp text (bỏ animation) */
+  function setK(i,txt){ if(kv[i]) kv[i].textContent=txt; }
+  setK(0, hvUSD(totUSD)); setK(1, hvUSD(exUSD)); setK(2, hvUSD(oppUSD));
+  setK(3, ach.toFixed(0)+"%");
+  var notes=document.querySelectorAll("#sec-plan .kr .kpi .knote");
+  if(notes[0]) notes[0].innerHTML=(LANG==="vi"?"Existing ":"")+hvUSD(exUSD)+" + "+(LANG==="vi"?"Cơ hội ":"opportunity ")+hvUSD(oppUSD);
+  if(notes[2]) notes[2].innerHTML=oppN+(LANG==="vi"?" dòng đã điền SL Mani":" rows with Mani qty");
+
+  /* revbar */
+  var fill=document.querySelector("#sec-plan .revbar-fill");
+  var pct=document.querySelector("#sec-plan .revbar-pct");
+  var inLbl=document.querySelector("#sec-plan .revbar-in");
+  if(fill){ fill.style.width=Math.max(0,Math.min(100,ach))+"%"; fill.classList.toggle("full",ach>=100); }
+  if(inLbl) inLbl.textContent=hvUSD(totUSD);
+  if(pct){ pct.textContent=ach.toFixed(0)+"%"; pct.style.color=ach>=100?"var(--pos)":ach>=60?"var(--warn)":"var(--neg)"; }
+
+  /* revenue dòng đang mở */
+  if(S.plan.detail){
+    var dr=rows.filter(function(r){return r.rowKey===S.plan.detail;})[0];
+    var el=document.getElementById("pd-rev"); if(dr&&el) el.textContent=hvUSD(dr._c.usdFY68);
+  }
+
+  /* dirty tag + save button */
+  var dn=Object.keys(S.plan.dirty).length;
+  var tag=document.querySelector("#sec-plan .plan-dirty-tag");
+  if(tag){ tag.classList.toggle("on",dn>0); tag.textContent=dn?(dn+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"); }
+  var sv=document.querySelector("#sec-plan .plan-savebar .fc-save");
+  if(sv){ sv.classList.toggle("has",dn>0); sv.innerHTML="💾 "+(LANG==="vi"?"Lưu tất cả lên Sheet":"Save all to Sheet")+(dn?" ("+dn+")":""); }
+}
+
+/* ── Bảng cũ không dùng nữa ở render v2 (giữ hàm rỗng để tương thích nếu gọi) ── */
+function planTableHTML(){ return ""; }
+
+
 function planKnifeInput(k,field,val){
   return '<input class="plan-i num" data-focus="'+k+'_'+field+'" value="'+(val||"")+'" '
     +'oninput="S._planFocus=\''+k+'_'+field+'\';planEdit(\''+k+'\',\''+field+'\',this.value)" onfocus="this.select()">';
 }
-function planTableHTML(rows){
-  function section(group, editable){
-    var list=rows.filter(function(r){return r.group===group;});
-    var gcol=PLAN_GCOL[group];
-    var icon = group==="Existing"?"①":group==="Duy trì"?"②":"③";
-    var sub = group==="Existing"?(LANG==="vi"?"tự động từ feed · chỉ xem":"auto from feed · read-only")
-            : (LANG==="vi"?"điền tay · SL dao · cơ hội · ghi chú":"editable · knife qty · opportunity · note");
-    var subtot=list.reduce(function(s,r){return s+ (planInclude(r)?r._c.usdFY68:0);},0);
-
-    var head='<tr>'
-      +'<th>#</th><th>'+(LANG==="vi"?"Bệnh viện":"Hospital")+'</th><th>'+(LANG==="vi"?"Tỉnh":"Prov.")+'</th><th>TBMT</th>'
-      +'<th class="kh" style="color:'+HV_KCOL.MST+'">MST</th><th class="kh" style="color:'+HV_KCOL.MSL+'">MSL</th><th class="kh" style="color:'+HV_KCOL.MCU+'">MCU</th>'
-      +'<th>'+(LANG==="vi"?"Bắt đầu":"Start")+'</th><th>'+(LANG==="vi"?"HL(th)":"Dur")+'</th>'
-      +(editable?'<th>'+(LANG==="vi"?"Cơ hội":"Opp.")+'</th>':'')
-      +'<th>'+(LANG==="vi"?"Doanh số FY68":"FY68 rev")+'</th>'
-      +(editable?'<th>'+(LANG==="vi"?"Ghi chú":"Note")+'</th><th></th>':'')
-      +'</tr>';
-
-    var body=list.length? list.sort(function(a,b){return b._c.usdFY68-a._c.usdFY68;}).map(function(r,i){
-      var k=r.rowKey, off=!planInclude(r);
-      if(!editable){
-        return '<tr class="'+(off?"plan-off":"")+'"><td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
-          +'<td><b>'+esc(r.account||"—")+'</b></td><td>'+esc(r.city||"—")+'</td>'
-          +'<td class="mono" style="font-size:11px;color:var(--t2)">'+esc(r.tbmt||"—")+'</td>'
-          +'<td class="num">'+(r.mst?hvNum(r.mst):"—")+'</td><td class="num">'+(r.msl?hvNum(r.msl):"—")+'</td><td class="num">'+(r.mcu?hvNum(r.mcu):"—")+'</td>'
-          +'<td class="num">'+(r.startIdx?planIdxToLabel(r.startIdx):"—")+'</td><td class="num">'+r.dur+'</td>'
-          +'<td class="num"><b>'+hvUSD(r._c.usdFY68)+'</b></td></tr>';
-      }
-      var oppSel='<select class="plan-sel opp-'+({"Cao":"hi","Trung bình":"mid","Thấp":"lo"}[r.opp]||"mid")+'" onchange="planEdit(\''+k+'\',\'opp\',this.value)">'
-        +["Cao","Trung bình","Thấp"].map(function(o){return '<option '+(r.opp===o?"selected":"")+'>'+o+'</option>';}).join("")+'</select>';
-      return '<tr class="'+(off?"plan-off":"")+'"><td class="num" style="color:var(--t3)">'+(i+1)+'</td>'
-        +'<td><input class="plan-i" data-focus="'+k+'_account" value="'+esc(r.account)+'" oninput="S._planFocus=\''+k+'_account\';planEdit(\''+k+'\',\'account\',this.value)"></td>'
-        +'<td><input class="plan-i sm" data-focus="'+k+'_city" value="'+esc(r.city)+'" oninput="S._planFocus=\''+k+'_city\';planEdit(\''+k+'\',\'city\',this.value)"></td>'
-        +'<td><input class="plan-i sm mono" data-focus="'+k+'_tbmt" value="'+esc(r.tbmt)+'" oninput="S._planFocus=\''+k+'_tbmt\';planEdit(\''+k+'\',\'tbmt\',this.value)"></td>'
-        +'<td>'+planKnifeInput(k,"mst",r.mst||"")+'</td><td>'+planKnifeInput(k,"msl",r.msl||"")+'</td><td>'+planKnifeInput(k,"mcu",r.mcu||"")+'</td>'
-        +'<td>'+mpickBtnHtml("plan-mp-"+k, r.startMonth||planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_END), "planPickStart_"+k)+'</td>'
-        +'<td>'+planKnifeInput(k,"dur",r.dur||12)+'</td>'
-        +'<td>'+oppSel+'</td>'
-        +'<td class="num"><b>'+hvUSD(r._c.usdFY68)+'</b></td>'
-        +'<td><input class="plan-i" data-focus="'+k+'_note" value="'+esc(r.note)+'" oninput="S._planFocus=\''+k+'_note\';planEdit(\''+k+'\',\'note\',this.value)"></td>'
-        +'<td><button class="plan-del" onclick="planDelRow(\''+k+'\')" title="Delete">🗑</button></td></tr>';
-    }).join("") : '<tr><td colspan="'+(editable?13:10)+'" style="text-align:center;color:var(--t3);padding:18px">'+(LANG==="vi"?"Chưa có dòng nào":"No rows yet")+'</td></tr>';
-
-    return '<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-      +'<div class="ct" style="color:'+gcol+'">'+icon+' '+group+' — '+list.length+' '+(LANG==="vi"?"dòng":"rows")+'</div>'
-      +'<div class="cs">'+sub+' · '+(LANG==="vi"?"doanh số nhóm ":"subtotal ")+hvUSD(subtot)+'</div></div>'
-      +'<div class="cb" style="padding:0"><div class="tw"><table class="plan-tb">'
-      +'<thead>'+head+'</thead><tbody>'+body+'</tbody></table></div></div></div>';
-  }
-  return section("Existing",false)+section("Duy trì",true)+section("Mở mới",true);
-}
-
 /* startMonth picker cần handler tên động — tạo proxy 1 lần */
 var _planPickProxy={};
 function planEnsurePickHandlers(rows){
@@ -5897,9 +6229,9 @@ function planEnsurePickHandlers(rows){
 }
 
 /* ── Smart search kết quả ── */
-function planOnSearch(v){ S.plan.q=v; renderPlan(); }
+function planOnSearch(v){ S.plan.qAdd=v; renderPlan(); }
 function planSearchResHTML(){
-  var q=norm(S.plan.q||"");
+  var q=norm(S.plan.qAdd||"");
   if(!q) return '<div class="plan-hint">'+(LANG==="vi"?"Gõ để tìm tỉnh hoặc bệnh viện…":"Type to search province or hospital…")+'</div>';
   var map=planHospitalsByProvince();
   var out=[], cnt=0;
@@ -5921,7 +6253,7 @@ function planSearchResHTML(){
     });
   });
   return out.length? '<div class="plan-res">'+out.join("")+'</div>'
-    : '<div class="plan-hint">'+(LANG==="vi"?"Không tìm thấy «"+esc(S.plan.q)+"»":"No match for «"+esc(S.plan.q)+"»")+'</div>';
+    : '<div class="plan-hint">'+(LANG==="vi"?"Không tìm thấy «"+esc(S.plan.qAdd)+"»":"No match for «"+esc(S.plan.qAdd)+"»")+'</div>';
 }
 function planAddFromSearch(group, name, city, tbmt){
   planAddRow(group, name, city, tbmt);

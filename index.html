@@ -912,6 +912,61 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .gantt-legend span{display:flex;align-items:center;gap:7px;}
 .gantt-legend i{width:13px;height:13px;border-radius:4px;display:inline-block;}
 
+/* ── FY selector (v5) ── */
+.plan-fy-wrap{display:inline-flex;gap:6px;flex-wrap:wrap;}
+.plan-fy{border:1px solid var(--br);background:var(--sf2);color:var(--t2);border-radius:8px;padding:6px 13px;
+  font-family:var(--ff);font-size:13px;font-weight:800;cursor:pointer;transition:all .12s;font-variant-numeric:tabular-nums;}
+.plan-fy:hover{border-color:var(--blue);color:var(--t1);}
+.plan-fy.on{background:var(--navy2);color:#fff;border-color:var(--navy2);box-shadow:0 3px 10px rgba(14,47,95,.25);}
+.plan-fy-note{font-size:12px;font-weight:700;color:var(--sky);background:var(--pale);padding:4px 11px;border-radius:20px;}
+.plan-fy-hint{font-size:11.5px;color:var(--t3);max-width:420px;text-align:right;}
+@media(max-width:720px){.plan-fy-hint{display:none;}}
+/* ── opportunity-tier revenue strip ── */
+.popp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:640px){.popp-grid{grid-template-columns:1fr;}}
+.popp-seg{background:var(--sf2);border:1px solid var(--br);border-radius:11px;padding:11px 13px;}
+.popp-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.popp-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+.popp-nm{font-weight:800;font-size:12.5px;color:var(--t1);}
+.popp-v{margin-left:auto;font-weight:900;font-size:15px;color:var(--navy2);font-variant-numeric:tabular-nums;}
+.popp-n{font-size:11px;color:var(--t3);}
+.popp-bar{height:8px;border-radius:6px;background:var(--br);overflow:hidden;}
+.popp-fill{height:100%;border-radius:6px;transition:width .3s;}
+/* ── gantt per-month value ── */
+.gmv{font-size:9.5px;font-weight:800;color:currentColor;opacity:.85;font-variant-numeric:tabular-nums;white-space:nowrap;transform:scale(.92);}
+.gantt-cell.on.gx .gmv{color:#0E2F5F;}
+.gantt-cell.on.gh1 .gmv{color:#1B6B27;}
+.gantt-cell.on.gh2 .gmv{color:#9A7000;}
+.gantt-cell.on.gh3 .gmv{color:#B85F1E;}
+/* ── territory board (v5) ── */
+.terr-list{display:flex;flex-direction:column;gap:11px;max-height:620px;overflow-y:auto;padding:2px;}
+.terr-card{border:1px solid var(--br);border-radius:12px;background:var(--sf);padding:13px 15px;transition:border-color .12s,box-shadow .12s;}
+.terr-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(0,48,71,.08);}
+.terr-hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px;}
+.terr-nm{font-weight:800;font-size:15px;color:var(--t1);display:flex;align-items:center;gap:8px;min-width:0;}
+.terr-opp-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.terr-city{font-size:11.5px;color:var(--sky);background:var(--pale);padding:3px 11px;border-radius:20px;white-space:nowrap;}
+.terr-award{font-size:12.5px;color:var(--t2);background:var(--sf2);border:1px solid var(--br);border-radius:9px;padding:8px 11px;margin-bottom:10px;}
+.terr-award.empty{color:var(--t3);font-style:italic;}
+.terr-award .ta-h{font-weight:800;color:var(--t1);}
+.terr-kchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.tk-chip{font-size:11px;padding:2px 9px;border-radius:20px;background:var(--pale);color:var(--t1);}
+.tk-chip b{font-variant-numeric:tabular-nums;}
+.terr-edit{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:10px;}
+.terr-fld{display:flex;flex-direction:column;gap:5px;font-size:10.5px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.03em;}
+.terr-fld.grow{flex:1;min-width:200px;}
+.terr-note{border:1.5px solid var(--br);border-radius:8px;padding:8px 10px;font-family:var(--ff);font-size:13px;font-weight:500;background:var(--sf2);color:var(--t1);text-transform:none;letter-spacing:0;}
+.terr-note:focus{outline:none;border-color:var(--blue);background:var(--sf);box-shadow:0 0 0 2px rgba(58,92,170,.14);}
+.terr-qrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--br);}
+.terr-qlbl{font-size:11.5px;font-weight:800;color:var(--t2);}
+.terr-q{display:flex;flex-direction:column;gap:3px;}
+.terr-ql{font-size:10px;font-weight:800;letter-spacing:.02em;}
+.terr-qi{width:78px;border:1.5px solid var(--br);border-radius:8px;padding:6px 8px;text-align:center;
+  font-family:var(--ff);font-size:15px;font-weight:800;background:var(--sf2);color:var(--t1);font-variant-numeric:tabular-nums;}
+.terr-qi:focus{outline:none;border-color:var(--blue);background:var(--sf);box-shadow:0 0 0 2px rgba(58,92,170,.14);}
+.terr-rev{margin-left:auto;font-size:12.5px;color:var(--t2);white-space:nowrap;}
+.terr-rev b{color:var(--pos);font-size:15px;font-variant-numeric:tabular-nums;}
+
 /* ── FY68 Plan v2: gantt tabs + clickable rows + detail drawer ── */
 .plan-gtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 /* ── FY68: KPI cardbox tương tác (click ra data) ── */
@@ -5890,19 +5945,49 @@ function mkExportExcel(){
    Smart search: gõ tỉnh → hiện toàn bộ BV của tỉnh đó (kể cả BV chưa có dòng plan) để điền nhanh.
    ════════════════════════════════════════════════════════════════════════════════════════════ */
 
-var PLAN_BASE = 2026*12 + 8;              // W1 = T09/2026 = 24320
-var PLAN_END  = PLAN_BASE + 11;           // T08/2027 = 24331
+/* ══════════════════════════════════════════════════════════════════════════════════════════════
+   FY68 PLAN — v5:  KỲ ĐỘNG (chọn FY bất kỳ, mặc định FY68)
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   • Kỳ tài khoá MMH: FY<NN> bắt đầu 01/09 của năm (2000+NN-1) → 31/08 của năm (2000+NN).
+       FY68 → 09/2026..08/2027.  month-index (y*12 + (m-1)):  base=Y*12+8, end=base+11.
+   • S.plan.fy = 'FY68' (mặc định) — đổi qua planSetFY().  Mọi công thức/gantt/cardbox
+     đọc PLAN_BASE()/PLAN_END()/PLAN_FYKEY() thay cho hằng số cứng cũ.
+   ══════════════════════════════════════════════════════════════════════════════════════════════ */
 var PLAN_PRICE_DEFAULT = { MST:140000, MSL:240000, MCU:250000 };
 var PLAN_FX_DEFAULT = 26400;
 var PLAN_GCOL = { "Existing":"#0E2F5F", "Duy trì":"#2E7D32", "Mở mới":"#8E44AD" };
 var PLAN_OPPCOL = { "Cao":"#2E7D32", "Trung bình":"#F0A800", "Thấp":"#E07A2E" };
 
+/* FY meta — có thể mở rộng tuỳ ý, không cần khai báo trước; suy trực tiếp từ số FY. */
+function planFyNum(fy){ var n=parseInt(String(fy||"FY68").replace(/[^\d]/g,""),10); return isFinite(n)?n:68; }
+/* MMH: FY<N> bắt đầu 01/09 của năm (1958 + N).  FY68→2026, FY67→2025, FY69→2027. */
+function planFyStartYear(fy){ return 1958 + planFyNum(fy); }
+function planFyBaseIdx(fy){ return planFyStartYear(fy)*12 + 8; }   // 09 = month-index +8
+function PLAN_FYKEY(){ return S.plan.fy || "FY68"; }
+function PLAN_BASE(){ return planFyBaseIdx(PLAN_FYKEY()); }        // month-index của T09 đầu kỳ
+function PLAN_END(){  return PLAN_BASE() + 11; }                   // T08 cuối kỳ
+function planFyLabel(fy){ var y0=planFyStartYear(fy); return "FY"+planFyNum(fy)+" · T09/"+y0+" → T08/"+(y0+1); }
+/* Danh sách FY để chọn: từ FY67 (kỳ có data) tới +2 năm sau data mới nhất. */
+function planFyOptions(){
+  var out=[], base=67;
+  for(var n=base; n<=base+4; n++) out.push("FY"+n);
+  return out;
+}
+
 if(!S.plan) S.plan = {
+  fy:"FY68",          // ⭐ kỳ đang xem (mặc định FY68)
   price: { MST:140000, MSL:240000, MCU:250000 }, fx:26400,
-  oppFilter:"ALL", inclExisting:true, q:"", qAdd:"", ganttTab:"all", detail:null,
+  oppFilter:"ALL", inclExisting:true, inclRemaining:true, q:"", qAdd:"", ganttTab:"all", detail:null,
   manual:{},          // rowKey → {group,account,city,tbmt,mst,msl,mcu,startMonth,dur,opp,note}
-  dirty:{}, saving:false, loaded:false, chart:null
+  acct:{},            // "<FY>|<accNorm>" → {account,city,opp,note,msl,mst,mcu,...}  (sheet ACCT_PLAN)
+  acctDirty:{}, acctSaving:false,
+  terrView:"gantt",   // panel địa bàn: 'gantt' | 'board'
+  dirty:{}, saving:false, loaded:false, acctLoaded:false, chart:null
 };
+if(S.plan.fy===undefined) S.plan.fy="FY68";
+if(!S.plan.acct) S.plan.acct={};
+if(!S.plan.acctDirty) S.plan.acctDirty={};
+if(S.plan.inclRemaining===undefined) S.plan.inclRemaining=true;
 
 /* ── month-index helpers ── */
 function planMoToIdx(mo){ var p=String(mo||"").split("/"); if(p.length<2) return 0; return (+p[1])*12 + (+p[0]-1); }
@@ -5912,9 +5997,49 @@ function planIdxToLabel(idx){ var y=Math.floor(idx/12), m=idx%12+1; return (m<10
 function planIdxToMo(idx){ var y=Math.floor(idx/12), m=idx%12+1; return (m<10?"0":"")+m+"/"+y; }
 function planPrice(g){ return +S.plan.price[g] || 0; }
 function planFx(){ return +S.plan.fx || 26400; }
+function planAcctNorm(s){ return norm(s||""); }               // dùng cùng norm() của app
+function planAcctKey(account){ return PLAN_FYKEY()+"|"+planAcctNorm(account); }
 
-/* ── 1 dòng plan → tính doanh số + Gantt ── */
+/* Đổi kỳ FY → nạp lại plan cho kỳ đó, re-render */
+function planSetFY(fy){
+  if(!fy || fy===S.plan.fy) return;
+  S.plan.fy=fy;
+  try{ localStorage.setItem("mmh_plan_fy", fy); }catch(e){}
+  S.plan.detail=null;
+  renderPlan();
+}
+
+/* ── Tổng hợp doanh số kế hoạch của KỲ đang xem (rows Gantt + kế hoạch địa bàn ACCT_PLAN) ──
+   Existing = chắc chắn; Opportunity = Duy trì(auto-renew) + Mở mới + SL Mani điền ở panel địa bàn.
+   Tránh đếm trùng: record địa bàn của BV nào trùng account với 1 dòng Gantt Existing thì record
+   đó CỘNG THÊM (là kỳ vọng bán thêm), vì Existing = gói đang trúng, còn ACCT = SL Mani dự kiến. */
+function planTotals(){
+  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude);
+  var totUSD=0, exUSD=0, oppUSD=0, exN=0, oppN=0;
+  rows.forEach(function(r){
+    if(r._c.total<=0) return;
+    totUSD+=r._c.usdFY68;
+    if(r.group==="Existing"){ exUSD+=r._c.usdFY68; exN++; }
+    else { oppUSD+=r._c.usdFY68; oppN++; }
+  });
+  // + doanh số từ kế hoạch địa bàn (SL Mani điền ở panel), theo kỳ đang xem
+  var acctUSD=0, acctN=0;
+  Object.keys(S.plan.acct).forEach(function(k){
+    var rec=S.plan.acct[k]; if(!rec || rec.fy!==PLAN_FYKEY()) return;
+    var u=acctRevenueUSD(rec); if(u<=0) return;
+    acctUSD+=u; acctN++;
+  });
+  oppUSD+=acctUSD; oppN+=acctN; totUSD+=acctUSD;
+  return { rows:rows, totUSD:totUSD, exUSD:exUSD, oppUSD:oppUSD, exN:exN, oppN:oppN, acctUSD:acctUSD, acctN:acctN };
+}
+
+/* ── 1 dòng plan → tính doanh số + Gantt (theo KỲ ĐANG CHỌN) ──
+   • usdPerMonth = (giá trị gói theo giá kế hoạch / FX) / hiệu lực(tháng)
+   • overlap     = số tháng gói còn hiệu lực RƠI VÀO cửa sổ FY đang xem
+   • usdFY       = usdPerMonth × overlap
+   • gantt[12]   = tháng nào của kỳ đang xem thì gói còn hiệu lực (để tô màu + fill số)   */
 function planCompute(row){
+  var BASE=PLAN_BASE(), END=PLAN_END();
   var MST=+row.mst||0, MSL=+row.msl||0, MCU=+row.mcu||0;
   var total=MST+MSL+MCU;
   var packageVND = MST*planPrice("MST") + MSL*planPrice("MSL") + MCU*planPrice("MCU");
@@ -5922,43 +6047,103 @@ function planCompute(row){
   var hasTime = gs>0 && dur>0;
   var usdPerMonth = hasTime ? (packageVND/planFx())/dur : 0;
   var ge = hasTime ? gs+dur-1 : 0;
-  var overlap = hasTime ? Math.max(0, Math.min(ge, PLAN_END) - Math.max(gs, PLAN_BASE) + 1) : 0;
-  var usdFY68 = usdPerMonth * overlap;
+  var overlap = hasTime ? Math.max(0, Math.min(ge, END) - Math.max(gs, BASE) + 1) : 0;
+  var usdFY = usdPerMonth * overlap;
   var gantt = [];
-  for(var k=0;k<12;k++){ var m=PLAN_BASE+k; gantt.push(hasTime && m>=gs && m<=ge); }
-  return { total:total, packageVND:packageVND, usdPerMonth:usdPerMonth, usdFY68:usdFY68,
+  for(var k=0;k<12;k++){ var m=BASE+k; gantt.push(hasTime && m>=gs && m<=ge); }
+  return { total:total, packageVND:packageVND, usdPerMonth:usdPerMonth,
+           usdFY68:usdFY, usdFY:usdFY,          /* usdFY68 giữ tên cũ để tương thích */
            gs:gs, ge:ge, overlap:overlap, gantt:gantt };
 }
 
-/* ── INCLUDE(row) theo bộ lọc (C5 oppFilter · C6 inclExisting) ── */
+/* ── INCLUDE(row) theo bộ lọc (oppFilter · inclExisting · inclRemaining) ── */
 function planInclude(row){
   if(row.group==="Existing") return S.plan.inclExisting;
+  if(row.group==="Duy trì" && !S.plan.inclRemaining) return false;
   return S.plan.oppFilter==="ALL" || row.opp===S.plan.oppFilter;
 }
 
-/* ── Nhóm ① Existing: đổ tự động từ feed HV (gói Win còn hiệu lực FY68) ── */
+/* ── Nhóm ① Existing: gói HV status=Win còn hiệu lực RƠI VÀO kỳ đang chọn ──
+   Không lệ thuộc r.m.FY68 (chỉ có FY66/67/68/69 tiền-tính). Tự tính overlap theo
+   start(approve/eff) + duration vs cửa sổ FY đang xem → giữ được mọi kỳ (FY67 tail, FY69…). */
 function planExistingRows(){
+  var BASE=PLAN_BASE(), END=PLAN_END();
   var byPkg={};
   (NPP_FEED.HUNGVI||[]).forEach(function(r){
     if(r.result!=="Win" || !r.demandOK) return;
-    var m=r.m && r.m.FY68;
-    if(!m || m.overlap<=0) return;
+    var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
+    if(!si) return;
+    var dur = (+r.durationMonths>0)? +r.durationMonths : 12;
+    var ge = si + dur - 1;
+    var overlap = Math.max(0, Math.min(ge,END) - Math.max(si,BASE) + 1);
+    if(overlap<=0) return;                      // gói không phủ tháng nào của kỳ đang xem
     var k=r.pkgKey;
     if(!byPkg[k]) byPkg[k]={ rowKey:"EX|"+k, group:"Existing", account:r.hospitalStd||r.hospital,
-      city:r.city, tbmt:r.tbmt||"", mst:0, msl:0, mcu:0, startIdx:0, dur:r.durationMonths||12,
-      opp:"", note:"", _auto:true };
+      city:r.city, tbmt:r.tbmt||"", mst:0, msl:0, mcu:0, startIdx:0, dur:dur,
+      opp:"", note:"", _auto:true, _pkgKey:k, _startIdxRaw:si, _durRaw:dur };
     var p=byPkg[k];
     p.mst += r.qtyMST||0; p.msl += r.qtyMSL||0; p.mcu += r.qtyMCU||0;
-    var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
-    if(si && (!p.startIdx || si>p.startIdx)) p.startIdx=si;
-    if(r.durationMonths) p.dur=r.durationMonths;
+    if(si && (!p.startIdx || si>p.startIdx)){ p.startIdx=si; p._startIdxRaw=si; }
+    if(dur){ p.dur=dur; p._durRaw=dur; }
   });
   return Object.keys(byPkg).map(function(k){ return byPkg[k]; });
 }
 
-/* ── Nhóm ② ③: dòng điền tay (từ S.plan.manual, khôi phục từ FC_LOG) ── */
+/* ── Nhóm ② Duy trì (auto-renew): với MỖI gói Existing, sinh kỳ kế tiếp nối sau khi hết hạn,
+      nếu kỳ kế đó phủ vào cửa sổ FY đang xem. SL = gói gốc (editable), start = ngay sau khi hết,
+      dur = gói gốc (editable). Nếu user đã chỉnh tay (S.plan.manual có key "MTA|<pkg>") thì lấy
+      giá trị chỉnh tay đó. */
+function planAutoRenewRows(){
+  var BASE=PLAN_BASE(), END=PLAN_END();
+  var pkgs={};   // pkgKey → {account,city,tbmt,mst,msl,mcu,startIdx,dur}
+  (NPP_FEED.HUNGVI||[]).forEach(function(r){
+    if(r.result!=="Win" || !r.demandOK) return;
+    var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
+    if(!si) return;
+    var dur=(+r.durationMonths>0)?+r.durationMonths:12;
+    var k=r.pkgKey;
+    if(!pkgs[k]) pkgs[k]={ account:r.hospitalStd||r.hospital, city:r.city, tbmt:r.tbmt||"",
+      mst:0, msl:0, mcu:0, startIdx:si, dur:dur };
+    var p=pkgs[k];
+    p.mst+=r.qtyMST||0; p.msl+=r.qtyMSL||0; p.mcu+=r.qtyMCU||0;
+    if(si>p.startIdx) p.startIdx=si;
+    if(dur) p.dur=dur;
+  });
+  var out=[];
+  Object.keys(pkgs).forEach(function(k){
+    var p=pkgs[k];
+    // kỳ renew đầu tiên bắt đầu ngay sau khi gói gốc hết hạn; nhảy tiếp cho tới khi qua END
+    var rs = p.startIdx + p.dur;                 // start kỳ renew #1
+    var guard=0;
+    while(rs<=END && guard++<10){
+      var re=rs+p.dur-1;
+      if(re>=BASE){                              // kỳ renew này phủ vào cửa sổ đang xem
+        var rowKey="MTA|"+k+"|"+rs;              // khoá auto-renew ổn định theo pkg + start
+        var man=S.plan.manual[rowKey];
+        out.push({
+          rowKey:rowKey, group:"Duy trì", account:p.account, city:p.city, tbmt:p.tbmt||"",
+          mst: man&&man.mst!=null? +man.mst : p.mst,
+          msl: man&&man.msl!=null? +man.msl : p.msl,
+          mcu: man&&man.mcu!=null? +man.mcu : p.mcu,
+          startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : rs,
+          startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(rs),
+          dur: man&&man.dur!=null? +man.dur : p.dur,
+          opp: man&&man.opp? man.opp : "Trung bình",
+          note: man&&man.note? man.note : "",
+          _auto:false, _autoRenew:true, _pkgKey:k
+        });
+      }
+      rs += p.dur;                               // sang kỳ renew kế tiếp
+    }
+  });
+  return out;
+}
+
+/* ── Nhóm ③ Mở mới (+ Duy trì điền tay không gắn pkg): dòng thuần thủ công.
+      Bỏ qua key "MTA|…" (đó là override cho auto-renew, đã xử lý ở planAutoRenewRows). ── */
 function planManualRows(){
-  return Object.keys(S.plan.manual).map(function(k){
+  return Object.keys(S.plan.manual).filter(function(k){ return k.indexOf("MTA|")!==0; })
+    .map(function(k){
     var m=S.plan.manual[k];
     return { rowKey:k, group:m.group||"Mở mới", account:m.account||"", city:m.city||"",
       tbmt:m.tbmt||"", mst:+m.mst||0, msl:+m.msl||0, mcu:+m.mcu||0,
@@ -5967,7 +6152,9 @@ function planManualRows(){
   });
 }
 
-function planAllRows(){ return planExistingRows().concat(planManualRows()); }
+function planAllRows(){
+  return planExistingRows().concat(planAutoRenewRows()).concat(planManualRows());
+}
 
 /* ── Nạp dòng plan đã lưu từ FC_LOG (group = Duy trì / Mở mới) ── */
 function planMergeLog(logMap){
@@ -5978,6 +6165,83 @@ function planMergeLog(logMap){
     S.plan.manual[k]={ group:e.group, account:e.account||"", city:e.city||"", tbmt:e.tbmt||"",
       mst:e.mst, msl:e.msl, mcu:e.mcu, startMonth:e.startMonth||e.expMonth||"",
       dur:e.dur, opp:e.potential||"Trung bình", note:e.note||"" };
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════════════════
+   ACCT_PLAN — kế hoạch địa bàn (sheet phụ MỚI trong file Hùng Vĩ)
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   Lưu bền cho TỪNG BV × TỪNG KỲ: đánh giá cơ hội, cập nhật tình hình, SL Mani kỳ vọng (3 loại).
+   Khoá = "<FY>|<accNorm>".  S.plan.acct[key] = {account,city,opp,note,msl,mst,mcu,group,startMonth,dur}
+   ════════════════════════════════════════════════════════════════════════════════════════════ */
+function acctLoad(force){
+  if(S.plan.acctLoaded && !force) return Promise.resolve();
+  return fetch(NPP_URL.HUNGVI+"?action=acctPlan",{method:"GET",redirect:"follow"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d && d.ok!==false && d.plan){
+        S.plan.acct = S.plan.acct || {};
+        Object.keys(d.plan).forEach(function(k){ S.plan.acct[k]=d.plan[k]; });
+      }
+      S.plan.acctLoaded=true;
+    })
+    .catch(function(e){ console.warn("acctPlan load fail",e); S.plan.acctLoaded=true; });
+}
+/* lấy record địa bàn cho BV (kỳ hiện tại) — tạo rỗng nếu chưa có */
+function acctGet(account, city){
+  var key=planAcctKey(account);
+  var rec=S.plan.acct[key];
+  if(!rec){ rec={ key:key, fy:PLAN_FYKEY(), account:account||"", city:city||"",
+    opp:"Trung bình", note:"", msl:null, mst:null, mcu:null }; }
+  return rec;
+}
+/* sửa 1 field của record địa bàn → đánh dấu dirty (không tự lưu; bấm Lưu mới ghi) */
+function acctEdit(account, city, field, val){
+  var key=planAcctKey(account);
+  var rec=S.plan.acct[key] || { key:key, fy:PLAN_FYKEY(), account:account||"", city:city||"",
+    opp:"Trung bình", note:"", msl:null, mst:null, mcu:null };
+  if(field==="msl"||field==="mst"||field==="mcu"){
+    var s=String(val).replace(/[^\d]/g,""); rec[field]= s===""? null : +s;
+  } else { rec[field]=val; }
+  rec.fy=PLAN_FYKEY(); if(city) rec.city=city; rec.account=account||rec.account;
+  S.plan.acct[key]=rec;
+  S.plan.acctDirty[key]=true;
+  acctUpdateLive();      // cardbox + revenue nhảy ngay
+}
+/* SL Mani kỳ vọng của địa bàn → dùng để tính doanh số nhóm "địa bàn" (bổ sung ngoài Existing) */
+function acctRevenueUSD(rec){
+  if(!rec) return 0;
+  var vnd = (+rec.msl||0)*planPrice("MSL") + (+rec.mst||0)*planPrice("MST") + (+rec.mcu||0)*planPrice("MCU");
+  return vnd/planFx();
+}
+/* tổng theo mức cơ hội (Cao/TB/Thấp) — cho cột "doanh số theo nhóm cơ hội" */
+function acctByOpp(){
+  var agg={ "Cao":{n:0,usd:0}, "Trung bình":{n:0,usd:0}, "Thấp":{n:0,usd:0} };
+  Object.keys(S.plan.acct).forEach(function(k){
+    var rec=S.plan.acct[k]; if(!rec || rec.fy!==PLAN_FYKEY()) return;
+    var tot=(+rec.msl||0)+(+rec.mst||0)+(+rec.mcu||0); if(tot<=0) return;
+    var o=rec.opp||"Trung bình"; if(!agg[o]) agg[o]={n:0,usd:0};
+    agg[o].n++; agg[o].usd += acctRevenueUSD(rec);
+  });
+  return agg;
+}
+/* Lưu các record địa bàn đã sửa lên ACCT_PLAN */
+function acctSaveAll(){
+  if(S.plan.acctSaving) return;
+  var rows=[];
+  Object.keys(S.plan.acctDirty).forEach(function(k){
+    var rec=S.plan.acct[k]; if(!rec) return;
+    rows.push({ key:k, fy:rec.fy||PLAN_FYKEY(), account:rec.account, city:rec.city,
+      opp:rec.opp, note:rec.note, msl:rec.msl, mst:rec.mst, mcu:rec.mcu,
+      group:rec.group||"", startMonth:rec.startMonth||"", dur:rec.dur });
+  });
+  if(!rows.length){ showToast(LANG==="vi"?"Chưa có thay đổi địa bàn":"No territory changes","warn"); return; }
+  S.plan.acctSaving=true; acctUpdateLive();
+  fcPostJSON(NPP_URL.HUNGVI,{action:"saveAcctPlan",rows:rows}).then(function(res){
+    S.plan.acctSaving=false;
+    if(res && res.ok!==false){ S.plan.acctDirty={}; showToast(LANG==="vi"?"Đã lưu kế hoạch địa bàn":"Territory plan saved","success"); }
+    else showToast(LANG==="vi"?"Lưu địa bàn thất bại":"Territory save failed","warn");
+    if(S.tab==="plan") renderPlan();
   });
 }
 
@@ -6003,7 +6267,7 @@ function planNewRowKey(g){ return (g==="Duy trì"?"MT":"NEW")+"|"+Date.now()+"|"
 function planAddRow(group, account, city, tbmt){
   var k=planNewRowKey(group);
   S.plan.manual[k]={ group:group||"Mở mới", account:account||"", city:city||"", tbmt:tbmt||"",
-    mst:0, msl:0, mcu:0, startMonth:planIdxToMo(PLAN_BASE), dur:12, opp:"Trung bình", note:"" };
+    mst:0, msl:0, mcu:0, startMonth:planIdxToMo(PLAN_BASE()), dur:12, opp:"Trung bình", note:"" };
   S.plan.dirty[k]=true;
   renderPlan();
 }
@@ -6056,10 +6320,14 @@ function planRenderCtrl(){
     +'<input class="fc-set-i" value="'+nf(S.plan.price[k])+'" onchange="planSetPrice(\''+k+'\',this.value)" onfocus="this.select()"><span class="u">'+unit+'</span></div>'; }
   var opp=[["ALL",LANG==="vi"?"Tất cả":"All"],["Cao",LANG==="vi"?"Cao":"High"],["Trung bình",LANG==="vi"?"TB":"Mid"],["Thấp",LANG==="vi"?"Thấp":"Low"]];
   var oppChips=opp.map(function(o){ return '<button class="chip '+(S.plan.oppFilter===o[0]?"on":"")+'" onclick="S.plan.oppFilter=\''+o[0]+'\';renderPlan()">'+o[1]+'</button>'; }).join("");
+  var fyChips=planFyOptions().map(function(fk){ return '<button class="chip '+(PLAN_FYKEY()===fk?"on":"")+'" onclick="planSetFY(\''+fk+'\')">'+fk+'</button>'; }).join("");
   document.getElementById("plan-ctrl").innerHTML=
-      '<span class="cl">'+(LANG==="vi"?"Cơ hội (Duy trì/Mở mới)":"Opportunity (Renew/New)")+'</span><div class="sb-side">'+oppChips+'</div>'
+      '<span class="cl">'+(LANG==="vi"?"Kỳ kế hoạch (FY)":"Plan period (FY)")+'</span><div class="sb-side">'+fyChips+'</div>'
     + '<div class="sb-divx"></div>'
-    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm nhóm Existing (đang trúng)":"Include Existing (currently won)")+'</label>'
+    + '<span class="cl">'+(LANG==="vi"?"Cơ hội (Duy trì/Mở mới)":"Opportunity (Renew/New)")+'</span><div class="sb-side">'+oppChips+'</div>'
+    + '<div class="sb-divx"></div>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ① Existing (đang trúng)":"Include ① Existing")+'</label>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclRemaining?"checked":"")+' onchange="S.plan.inclRemaining=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ② Duy trì (renew tự sinh)":"Include ② Remaining (auto-renew)")+'</label>'
     + '<div class="sb-divx"></div>'
     + '<div class="fc-setup"><div class="fc-set-h">'+(LANG==="vi"?"Giá kế hoạch FY68 (VND/dao)":"FY68 plan price (VND/knife)")+'</div>'
     + pRow("MST","MST (Stab)","₫")+pRow("MSL","MSL (Slit)","₫")+pRow("MCU","MCU (Cresc.)","₫")
@@ -6140,26 +6408,43 @@ function renderPlan(){
     });
     return;
   }
-  document.getElementById("plan-name").textContent="FY68 · T09/2026 → T08/2027";
+  if(!S.plan.acctLoaded){
+    document.getElementById("plan-body").innerHTML='<div class="fc-load">⏳ '+(LANG==="vi"?"Đang tải kế hoạch địa bàn…":"Loading territory plan…")+'</div>';
+    acctLoad().then(function(){ if(S.tab==="plan") renderPlan(); });
+    return;
+  }
+  var FYK=PLAN_FYKEY();
+  document.getElementById("plan-name").textContent=planFyLabel(FYK);
+  var sl=document.querySelector("#sec-plan .sh .sl"); if(sl) sl.textContent=(LANG==="vi"?"Kế hoạch "+FYK+" — Hùng Vĩ":FYK+" Plan — Hùng Vĩ");
 
   var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; });
   planEnsurePickHandlers(rows);
   var incl=rows.filter(planInclude);
 
-  /* ── KPI (nhảy theo edit) ── */
-  var totUSD=0, exUSD=0, oppUSD=0, exN=0, oppN=0;
-  incl.forEach(function(r){
-    if(r._c.total<=0) return;
-    totUSD+=r._c.usdFY68;
-    if(r.group==="Existing"){ exUSD+=r._c.usdFY68; exN++; }
-    else { oppUSD+=r._c.usdFY68; oppN++; }
-  });
+  /* ── KPI (nhảy theo edit) — dùng planTotals (gồm cả kế hoạch địa bàn) ── */
+  var T=planTotals();
+  var totUSD=T.totUSD, exUSD=T.exUSD, oppUSD=T.oppUSD, exN=T.exN, oppN=T.oppN;
   var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(totUSD/tgt*100):0;
   var dirtyN=Object.keys(S.plan.dirty).length;
+  var acctDirtyN=Object.keys(S.plan.acctDirty).length;
 
   var H='';
+
+  /* ── Bộ chọn KỲ (FY) + giá kế hoạch nhanh ── */
+  var fyOpts=planFyOptions().map(function(fk){
+    return '<button class="plan-fy'+(fk===FYK?" on":"")+'" onclick="planSetFY(\''+fk+'\')">'+fk+'</button>';
+  }).join("");
+  H+='<div class="card reveal plan-fybar" style="margin-bottom:14px"><div class="cb" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between">'
+    +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+    +'<span style="font-weight:800;color:var(--navy2);font-size:13px">📆 '+(LANG==="vi"?"Kỳ kế hoạch":"Plan period")+'</span>'
+    +'<div class="plan-fy-wrap">'+fyOpts+'</div>'
+    +'<span class="plan-fy-note">'+esc(planFyLabel(FYK))+'</span>'
+    +'</div>'
+    +'<div class="plan-fy-hint">'+(LANG==="vi"?"Existing tự đổ theo kỳ · Duy trì tự sinh (sửa được) · SL Mani điền ở địa bàn":"Existing auto per period · Remaining auto (editable) · fill Mani qty in territory")+'</div>'
+    +'</div></div>';
+
   H+='<div class="kr">'
-    + kpiCard({lbl:(LANG==="vi"?"TỔNG doanh số kế hoạch FY68":"TOTAL FY68 planned revenue"),val:totUSD,mode:"$",cls:"y",
+    + kpiCard({lbl:(LANG==="vi"?"TỔNG doanh số kế hoạch "+FYK:"TOTAL "+FYK+" planned revenue"),val:totUSD,mode:"$",cls:"y",
         click:"planKpiDrill('total')",
         note:(LANG==="vi"?"Existing ":"")+hvUSD(exUSD)+" + "+(LANG==="vi"?"Cơ hội ":"opportunity ")+hvUSD(oppUSD)})
     + kpiCard({lbl:(LANG==="vi"?"① Existing (chắc chắn)":"① Existing (certain)"),val:exUSD,mode:"$",cls:"pos",
@@ -6167,11 +6452,26 @@ function renderPlan(){
         note:exN+(LANG==="vi"?" gói đang còn hiệu lực":" packages still valid")})
     + kpiCard({lbl:(LANG==="vi"?"②③ Cơ hội (kỳ vọng)":"②③ Opportunity (expected)"),val:oppUSD,mode:"$",cls:"y",
         click:"planKpiDrill('opp')",
-        note:oppN+(LANG==="vi"?" dòng đã điền SL Mani":" rows with Mani qty")})
+        note:oppN+(LANG==="vi"?" dòng cơ hội (Duy trì + Mở mới + địa bàn)":" opportunity rows")})
     + kpiCard({lbl:(LANG==="vi"?"Đạt target Hùng Vĩ":"vs Hùng Vĩ target"),val:ach,mode:"%",cls:ach>=100?"pos":ach>=60?"y":"neg",
         click:"planKpiDrill('knife')",
         note:tgt?("target "+hvUSD(tgt)):(LANG==="vi"?"đặt target ở Setup Forecast":"set target in Forecast Setup")})
     +'</div>';
+
+  /* ── Dải doanh số theo MỨC CƠ HỘI (Cao / TB / Thấp) từ kế hoạch địa bàn ── */
+  var opp=acctByOpp();
+  var oppTot=opp["Cao"].usd+opp["Trung bình"].usd+opp["Thấp"].usd;
+  function oppSeg(name,col){ var o=opp[name]||{n:0,usd:0}; var w=oppTot? (o.usd/oppTot*100):0;
+    return '<div class="popp-seg"><div class="popp-top"><span class="popp-dot" style="background:'+col+'"></span>'
+      +'<span class="popp-nm">'+(LANG==="vi"?name:(name==="Cao"?"High":name==="Thấp"?"Low":"Mid"))+'</span>'
+      +'<span class="popp-v">'+hvUSD(o.usd)+'</span><span class="popp-n">'+o.n+(LANG==="vi"?" BV":" hosp")+'</span></div>'
+      +'<div class="popp-bar"><div class="popp-fill" style="width:'+w.toFixed(1)+'%;background:'+col+'"></div></div></div>'; }
+  H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
+    +'<div class="ct">🎯 '+(LANG==="vi"?"Doanh số kỳ vọng theo mức cơ hội":"Expected revenue by opportunity tier")+'</div>'
+    +'<div class="cs">'+(LANG==="vi"?"tổng hợp từ SL Mani điền ở panel địa bàn · "+FYK:"aggregated from Mani qty in territory panel · "+FYK)+'</div></div>'
+    +'<div class="cb"><div class="popp-grid">'
+    + oppSeg("Cao",PLAN_OPPCOL["Cao"]) + oppSeg("Trung bình",PLAN_OPPCOL["Trung bình"]) + oppSeg("Thấp",PLAN_OPPCOL["Thấp"])
+    +'</div></div></div>';
 
   var achC=Math.max(0,Math.min(100,ach));
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="cb"><div class="revbar-wrap">'
@@ -6207,8 +6507,8 @@ function renderPlan(){
   });
 
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">📅 '+(LANG==="vi"?"Gantt FY68 theo nhóm & bệnh viện":"FY68 Gantt by group & hospital")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"chọn nhóm · tìm BV · bấm 1 dòng để xem kết quả trúng gần nhất + điền SL Mani":"pick group · search hospital · click a row for latest award + fill Mani qty")+'</div></div>'
+    +'<div class="ct">📅 '+(LANG==="vi"?"Hiệu lực thầu & doanh số dự kiến theo tháng ("+FYK+")":"Tender validity & expected revenue by month ("+FYK+")")+'</div>'
+    +'<div class="cs">'+(LANG==="vi"?"mỗi tháng còn hiệu lực = doanh số dự kiến/tháng · phân màu theo nhóm · bấm 1 dòng để xem KQ trúng gần nhất + điền SL Mani":"each valid month = expected revenue/month · coloured by group · click a row for latest award + fill Mani qty")+'</div></div>'
     +'<div class="cb">'
       +'<div class="plan-gtabs">'+tabBtns+'</div>'
       +'<div class="ac-search" style="margin:0 0 12px"><span class="ac-search-ic">🔍</span>'
@@ -6217,20 +6517,24 @@ function renderPlan(){
       +planGanttHTML(ganttRows)
     +'</div></div>';
 
-  /* ── Panel thêm BV (smart search toàn bộ danh sách) ── */
+  /* ── TERRITORY BOARD: smart-search địa bàn → xem KQ trúng gần nhất + điền/sửa kế hoạch (lưu ACCT_PLAN) ── */
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
-    +'<div class="ct">➕ '+(LANG==="vi"?"Thêm bệnh viện vào kế hoạch (Duy trì / Mở mới)":"Add hospital to plan (Remaining / New)")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"gõ tỉnh hoặc BV → chọn để thêm dòng cơ hội":"type province or hospital → pick to add an opportunity row")+'</div></div>'
-    +'<div class="cb"><div class="ac-search"><span class="ac-search-ic">🔍</span>'
-    +'<input id="plan-q" class="ac-search-i" placeholder="'+(LANG==="vi"?"VD: Nghệ An, Bệnh viện Mắt…":"e.g. Nghệ An, Eye Hospital…")+'" value="'+esc(S.plan.qAdd||"")+'" oninput="planOnSearch(this.value)">'
-    +(S.plan.qAdd?'<button class="ac-search-x" onclick="planOnSearch(\'\')">✕</button>':'')+'</div>'
-    +'<div id="plan-search-res">'+planSearchResHTML()+'</div></div></div>';
+    +'<div class="ct">📍 '+(LANG==="vi"?"Kế hoạch địa bàn ("+FYK+")":"Territory plan ("+FYK+")")+'</div>'
+    +'<div class="cs">'+(LANG==="vi"?"tìm & bấm 1 địa bàn → xem lịch sử trúng thầu gần nhất, đánh giá cơ hội, cập nhật tình hình, điền SL Mani (MSL/MST/MCU). Mọi thay đổi lưu vào sheet ACCT_PLAN.":"search & click a territory → latest award history, opportunity, situation, Mani qty. Saved to ACCT_PLAN.")+'</div></div>'
+    +'<div class="cb">'
+      +'<div class="ac-search" style="margin-bottom:12px"><span class="ac-search-ic">🔍</span>'
+      +'<input id="plan-q" class="ac-search-i" placeholder="'+(LANG==="vi"?"Tìm tỉnh / bệnh viện… (VD: Quân Y 103, Nghệ An)":"Search province / hospital…")+'" value="'+esc(S.plan.qAdd||"")+'" oninput="planOnSearch(this.value)">'
+      +(S.plan.qAdd?'<button class="ac-search-x" onclick="planOnSearch(\'\')">✕</button>':'')+'</div>'
+      +'<div id="plan-terr-res">'+planTerritoryHTML()+'</div>'
+    +'</div></div>';
 
-  /* ── Save bar ── */
+  /* ── Save bar (gộp cả kế hoạch Gantt + kế hoạch địa bàn) ── */
+  var totDirty=dirtyN+acctDirtyN;
   H+='<div class="plan-savebar">'
-    +'<span class="plan-dirty-tag'+(dirtyN?" on":"")+'">'+(dirtyN?(dirtyN+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"))+'</span>'
+    +'<span class="plan-dirty-tag'+(totDirty?" on":"")+'">'+(totDirty?(totDirty+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"))+'</span>'
+    +(acctDirtyN?'<button class="chip fc-save has" '+(S.plan.acctSaving?"disabled":"")+' onclick="acctSaveAll()">'+(S.plan.acctSaving?"⏳ ":"📍 ")+(LANG==="vi"?"Lưu địa bàn":"Save territory")+' ('+acctDirtyN+')</button>':'')
     +'<button class="chip fc-save'+(dirtyN?" has":"")+'" '+(S.plan.saving?"disabled":"")+' onclick="planSaveAll()">'
-      +(S.plan.saving?"⏳ ":"💾 ")+(LANG==="vi"?"Lưu tất cả lên Sheet":"Save all to Sheet")+(dirtyN?" ("+dirtyN+")":"")+'</button>'
+      +(S.plan.saving?"⏳ ":"💾 ")+(LANG==="vi"?"Lưu dòng Gantt":"Save Gantt rows")+(dirtyN?" ("+dirtyN+")":"")+'</button>'
     +'</div>';
 
   document.getElementById("plan-body").innerHTML=H;
@@ -6243,6 +6547,7 @@ function renderPlan(){
 
   var pq=document.getElementById("plan-q");   if(pq && S.plan.qAdd){ pq.focus(); pq.setSelectionRange(pq.value.length,pq.value.length); }
   var gq=document.getElementById("plan-gq");  if(gq && S.plan.q){ gq.focus(); gq.setSelectionRange(gq.value.length,gq.value.length); }
+  if(S._terrFocus){ var tf=document.querySelector('[data-focus="'+S._terrFocus+'"]'); if(tf){ tf.focus(); try{tf.setSelectionRange(tf.value.length,tf.value.length);}catch(e){} } S._terrFocus=null; }
 
   setTimeout(function(){var s=document.getElementById("sec-plan");if(s){s.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});try{runCountUp(s);animateBars(s);}catch(e){}}},40);
 }
@@ -6288,9 +6593,9 @@ function planKpiDrill(which){
       }).join("")+'</div>';
   } else {
     var pick, hn;
-    if(which==="existing"){ pick=rows.filter(function(r){return r.group==="Existing";}); title="① Existing"; sub=(LANG==="vi"?"Gói đang còn hiệu lực FY68 (tự động)":"Packages valid in FY68 (auto)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(exUSD)+'</b> · '+pick.length+(LANG==="vi"?" bệnh viện":" hospitals"); }
+    if(which==="existing"){ pick=rows.filter(function(r){return r.group==="Existing";}); title="① Existing"; sub=(LANG==="vi"?"Gói đang còn hiệu lực "+PLAN_FYKEY()+" (tự động)":"Packages valid in "+PLAN_FYKEY()+" (auto)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(exUSD)+'</b> · '+pick.length+(LANG==="vi"?" bệnh viện":" hospitals"); }
     else if(which==="opp"){ pick=rows.filter(function(r){return r.group!=="Existing";}); title=(LANG==="vi"?"②③ Cơ hội":"②③ Opportunity"); sub=(LANG==="vi"?"Duy trì + Mở mới (đã điền SL Mani)":"Remaining + New (Mani qty filled)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(oppUSD)+'</b> · '+pick.length+(LANG==="vi"?" dòng":" rows"); }
-    else { pick=rows; title=(LANG==="vi"?"TỔNG kế hoạch FY68":"TOTAL FY68 plan"); sub=(LANG==="vi"?"Tất cả bệnh viện trong kế hoạch":"All hospitals in plan"); hn=(LANG==="vi"?"Existing":"Existing")+' <b>'+hvUSD(exUSD)+'</b> + '+(LANG==="vi"?"Cơ hội":"Opportunity")+' <b>'+hvUSD(oppUSD)+'</b> = <b>'+hvUSD(totUSD)+'</b>'; }
+    else { pick=rows; title=(LANG==="vi"?"TỔNG kế hoạch "+PLAN_FYKEY():"TOTAL "+PLAN_FYKEY()+" plan"); sub=(LANG==="vi"?"Tất cả bệnh viện trong kế hoạch":"All hospitals in plan"); hn=(LANG==="vi"?"Existing":"Existing")+' <b>'+hvUSD(exUSD)+'</b> + '+(LANG==="vi"?"Cơ hội":"Opportunity")+' <b>'+hvUSD(oppUSD)+'</b> = <b>'+hvUSD(totUSD)+'</b>'; }
     pick.sort(function(a,b){ return b._c.usdFY68-a._c.usdFY68; });
     body='<div class="kd-head">'+hn+'<br><span style="color:var(--t3)">'+(LANG==="vi"?"Bấm 1 dòng để mở chi tiết & sửa SL Mani":"Click a row to open detail & edit Mani qty")+'</span></div>'
       +(pick.length?'<div class="kd-list">'+pick.map(planKdRowHTML).join("")+'</div>':'<div class="kd-empty">'+(LANG==="vi"?"Chưa có dòng nào.":"No rows yet.")+'</div>');
@@ -6332,16 +6637,17 @@ function planSyncHungVi(dryRun){
   });
 }
 
-/* ── Gantt HTML (mỗi dòng bấm được) ── */
+/* ── Gantt HTML (mỗi dòng bấm được) — cell còn hiệu lực HIỆN SỐ doanh số/tháng ── */
 function planGanttHTML(rows){
-  var months=[]; for(var k=0;k<12;k++) months.push(planIdxToLabel(PLAN_BASE+k));
+  var BASE=PLAN_BASE(), FYK=PLAN_FYKEY();
+  var months=[]; for(var k=0;k<12;k++) months.push(planIdxToLabel(BASE+k));
   var colTot=new Array(12).fill(0);
   rows.forEach(function(r){ r._c.gantt.forEach(function(on,k){ if(on) colTot[k]+=r._c.usdPerMonth; }); });
   var grand=colTot.reduce(function(a,b){return a+b;},0);
 
   var head='<div class="gantt-row gantt-head"><div class="gantt-lbl">'+(LANG==="vi"?"Bệnh viện · nhóm":"Hospital · group")+'</div>'
     +months.map(function(m){return '<div class="gantt-cell gh">'+m+'</div>';}).join("")
-    +'<div class="gantt-tot gh">FY68 $</div></div>';
+    +'<div class="gantt-tot gh">'+FYK+' $</div></div>';
 
   var body=rows.slice().sort(function(a,b){
     var ord={"Existing":0,"Duy trì":1,"Mở mới":2};
@@ -6349,25 +6655,30 @@ function planGanttHTML(rows){
     return b._c.usdFY68-a._c.usdFY68;
   }).map(function(r){
     var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
+    var perMo=r._c.usdPerMonth||0;
     var cells=r._c.gantt.map(function(on){
-      return '<div class="gantt-cell'+(on?" on "+cls:"")+'">'+(on?'<span class="gdot"></span>':'')+'</div>';
+      return '<div class="gantt-cell'+(on?" on "+cls:"")+'">'+(on? '<span class="gmv">'+hvUSD(perMo)+'</span>':'')+'</div>';
     }).join("");
     var sel=(S.plan.detail===r.rowKey)?" gsel":"";
+    var grpChip=r.group==="Existing"?"E":r.group==="Duy trì"?"R":"N";
     return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết":"Click for detail")+'">'
-      +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'"></span>'
-      +'<span class="gnm">'+esc(r.account||"—")+'</span><span class="gcity">'+esc(r.city||"")+'</span></div>'
+      +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'" title="'+esc(r.group)+'"></span>'
+      +'<span class="gnm">'+esc(r.account||"—")+'</span><span class="gcity">'+esc(r.city||"")+(r._autoRenew?' · <i style="color:'+PLAN_GCOL["Duy trì"]+'">'+(LANG==="vi"?"renew":"renew")+'</i>':'')+'</span></div>'
       +cells+'<div class="gantt-tot">'+hvUSD(r._c.usdFY68)+'</div></div>';
-  }).join("") || '<div class="gantt-empty">'+(LANG==="vi"?"Không có dòng nào khớp":"No rows match")+'</div>';
+  }).join("") || '<div class="gantt-empty">'+(LANG==="vi"?"Không có dòng nào khớp trong kỳ "+FYK:"No rows match in "+FYK)+'</div>';
 
   var foot=rows.length?'<div class="gantt-row gantt-foot"><div class="gantt-lbl">'+(LANG==="vi"?"Doanh số USD / tháng":"USD revenue / month")+'</div>'
     +colTot.map(function(v){return '<div class="gantt-cell gf">'+(v>0?hvUSD(v):"")+'</div>';}).join("")
     +'<div class="gantt-tot gf">'+hvUSD(grand)+'</div></div>':'';
 
   var legend='<div class="gantt-legend">'
-    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>Existing</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Cao"]+'"></i>'+(LANG==="vi"?"Cơ hội cao":"High opp.")+'</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Trung bình"]+'"></i>'+(LANG==="vi"?"Cơ hội TB":"Mid opp.")+'</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"Cơ hội thấp":"Low opp.")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>① Existing ('+(LANG==="vi"?"đang trúng":"won")+')</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Duy trì"]+'"></i>② '+(LANG==="vi"?"Duy trì (renew)":"Remaining (renew)")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Mở mới"]+'"></i>③ '+(LANG==="vi"?"Mở mới / Convert":"New / Convert")+'</span>'
+    +'<span style="opacity:.6">|</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Cao"]+'"></i>'+(LANG==="vi"?"CH cao":"High")+'</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Trung bình"]+'"></i>'+(LANG==="vi"?"CH TB":"Mid")+'</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"CH thấp":"Low")+'</span>'
     +'</div>';
 
   return '<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
@@ -6385,7 +6696,7 @@ function planOpenDetail(rowKey){
   var head='<div class="drill-kpi">'
     +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Nhóm":"Group")+'</div><div class="kv" style="font-size:16px;color:'+PLAN_GCOL[r.group]+'">'+(r.group==="Duy trì"?(LANG==="vi"?"Duy trì":"Remaining"):r.group==="Mở mới"?(LANG==="vi"?"Mở mới":"New/Convert"):"Existing")+'</div></div>'
     +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"SL dao (plan)":"Plan knives")+'</div><div class="kv">'+hvNum(r._c.total)+'</div></div>'
-    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Doanh số FY68":"FY68 revenue")+'</div><div class="kv">'+hvUSD(r._c.usdFY68)+'</div></div>'
+    +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Doanh số "+PLAN_FYKEY():PLAN_FYKEY()+" revenue")+'</div><div class="kv">'+hvUSD(r._c.usdFY68)+'</div></div>'
     +'<div class="drill-k"><div class="kl">'+(LANG==="vi"?"Hiệu lực":"Duration")+'</div><div class="kv">'+r.dur+'<span style="font-size:12px"> '+(LANG==="vi"?"tháng":"mo")+'</span></div></div>'
     +'</div>';
 
@@ -6418,7 +6729,7 @@ function planOpenDetail(rowKey){
       +'<input class="pd-qi" data-focus="pd_'+field+'" value="'+val+'" onfocus="this.select()" '
       +'oninput="S._planFocus=\'pd_'+field+'\';planDetailEdit(\''+rowKey+'\',\''+field+'\',this.value)"></div>';
   }
-  var editHtml='<div class="pd-card"><div class="pd-h">✏️ '+(LANG==="vi"?"SL Mani dự kiến bán (FY68)":"Expected Mani qty (FY68)")+'</div>'
+  var editHtml='<div class="pd-card"><div class="pd-h">✏️ '+(LANG==="vi"?"SL Mani dự kiến bán ("+PLAN_FYKEY()+")":"Expected Mani qty ("+PLAN_FYKEY()+")")+'</div>'
     +'<div class="pd-qgrid">'
     + qCell("msl","MSL · Slit",HV_KCOL.MSL)
     + qCell("mst","MST · Stab",HV_KCOL.MST)
@@ -6428,7 +6739,7 @@ function planOpenDetail(rowKey){
       +'<label class="pd-fld"><span>'+(LANG==="vi"?"Cơ hội":"Opportunity")+'</span>'
         +'<select class="plan-sel" onchange="planDetailEdit(\''+rowKey+'\',\'opp\',this.value)">'
         +["Cao","Trung bình","Thấp"].map(function(o){return '<option '+(r.opp===o?"selected":"")+'>'+o+'</option>';}).join("")+'</select></label>'
-      +'<label class="pd-fld"><span>'+(LANG==="vi"?"Bắt đầu":"Start")+'</span>'+mpickBtnHtml("pd-mp-"+rowKey, r.startMonth||planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_BASE), planIdxToMo(PLAN_END), "planPickStart_"+rowKey)+'</label>'
+      +'<label class="pd-fld"><span>'+(LANG==="vi"?"Bắt đầu":"Start")+'</span>'+mpickBtnHtml("pd-mp-"+rowKey, r.startMonth||planIdxToMo(PLAN_BASE()), planIdxToMo(PLAN_BASE()), planIdxToMo(PLAN_END()), "planPickStart_"+rowKey)+'</label>'
       +'<label class="pd-fld"><span>'+(LANG==="vi"?"Hiệu lực (tháng)":"Duration (mo)")+'</span><input class="pd-qi sm" value="'+r.dur+'" onfocus="this.select()" oninput="planDetailEdit(\''+rowKey+'\',\'dur\',this.value)"></label>'
       +'<label class="pd-fld grow"><span>'+(LANG==="vi"?"Ghi chú / Hành động":"Note / Action")+'</span><input class="pd-qi grow" data-focus="pd_note" value="'+esc(r.note||"")+'" oninput="S._planFocus=\'pd_note\';planDetailEdit(\''+rowKey+'\',\'note\',this.value)"></label>'
       +'</div>')
@@ -6438,11 +6749,11 @@ function planOpenDetail(rowKey){
 
   var delBtn=isAuto?'':'<button class="drill-act" style="background:var(--nb);color:var(--neg)" onclick="planDelRow(\''+rowKey+'\');closeDrill();">🗑 '+(LANG==="vi"?"Xoá dòng":"Delete")+'</button>';
 
-  S.drill={rows:[],title:r.account||"—",sub:(r.city||"")+" · FY68 plan",kind:"plan"};
+  S.drill={rows:[],title:r.account||"—",sub:(r.city||"")+" · "+PLAN_FYKEY()+" plan",kind:"plan"};
   var pn=document.getElementById("drill-pn"); pn.classList.remove("expanded");
   document.getElementById("drill-exp").textContent="⛶";
   document.getElementById("drill-t").textContent=r.account||"—";
-  document.getElementById("drill-s").textContent=(r.city||"")+" · FY68 plan";
+  document.getElementById("drill-s").textContent=(r.city||"")+" · "+PLAN_FYKEY()+" plan";
   document.getElementById("drill-body").innerHTML=head+lrHtml+editHtml;
   /* nút xoá vào thanh action nếu có chỗ */
   var actWrap=document.querySelector("#drill-pn .drill-hd");
@@ -6454,11 +6765,17 @@ function planOpenDetail(rowKey){
 
 /* Sửa trong detail → cập nhật manual/existing-override + cardbox nhảy (không đóng drawer) */
 function planDetailEdit(rowKey, field, val){
-  /* Existing (auto) cũng cho override SL Mani: tạo bản manual "shadow" nếu cần?
-     Theo yêu cầu chỉ cần editable cho SL Mani dự kiến — với Existing ta KHÔNG cho sửa (readonly),
-     nên planDetailEdit chỉ chạm dòng manual. */
+  /* Existing (auto, rowKey "EX|…") = readonly → không tới đây.
+     Duy trì auto-renew (rowKey "MTA|…") = editable → tạo bản override trong S.plan.manual nếu chưa có,
+     seed bằng giá trị auto-tính hiện tại để chỉnh 1 field không mất field khác. */
   var m=S.plan.manual[rowKey];
-  if(!m) return;   // Existing auto → bỏ qua (input readonly nên không tới đây)
+  if(!m && rowKey.indexOf("MTA|")===0){
+    var cur=planAutoRenewRows().filter(function(x){return x.rowKey===rowKey;})[0];
+    if(cur){ m=S.plan.manual[rowKey]={ group:"Duy trì", account:cur.account, city:cur.city, tbmt:cur.tbmt||"",
+      mst:cur.mst, msl:cur.msl, mcu:cur.mcu, startMonth:cur.startMonth||planIdxToMo(cur.startIdx), dur:cur.dur,
+      opp:cur.opp||"Trung bình", note:cur.note||"" }; }
+  }
+  if(!m) return;   // Existing auto → bỏ qua
   if(field==="msl"||field==="mst"||field==="mcu"||field==="dur"){
     var num=+String(val).replace(/[^\d]/g,""); m[field]=isFinite(num)?num:0;
   } else if(field==="startMonth"){ m.startMonth=val; }
@@ -6471,11 +6788,9 @@ function planDetailEdit(rowKey, field, val){
 
 /* Cập nhật cardbox + revbar + revenue dòng mà KHÔNG re-render drawer (giữ focus khi gõ) */
 function planUpdateLiveTotals(){
-  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; });
-  var incl=rows.filter(planInclude);
-  var totUSD=0,exUSD=0,oppUSD=0,exN=0,oppN=0;
-  incl.forEach(function(r){ if(r._c.total<=0)return; totUSD+=r._c.usdFY68;
-    if(r.group==="Existing"){exUSD+=r._c.usdFY68;exN++;} else {oppUSD+=r._c.usdFY68;oppN++;} });
+  var T=planTotals();
+  var rows=T.rows;
+  var totUSD=T.totUSD,exUSD=T.exUSD,oppUSD=T.oppUSD,exN=T.exN,oppN=T.oppN;
   var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(totUSD/tgt*100):0;
 
   var kv=document.querySelectorAll("#sec-plan .kr .kpi .kv span");
@@ -6495,9 +6810,10 @@ function planUpdateLiveTotals(){
   if(inLbl) inLbl.textContent=hvUSD(totUSD);
   if(pct){ pct.textContent=ach.toFixed(0)+"%"; pct.style.color=ach>=100?"var(--pos)":ach>=60?"var(--warn)":"var(--neg)"; }
 
-  /* revenue dòng đang mở */
+  /* revenue dòng đang mở (recompute từ toàn bộ rows, tránh bị lọc mất) */
   if(S.plan.detail){
-    var dr=rows.filter(function(r){return r.rowKey===S.plan.detail;})[0];
+    var all=planAllRows().map(function(r){ r._c=planCompute(r); return r; });
+    var dr=all.filter(function(r){return r.rowKey===S.plan.detail;})[0];
     var el=document.getElementById("pd-rev"); if(dr&&el) el.textContent=hvUSD(dr._c.usdFY68);
   }
 
@@ -6529,8 +6845,135 @@ function planEnsurePickHandlers(rows){
   });
 }
 
-/* ── Smart search kết quả ── */
-function planOnSearch(v){ S.plan.qAdd=v; renderPlan(); }
+/* ════════════════════════════════════════════════════════════════════════════════════════════
+   TERRITORY BOARD — smart-search địa bàn + editable + lịch sử trúng thầu (ACCT_PLAN)
+   ════════════════════════════════════════════════════════════════════════════════════════════ */
+function planTerritoryHTML(){
+  var q=norm(S.plan.qAdd||"");
+  if(!q) return '<div class="plan-hint">'+(LANG==="vi"?"Gõ tên tỉnh hoặc bệnh viện để xem & lập kế hoạch địa bàn…":"Type a province or hospital to view & plan…")+'</div>';
+  var map=planHospitalsByProvince();
+  var items=[], cnt=0;
+  Object.keys(map).forEach(function(pk){
+    var P=map[pk];
+    var provMatch=norm(P.prov).indexOf(q)>=0;
+    Object.keys(P.hospitals).forEach(function(hk){
+      var h=P.hospitals[hk];
+      if(!(provMatch || norm(h.name).indexOf(q)>=0)) return;
+      if(cnt++>50) return;
+      items.push({ name:h.name, city:P.prov, tbmt:h.tbmt||"" });
+    });
+  });
+  if(!items.length) return '<div class="plan-hint">'+(LANG==="vi"?"Không tìm thấy «"+esc(S.plan.qAdd)+"»":"No match for «"+esc(S.plan.qAdd)+"»")+'</div>';
+  // ưu tiên BV đã có record kế hoạch (đã điền) lên đầu
+  items.sort(function(a,b){
+    var ra=S.plan.acct[planAcctKey(a.name)]?1:0, rb=S.plan.acct[planAcctKey(b.name)]?1:0;
+    return rb-ra;
+  });
+  return '<div class="terr-list">'+items.map(planTerrCardHTML).join("")+'</div>';
+}
+
+/* 1 card địa bàn: lịch sử trúng gần nhất + editable (cơ hội/tình hình/SL Mani) + doanh số dòng */
+function planTerrCardHTML(it){
+  var rec=acctGet(it.name, it.city);
+  var lr=planLatestResult(it.name);
+  var key=planAcctKey(it.name);
+  var revUSD=acctRevenueUSD(rec);
+  var oppCol=PLAN_OPPCOL[rec.opp||"Trung bình"]||"#F0A800";
+  var esN=esc(it.name).replace(/'/g,"\\'"), esC=esc(it.city||"").replace(/'/g,"\\'");
+
+  /* Lịch sử trúng thầu gần nhất */
+  var lrHtml;
+  if(lr && lr.winner){
+    var w=lr.winner;
+    var isMani=norm(w.brand)==="mani";
+    var knifeChips=Object.keys(w.knives).map(function(kn){ return '<span class="tk-chip">'+esc(kn)+': <b>'+hvNum(w.knives[kn])+'</b></span>'; }).join(" ");
+    var priceStr = w.price? (" · "+(LANG==="vi"?"giá":"price")+" "+fcMoneyVND(w.price)) : (lr.latest&&lr.latest.price? (" · "+fcMoneyVND(lr.latest.price)):"");
+    lrHtml='<div class="terr-award"><span class="ta-h">🏆 '+(LANG==="vi"?"Trúng gần nhất":"Latest award")+':</span> '
+      +'<span class="pd-brand '+(isMani?"mani":"")+'">'+esc(w.brand)+'</span> · <b>'+hvNum(w.qty)+'</b> '+(LANG==="vi"?"cái":"pcs")
+      +(w.tbmt?' · <span class="mono" style="font-size:11px;color:var(--t3)">'+esc(w.tbmt)+'</span>':'')
+      +(knifeChips?'<div class="terr-kchips">'+knifeChips+'</div>':'')
+      +'</div>';
+  } else {
+    lrHtml='<div class="terr-award empty">'+(LANG==="vi"?"Chưa có lịch sử trúng thầu cho địa bàn này.":"No award history for this territory.")+'</div>';
+  }
+
+  function qi(field,label,col){
+    var v=rec[field]==null?"":rec[field];
+    return '<div class="terr-q"><span class="terr-ql" style="color:'+col+'">'+label+'</span>'
+      +'<input class="terr-qi" data-focus="terr_'+key+'_'+field+'" value="'+v+'" onfocus="this.select()" '
+      +'oninput="S._terrFocus=\'terr_'+key+'_'+field+'\';acctEdit(\''+esN+'\',\''+esC+'\',\''+field+'\',this.value)"></div>';
+  }
+  var oppSel='<select class="plan-sel" onchange="acctEdit(\''+esN+'\',\''+esC+'\',\'opp\',this.value)">'
+    +["Cao","Trung bình","Thấp"].map(function(o){return '<option '+((rec.opp||"Trung bình")===o?"selected":"")+'>'+o+'</option>';}).join("")+'</select>';
+
+  return '<div class="terr-card" data-key="'+key+'">'
+    +'<div class="terr-hd"><div class="terr-nm"><span class="terr-opp-dot" style="background:'+oppCol+'"></span>'+esc(it.name)+'</div>'
+      +'<div class="terr-city">'+esc(it.city||"")+'</div></div>'
+    + lrHtml
+    +'<div class="terr-edit">'
+      +'<label class="terr-fld"><span>'+(LANG==="vi"?"Đánh giá cơ hội":"Opportunity")+'</span>'+oppSel+'</label>'
+      +'<label class="terr-fld grow"><span>'+(LANG==="vi"?"Cập nhật tình hình":"Situation update")+'</span>'
+        +'<input class="terr-note" data-focus="terr_'+key+'_note" value="'+esc(rec.note||"")+'" placeholder="'+(LANG==="vi"?"VD: đang chờ gói mới, đối thủ giảm giá…":"e.g. new tender pending…")+'" '
+        +'oninput="S._terrFocus=\'terr_'+key+'_note\';acctEdit(\''+esN+'\',\''+esC+'\',\'note\',this.value)"></label>'
+    +'</div>'
+    +'<div class="terr-qrow">'
+      +'<div class="terr-qlbl">'+(LANG==="vi"?"SL Mani dự kiến bán ("+FYKshort()+"):":"Expected Mani qty:")+'</div>'
+      + qi("msl","MSL · Slit",HV_KCOL.MSL) + qi("mst","MST · Stab",HV_KCOL.MST) + qi("mcu","MCU · Cresc.",HV_KCOL.MCU)
+      +'<div class="terr-rev">'+(LANG==="vi"?"DS dòng":"Rev")+': <b class="terr-rev-v" data-key="'+key+'">'+hvUSD(revUSD)+'</b></div>'
+    +'</div>'
+    +'</div>';
+}
+function FYKshort(){ return PLAN_FYKEY(); }
+
+/* Cập nhật cardbox + revenue địa bàn mà KHÔNG re-render (giữ focus khi gõ) */
+function acctUpdateLive(){
+  var T=planTotals();
+  var kv=document.querySelectorAll("#sec-plan .kr .kpi .kv span");
+  function setK(i,txt){ if(kv[i]) kv[i].textContent=txt; }
+  var tgt=+S.fc.target.HUNGVI||0, ach=tgt?(T.totUSD/tgt*100):0;
+  setK(0,hvUSD(T.totUSD)); setK(1,hvUSD(T.exUSD)); setK(2,hvUSD(T.oppUSD)); setK(3,ach.toFixed(0)+"%");
+  var notes=document.querySelectorAll("#sec-plan .kr .kpi .knote");
+  if(notes[0]) notes[0].innerHTML=(LANG==="vi"?"Existing ":"")+hvUSD(T.exUSD)+" + "+(LANG==="vi"?"Cơ hội ":"opportunity ")+hvUSD(T.oppUSD);
+  if(notes[2]) notes[2].innerHTML=T.oppN+(LANG==="vi"?" dòng cơ hội (Duy trì + Mở mới + địa bàn)":" opportunity rows");
+  /* revbar */
+  var fill=document.querySelector("#sec-plan .revbar-fill"), pct=document.querySelector("#sec-plan .revbar-pct"), inLbl=document.querySelector("#sec-plan .revbar-in");
+  if(fill){ fill.style.width=Math.max(0,Math.min(100,ach))+"%"; fill.classList.toggle("full",ach>=100); }
+  if(inLbl) inLbl.textContent=hvUSD(T.totUSD);
+  if(pct){ pct.textContent=ach.toFixed(0)+"%"; pct.style.color=ach>=100?"var(--pos)":ach>=60?"var(--warn)":"var(--neg)"; }
+  /* revenue dòng địa bàn đang gõ */
+  Object.keys(S.plan.acct).forEach(function(k){
+    var el=document.querySelector('.terr-rev-v[data-key="'+k+'"]');
+    if(el){ el.textContent=hvUSD(acctRevenueUSD(S.plan.acct[k])); }
+    var card=document.querySelector('.terr-card[data-key="'+k+'"] .terr-opp-dot');
+    if(card){ var o=S.plan.acct[k].opp||"Trung bình"; card.style.background=PLAN_OPPCOL[o]||"#F0A800"; }
+  });
+  /* opp-tier strip */
+  var opp=acctByOpp(), oppTot=opp["Cao"].usd+opp["Trung bình"].usd+opp["Thấp"].usd;
+  ["Cao","Trung bình","Thấp"].forEach(function(nm,i){
+    var seg=document.querySelectorAll("#sec-plan .popp-seg")[i]; if(!seg) return;
+    var o=opp[nm]||{n:0,usd:0}, w=oppTot?(o.usd/oppTot*100):0;
+    var v=seg.querySelector(".popp-v"), n=seg.querySelector(".popp-n"), f=seg.querySelector(".popp-fill");
+    if(v) v.textContent=hvUSD(o.usd); if(n) n.textContent=o.n+(LANG==="vi"?" BV":" hosp"); if(f) f.style.width=w.toFixed(1)+"%";
+  });
+  /* dirty tags */
+  var dn=Object.keys(S.plan.dirty).length, an=Object.keys(S.plan.acctDirty).length, td=dn+an;
+  var tag=document.querySelector("#sec-plan .plan-dirty-tag");
+  if(tag){ tag.classList.toggle("on",td>0); tag.textContent=td?(td+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"); }
+  /* restore focus */
+  if(S._terrFocus){ var fEl=document.querySelector('[data-focus="'+S._terrFocus+'"]');
+    if(fEl && document.activeElement!==fEl){ /* giữ nguyên nếu đang focus */ } }
+}
+
+/* ── Smart search kết quả (panel cũ — giữ để tương thích, không dùng ở render v5) ── */
+function planOnSearch(v){ S.plan.qAdd=v; renderTerritoryOnly(); }
+/* re-render riêng phần territory để giữ focus mượt khi gõ search */
+function renderTerritoryOnly(){
+  var box=document.getElementById("plan-terr-res");
+  if(!box){ renderPlan(); return; }
+  box.innerHTML=planTerritoryHTML();
+  var q=document.getElementById("plan-q");
+  if(q){ q.focus(); try{q.setSelectionRange(q.value.length,q.value.length);}catch(e){} }
+}
 function planSearchResHTML(){
   var q=norm(S.plan.qAdd||"");
   if(!q) return '<div class="plan-hint">'+(LANG==="vi"?"Gõ để tìm tỉnh hoặc bệnh viện…":"Type to search province or hospital…")+'</div>';
@@ -6565,6 +7008,7 @@ function planAddFromSearch(group, name, city, tbmt){
 (function(){ try{
   var p=localStorage.getItem("mmh_plan_price"); if(p){var o=JSON.parse(p);["MST","MSL","MCU"].forEach(function(k){if(o[k]!=null)S.plan.price[k]=+o[k];});}
   var fx=localStorage.getItem("mmh_plan_fx"); if(fx) S.plan.fx=+fx;
+  var fy=localStorage.getItem("mmh_plan_fy"); if(fy) S.plan.fy=fy;
 }catch(e){} })();
 
 

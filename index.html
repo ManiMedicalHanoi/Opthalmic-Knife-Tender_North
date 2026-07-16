@@ -512,6 +512,24 @@ html[data-theme="dark"] .mp-pop{box-shadow:0 14px 42px rgba(0,0,0,.55);}
 /* Price-tier settings modal */
 .modal-ov{position:fixed;inset:0;background:rgba(0,48,71,.55);backdrop-filter:blur(4px);z-index:600;display:none;align-items:center;justify-content:center;padding:24px;}
 .modal-ov.on{display:flex;}
+/* ════ UPLOAD TENDER MODAL ════ */
+.um-dz{border:2.5px dashed var(--br);border-radius:14px;padding:38px 22px;text-align:center;cursor:pointer;background:var(--sf2);transition:.18s;}
+.um-dz:hover{border-color:var(--blue);background:var(--pale);}
+.um-dz.drag{border-color:var(--blue);background:var(--pale);transform:scale(1.01);}
+.um-dz.busy{opacity:.6;pointer-events:none;}
+.um-dz-ic{font-size:40px;margin-bottom:8px;}
+.um-dz-t{font-weight:800;font-size:15.5px;color:var(--t1);margin-bottom:5px;}
+.um-dz-s{font-size:12.5px;color:var(--t2);}
+.um-info{margin-top:16px;padding:13px 16px;border-radius:11px;background:var(--pale);border:1px solid var(--br);font-size:13.5px;color:var(--t1);line-height:1.6;}
+.um-info b{color:var(--blue);}
+.um-log{margin-top:14px;padding:13px 16px;border-radius:11px;background:var(--sf2);border:1px solid var(--br);font-size:13px;color:var(--t1);line-height:1.7;max-height:230px;overflow:auto;}
+.um-log .ok{color:var(--pos);font-weight:700;}
+.um-log .wn{color:var(--warn);font-weight:700;}
+.um-log .er{color:var(--neg);font-weight:700;}
+.um-log .row{padding:3px 0;border-bottom:1px dashed var(--br);}
+.um-log .row:last-child{border-bottom:none;}
+.um-spin{display:inline-block;width:15px;height:15px;border:2.5px solid var(--br);border-top-color:var(--blue);border-radius:50%;animation:umspin .7s linear infinite;vertical-align:-3px;margin-right:7px;}
+@keyframes umspin{100%{transform:rotate(360deg);}}
 .modal-bx{background:var(--sf);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.4);width:min(820px,100%);max-height:88vh;overflow-y:auto;}
 .modal-hd{padding:16px 22px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;border-radius:14px 14px 0 0;}
 .modal-hd h2{font-size:16px;font-weight:800;flex:1;}
@@ -1097,6 +1115,7 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
       <button class="hbtn gold" id="ppt-btn" onclick="exportPPT()" title="Export current tab to PowerPoint (MMH template)"><span>📊</span> <span data-i18n="btn.ppt">Export PPT</span></button>
 <button class="hbtn gold" id="dl-btn" onclick="exportCurrentTab()" title="Tải dữ liệu tab hiện tại (Excel bản đẹp)"><span>⬇️</span> <span id="dl-btn-tx">Tải Excel</span></button>
       <button class="hbtn" onclick="reloadData()" title="Reload data"><span>⟳</span> <span data-i18n="btn.refresh">Refresh</span></button>
+      <button class="hbtn gold" id="upload-btn" onclick="openUploadModal()" title="Nhập file Excel thầu mới → tự làm sạch &amp; cập nhật"><span>📤</span> <span id="upload-btn-tx">Nhập thầu</span></button>
       <button class="hbtn" id="theme-btn" onclick="toggleTheme()" title="Light / Dark">🌙</button>
       <button class="hbtn" onclick="window.print()" title="Print / Save PDF">🖨</button>
       <button class="hbtn" onclick="logout()" title="Sign out">⎋</button>
@@ -1211,6 +1230,32 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
 <div class="mp-pop" id="mp-pop" style="display:none"></div>
 
 <!-- Price-tier settings modal -->
+<!-- ════ UPLOAD TENDER MODAL ════ -->
+<div class="modal-ov" id="upload-modal" onclick="if(event.target===this)closeUploadModal()">
+  <div class="modal-bx" style="max-width:680px">
+    <div class="modal-hd">
+      <h2>📤 <span id="um-title">Nhập file thầu mới</span></h2>
+      <button class="mx" onclick="closeUploadModal()">✕</button>
+    </div>
+    <div class="modal-bd">
+      <div id="um-dropzone" class="um-dz"
+           ondragover="umDragOver(event)" ondragleave="umDragLeave(event)" ondrop="umDrop(event)"
+           onclick="document.getElementById('um-file').click()">
+        <div class="um-dz-ic">⬆️</div>
+        <div class="um-dz-t" id="um-dz-t">Kéo &amp; thả file Excel vào đây, hoặc bấm để chọn</div>
+        <div class="um-dz-s" id="um-dz-s">Định dạng .xlsx / .xls — dữ liệu lấy từ dòng 3, cột A→V</div>
+        <input type="file" id="um-file" accept=".xlsx,.xls" style="display:none" onchange="umPickFile(event)">
+      </div>
+      <div id="um-info" class="um-info" style="display:none"></div>
+      <div id="um-log" class="um-log" style="display:none"></div>
+    </div>
+    <div class="modal-ft">
+      <button onclick="closeUploadModal()" id="um-cancel">Đóng</button>
+      <button class="primary" id="um-run" onclick="umRun()" disabled>⚙ Làm sạch &amp; cập nhật</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-ov" id="tier-modal" onclick="if(event.target===this)closeTierModal()">
   <div class="modal-bx">
     <div class="modal-hd">
@@ -1259,7 +1304,7 @@ var I18N = {
     "sb.refwin":"Reference window","sb.from":"From","sb.to":"to","sb.cutoff":"Cutoff","sb.view":"View",
     "region.ALL":"Nationwide","region.North":"North","region.South":"South","region.Central":"Central","region.Unknown":"Unknown",
     "ptype.ALL":"All",
-    "btn.tiers":"Tiers","btn.ppt":"Export PPT","btn.source":"Data source","btn.refresh":"Refresh","btn.exportcsv":"Export CSV",
+    "btn.tiers":"Tiers","btn.ppt":"Export PPT","btn.source":"Data source","btn.refresh":"Refresh","btn.exportcsv":"Export CSV","btn.upload":"Import tender",
     "u.value":"₫ Value","u.qty":"# Quantity",
     "post.top3":"Positioning map: Top 3 per tier only",
     "vs.usetime":"⏱ Use the time bar above",
@@ -1307,7 +1352,7 @@ var I18N = {
     "sb.refwin":"Kỳ tham chiếu","sb.from":"Từ","sb.to":"đến","sb.cutoff":"Mốc cắt","sb.view":"Hiển thị",
     "region.ALL":"Toàn quốc","region.North":"Miền Bắc","region.South":"Miền Nam","region.Central":"Miền Trung","region.Unknown":"Chưa rõ",
     "ptype.ALL":"Tất cả",
-    "btn.tiers":"Phân khúc giá","btn.ppt":"Xuất PPT","btn.source":"Nguồn dữ liệu","btn.refresh":"Tải lại","btn.exportcsv":"Xuất CSV",
+    "btn.tiers":"Phân khúc giá","btn.ppt":"Xuất PPT","btn.source":"Nguồn dữ liệu","btn.refresh":"Tải lại","btn.exportcsv":"Xuất CSV","btn.upload":"Nhập thầu",
     "u.value":"₫ Giá trị","u.qty":"# Số lượng",
     "post.top3":"Bản đồ định vị: Chỉ Top 3 mỗi phân khúc",
     "vs.usetime":"⏱ Dùng thanh thời gian phía trên",
@@ -1891,6 +1936,171 @@ function fetchData(){
       return d;
     });
 }
+/* ════════════════════════════════════════════════════════════════════════════
+ *  UPLOAD TENDER — kéo-thả Excel → đọc A→V từ dòng 3 → POST uploadTender
+ *  → backend tự APPEND + LÀM SẠCH (chỉ dòng mới) + XOÁ TRÙNG toàn sheet → reload.
+ *  Dùng SheetJS (XLSX) đã nạp sẵn ở <head>. POST qua fcPostJSON (text/plain, CORS-safe).
+ * ════════════════════════════════════════════════════════════════════════════ */
+var UM = { rows:null, fileName:"", busy:false };
+
+function openUploadModal(){
+  UM.rows=null; UM.fileName=""; UM.busy=false;
+  var info=document.getElementById("um-info"); if(info){ info.style.display="none"; info.innerHTML=""; }
+  var log=document.getElementById("um-log"); if(log){ log.style.display="none"; log.innerHTML=""; }
+  var dz=document.getElementById("um-dropzone"); if(dz){ dz.classList.remove("busy","drag"); }
+  var dzt=document.getElementById("um-dz-t"); if(dzt) dzt.textContent = (LANG==="vi"?"Kéo & thả file Excel vào đây, hoặc bấm để chọn":"Drag & drop the Excel file here, or click to choose");
+  var dzs=document.getElementById("um-dz-s"); if(dzs) dzs.textContent = (LANG==="vi"?"Định dạng .xlsx / .xls — dữ liệu lấy từ dòng 3, cột A→V":".xlsx / .xls — data is read from row 3, columns A→V");
+  document.getElementById("um-title").textContent = (LANG==="vi"?"Nhập file thầu mới":"Import new tender file");
+  document.getElementById("um-cancel").textContent = (LANG==="vi"?"Đóng":"Close");
+  document.getElementById("um-run").innerHTML = "⚙ "+(LANG==="vi"?"Làm sạch & cập nhật":"Clean & update");
+  document.getElementById("um-run").disabled = true;
+  var f=document.getElementById("um-file"); if(f) f.value="";
+  document.getElementById("upload-modal").classList.add("on");
+}
+function closeUploadModal(){
+  if(UM.busy){
+    if(!confirm(LANG==="vi"?"Đang xử lý. Bạn chắc chắn muốn đóng?":"Processing. Close anyway?")) return;
+  }
+  document.getElementById("upload-modal").classList.remove("on");
+}
+
+function umDragOver(e){ e.preventDefault(); e.stopPropagation(); document.getElementById("um-dropzone").classList.add("drag"); }
+function umDragLeave(e){ e.preventDefault(); e.stopPropagation(); document.getElementById("um-dropzone").classList.remove("drag"); }
+function umDrop(e){
+  e.preventDefault(); e.stopPropagation();
+  document.getElementById("um-dropzone").classList.remove("drag");
+  if(UM.busy) return;
+  var files = e.dataTransfer && e.dataTransfer.files;
+  if(files && files.length) umHandleFile(files[0]);
+}
+function umPickFile(e){
+  var files = e.target.files;
+  if(files && files.length) umHandleFile(files[0]);
+}
+
+/* Đọc file Excel → cắt A→V từ dòng 3 (bỏ dòng 1 timestamp + dòng 2 header). */
+function umHandleFile(file){
+  if(!file) return;
+  var nm = (file.name||"").toLowerCase();
+  if(!/\.(xlsx|xls)$/.test(nm)){
+    showToast(LANG==="vi"?"Chỉ nhận file .xlsx / .xls":"Only .xlsx / .xls accepted","warn");
+    return;
+  }
+  UM.fileName = file.name;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var data = new Uint8Array(ev.target.result);
+      var wb = XLSX.read(data, {type:"array"});
+      var wsName = wb.SheetNames[0];
+      var ws = wb.Sheets[wsName];
+      /* header:1 → mảng theo hàng; defval:"" để giữ ô trống; blankrows:false bỏ hàng rỗng hoàn toàn */
+      var aoa = XLSX.utils.sheet_to_json(ws, {header:1, defval:"", blankrows:true, raw:false});
+      /* LẤY TỪ DÒNG 3 (index 2), CỘT A→V (0..21) */
+      var body = [];
+      for(var i=2;i<aoa.length;i++){
+        var r = aoa[i]||[];
+        var cut = [];
+        for(var c=0;c<22;c++) cut.push(r[c]!=null ? r[c] : "");
+        /* bỏ dòng rỗng hoàn toàn */
+        var any=false; for(var k=0;k<22;k++){ if(String(cut[k]).trim()!==""){ any=true; break; } }
+        if(any) body.push(cut);
+      }
+      UM.rows = body;
+      var warnStruct = "";
+      var row2 = aoa[1]||[];
+      var looksHeader = false;
+      for(var w2=0;w2<Math.min(row2.length,22);w2++){
+        var cell = String(row2[w2]||"").toLowerCase();
+        if(/tên|hãng|xuất xứ|đơn giá|mã hiệu|product|manufacturer|price|name|stt|no\./.test(cell)){ looksHeader=true; break; }
+      }
+      if(!looksHeader) warnStruct = (LANG==="vi"
+        ? "⚠ Dòng 2 không giống dòng tiêu đề — cấu trúc mong đợi: dòng 1=thời điểm xuất, dòng 2=tiêu đề, dữ liệu từ dòng 3."
+        : "⚠ Row 2 does not look like a header — expected: row1=export time, row2=header, data from row 3.");
+      umShowInfo(wsName, aoa.length, body.length, warnStruct);
+      document.getElementById("um-run").disabled = body.length===0;
+      if(body.length===0) showToast(LANG==="vi"?"Không thấy dòng dữ liệu nào (từ dòng 3).":"No data rows found (from row 3).","warn");
+    }catch(err){
+      console.error(err);
+      showToast((LANG==="vi"?"Lỗi đọc file: ":"Read error: ")+err.message,"warn");
+    }
+  };
+  reader.onerror = function(){ showToast(LANG==="vi"?"Không đọc được file.":"Cannot read file.","warn"); };
+  reader.readAsArrayBuffer(file);
+}
+
+function umShowInfo(wsName, totalRows, dataRows, warnStruct){
+  var info=document.getElementById("um-info");
+  info.style.display="block";
+  var L = LANG==="vi";
+  var warnHtml = warnStruct ? '<div style="margin-top:8px;padding:8px 11px;border-radius:8px;background:var(--nb);color:var(--neg);font-weight:700;font-size:12.5px">'+esc(warnStruct)+'</div>' : "";
+  info.innerHTML =
+    '<div>'+(L?"📄 File: ":"📄 File: ")+'<b>'+esc(UM.fileName)+'</b></div>'+
+    '<div>'+(L?"Sheet: ":"Sheet: ")+'<b>'+esc(wsName)+'</b> · '+(L?"tổng dòng":"total rows")+': '+totalRows+'</div>'+
+    '<div>'+(L?"Số dòng dữ liệu sẽ nhập (từ dòng 3, cột A→V): ":"Data rows to import (from row 3, cols A→V): ")+'<b>'+dataRows+'</b></div>'+
+    '<div style="margin-top:6px;font-size:12px;color:var(--t2)">'+
+      (L?"Backend sẽ: thêm vào cuối sheet → làm sạch riêng các dòng mới → xoá trùng toàn sheet (B→V)."
+        :"Backend will: append → clean only the new rows → dedupe whole sheet (B→V).")+'</div>'+warnHtml;
+}
+
+function umLog(html_){ var l=document.getElementById("um-log"); l.style.display="block"; l.innerHTML=html_; }
+
+function umRun(){
+  if(!UM.rows || !UM.rows.length){ showToast(LANG==="vi"?"Chưa có dữ liệu.":"No data.","warn"); return; }
+  if(UM.busy) return;
+  var L = LANG==="vi";
+  UM.busy = true;
+  document.getElementById("um-dropzone").classList.add("busy");
+  var runBtn = document.getElementById("um-run");
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<span class="um-spin"></span>'+(L?"Đang xử lý trên Sheet…":"Processing on Sheet…");
+  umLog('<div class="row">'+(L?"Đang gửi ":"Sending ")+UM.rows.length+(L?" dòng lên backend & làm sạch… (có thể mất 10–60s tuỳ số dòng)":" rows to backend & cleaning… (may take 10–60s)")+'</div>');
+
+  fcPostJSON(GAS_URL, { action:"uploadTender", rows:UM.rows, fileName:UM.fileName })
+    .then(function(res){
+      UM.busy = false;
+      document.getElementById("um-dropzone").classList.remove("busy");
+      runBtn.disabled = false;
+      runBtn.innerHTML = "⚙ "+(L?"Làm sạch & cập nhật":"Clean & update");
+
+      if(!res || res.ok===false){
+        umLog('<div class="row er">✕ '+(L?"Lỗi: ":"Error: ")+esc((res&&res.error)||"unknown")+'</div>');
+        showToast(L?"Nhập thất bại":"Import failed","warn");
+        return;
+      }
+      var d = res.deleted||{};
+      var ts = res.typeSrc||{};
+      var lines = [];
+      lines.push('<div class="row ok">✓ '+(L?"Đã thêm":"Appended")+': <b>'+(res.appended||0)+'</b> '+(L?"dòng":"rows")+'</div>');
+      lines.push('<div class="row">'+(L?"Đã làm sạch (cột W→AC)":"Cleaned (cols W→AC)")+': <b>'+(res.cleaned||0)+'</b></div>');
+      lines.push('<div class="row ok">'+(L?"Giữ & phân loại dao nhãn khoa":"Kept & classified")+': <b>'+(res.kept||0)+'</b></div>');
+      lines.push('<div class="row wn">'+(L?"Xoá ngoài khoảng giá 30k–400k":"Removed (price out of 30k–400k)")+': '+(d.price||0)+'</div>');
+      lines.push('<div class="row wn">'+(L?"Xoá dòng rác (điện/lưỡi/cán/tiêu bản/…) ":"Removed junk rows")+': '+(d.rac||0)+'</div>');
+      lines.push('<div class="row wn">'+(L?"Xoá brand lạ không phải nhãn khoa":"Removed non-ophthalmic unknown brand")+': '+(d.newbrand||0)+'</div>');
+      lines.push('<div class="row">'+(L?"Nguồn Knife Type":"Knife Type source")+' — token: '+(ts.token||0)+' · code/master: '+(ts.code||0)+' · brand+giá: '+(ts.brandPrice||0)+' · '+(L?"chưa rõ":"unknown")+': '+(ts.none||0)+'</div>');
+      if(res.masterAdded) lines.push('<div class="row">Master_Dao: +'+res.masterAdded+' '+(L?"mã hãng mới":"new brand codes")+'</div>');
+      lines.push('<div class="row ok">🧹 '+(L?"Đã xoá trùng (B→V, toàn sheet)":"Deduped (B→V, whole sheet)")+': <b>'+(res.dupDeleted||0)+'</b></div>');
+      lines.push('<div class="row" style="color:var(--t2)">'+(L?"Cập nhật lúc":"Updated at")+': '+esc((res.meta&&res.meta.exported)||"")+'</div>');
+      umLog(lines.join(""));
+
+      showToast((L?"Nhập thành công · đang tải lại dữ liệu…":"Imported · reloading…"),"success");
+      /* Reload dashboard để phản ánh data mới */
+      setTimeout(function(){
+        try{
+          reloadData();
+        }catch(e){ console.warn(e); }
+      }, 600);
+    })
+    .catch(function(err){
+      UM.busy = false;
+      document.getElementById("um-dropzone").classList.remove("busy");
+      runBtn.disabled = false;
+      runBtn.innerHTML = "⚙ "+(L?"Làm sạch & cập nhật":"Clean & update");
+      umLog('<div class="row er">✕ '+esc(String(err&&err.message||err))+'</div>');
+      showToast(L?"Nhập thất bại (mạng/CORS)":"Import failed (network/CORS)","warn");
+    });
+}
+
 function reloadData(){
   fetchData().then(function(){
     document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});

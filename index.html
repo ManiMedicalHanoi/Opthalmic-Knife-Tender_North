@@ -2138,8 +2138,9 @@ function umRun(){
         showToast(L?"Nhập thất bại":"Import failed","warn");
         return;
       }
+      var _dupTxt = (res.dupDeleted||0) < 0 ? (L?"bị chặn":"blocked") : (res.dupDeleted||0);
       umSetProg(100, L?"Hoàn tất":"Done",
-        (L?"Đã thêm ":"Added ")+'<b>'+(res.appended||0)+'</b>'+(L?" · giữ ":" · kept ")+'<b>'+(res.kept||0)+'</b>'+(L?" · xoá trùng ":" · deduped ")+'<b>'+(res.dupDeleted||0)+'</b>', "done");
+        (L?"Đã thêm ":"Added ")+'<b>'+(res.appended||0)+'</b>'+(L?" · giữ ":" · kept ")+'<b>'+(res.kept||0)+'</b>'+(L?" · xoá trùng ":" · deduped ")+'<b>'+_dupTxt+'</b>', "done");
 
       var d = res.deleted||{};
       var ts = res.typeSrc||{};
@@ -2153,7 +2154,12 @@ function umRun(){
       lines.push('<div class="row wn">'+(L?"Xoá brand lạ không phải nhãn khoa":"Removed non-ophthalmic unknown brand")+': <b>'+(d.newbrand||0)+'</b></div>');
       lines.push('<div class="row">'+(L?"Nguồn Knife Type":"Knife Type source")+' — token: '+(ts.token||0)+' · code/master: '+(ts.code||0)+' · brand+giá: '+(ts.brandPrice||0)+' · '+(L?"chưa rõ":"unknown")+': '+(ts.none||0)+'</div>');
       if(res.masterAdded) lines.push('<div class="row">Master_Dao: +'+res.masterAdded+' '+(L?"mã hãng mới":"new brand codes")+'</div>');
-      lines.push('<div class="row ok">🧹 '+(L?"Đã xoá trùng (B→V, toàn sheet)":"Deduped (B→V, whole sheet)")+': <b>'+(res.dupDeleted||0)+'</b></div>');
+      var dup = res.dupDeleted||0;
+      if(dup < 0){
+        lines.push('<div class="row er">🛡 '+(L?"Xoá trùng ĐÃ BỊ CHẶN (nghi lệch cột): định xoá ":"Dedup BLOCKED (suspected column misalignment): would delete ")+Math.abs(dup)+(L?" dòng >40% → không xoá gì. Kiểm tra lại cấu trúc file A→V.":" rows >40% → nothing deleted. Check file A→V layout.")+'</div>');
+      } else {
+        lines.push('<div class="row ok">🧹 '+(L?"Đã xoá trùng (A→V giống hệt, toàn sheet)":"Deduped (identical A→V, whole sheet)")+': <b>'+dup+'</b></div>');
+      }
       lines.push('<div class="row" style="color:var(--t2)">'+(L?"Cập nhật lúc":"Updated at")+': '+esc((res.meta&&res.meta.exported)||"")+'</div>');
 
       /* Cảnh báo nếu giữ = 0 nhưng có thêm dòng → nhắc kiểm tra + hiện mẫu dòng bị xoá */

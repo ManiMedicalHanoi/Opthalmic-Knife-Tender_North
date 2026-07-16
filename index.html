@@ -2062,8 +2062,8 @@ function umShowInfo(wsName, totalRows, dataRows, warnStruct){
     '<div>'+(L?"Sheet: ":"Sheet: ")+'<b>'+esc(wsName)+'</b> · '+(L?"tổng dòng":"total rows")+': '+totalRows+'</div>'+
     '<div>'+(L?"Số dòng dữ liệu sẽ nhập (từ dòng 3, cột A→V): ":"Data rows to import (from row 3, cols A→V): ")+'<b>'+dataRows+'</b></div>'+
     '<div style="margin-top:6px;font-size:12px;color:var(--t2)">'+
-      (L?"Backend sẽ: thêm vào cuối sheet → làm sạch riêng các dòng mới → xoá trùng toàn sheet (B→V)."
-        :"Backend will: append → clean only the new rows → dedupe whole sheet (B→V).")+'</div>'+warnHtml;
+      (L?"Backend sẽ: thêm vào cuối sheet → làm sạch riêng các dòng mới → BÔI MÀU dòng trùng (B→Y), KHÔNG xoá. Dòng đã có Knife Type sẽ KHÔNG bị xoá."
+        :"Backend will: append → clean only the new rows → HIGHLIGHT duplicates (B→Y), no delete. Rows with a Knife Type are never deleted.")+'</div>'+warnHtml;
 }
 
 function umLog(html_){ var l=document.getElementById("um-log"); l.style.display="block"; l.innerHTML=html_; }
@@ -2095,17 +2095,17 @@ function umRun(){
 
   var n = UM.rows.length;
   /* Tiến độ theo GIAI ĐOẠN ước lượng (1 request POST không stream được % thật từ GAS).
-     4 giai đoạn: gửi/append → làm sạch cột → phân loại/lọc → xoá trùng. Khi có kết quả → 100%. */
+     4 giai đoạn: gửi/append → làm sạch cột → phân loại/lọc → đánh dấu trùng. Khi có kết quả → 100%. */
   var stages = L ? [
     {p:8,  s:"1/4 · Gửi & thêm dữ liệu",    t:'Đang tải <b>'+n+'</b> dòng lên Google Sheet và chèn vào cuối bảng (cột A→V).'},
     {p:34, s:"2/4 · Làm sạch cột",          t:'Chuẩn hoá <b>Hãng sản xuất</b> & <b>Xuất xứ</b>, điền cột W→AC (Year, Month, Region, Price_Tier, Province…). Học hãng chuẩn từ dữ liệu cũ + danh sách hãng đã biết.'},
     {p:66, s:"3/4 · Phân loại & lọc",        t:'Lọc giá <b>30k–400k</b>, xác định <b>Knife Type</b> (Stab/Slit/Cresent/MVR), loại dòng rác & dao không phải nhãn khoa. Bổ sung hãng mới vào Master.'},
-    {p:88, s:"4/4 · Xoá trùng",             t:'So khớp <b>B→V</b> trên toàn bảng, bỏ dòng trùng gói cũ, giữ dòng đầy đủ nhất.'}
+    {p:88, s:"4/4 · Đánh dấu trùng",         t:'So khớp <b>B→Y</b> trên toàn bảng, <b>bôi màu</b> dòng trùng (KHÔNG xoá) để soát tay.'}
   ] : [
     {p:8,  s:"1/4 · Send & append",   t:'Uploading <b>'+n+'</b> rows to the Sheet and appending (A→V).'},
     {p:34, s:"2/4 · Clean columns",   t:'Normalizing <b>Manufacturer</b> & <b>Country</b>, filling W→AC. Learning canonical brands from existing data + known brands.'},
     {p:66, s:"3/4 · Classify & filter",t:'Price filter <b>30k–400k</b>, deciding <b>Knife Type</b>, removing junk & non-ophthalmic rows. Updating Master.'},
-    {p:88, s:"4/4 · Dedupe",          t:'Matching <b>B→V</b> across the sheet, dropping duplicates.'}
+    {p:88, s:"4/4 · Flag duplicates", t:'Matching <b>B→Y</b> across the sheet, highlighting duplicates (no delete).'}
   ];
   /* ước lượng thời lượng theo số dòng: ~40ms/dòng, tối thiểu 3.5s/giai đoạn cuối */
   var perStage = Math.max(1400, Math.min(9000, n*38));
@@ -2138,9 +2138,9 @@ function umRun(){
         showToast(L?"Nhập thất bại":"Import failed","warn");
         return;
       }
-      var _dupTxt = (res.dupDeleted||0) < 0 ? (L?"bị chặn":"blocked") : (res.dupDeleted||0);
+      var _dupTxt = (res.dupHighlighted||0);
       umSetProg(100, L?"Hoàn tất":"Done",
-        (L?"Đã thêm ":"Added ")+'<b>'+(res.appended||0)+'</b>'+(L?" · giữ ":" · kept ")+'<b>'+(res.kept||0)+'</b>'+(L?" · xoá trùng ":" · deduped ")+'<b>'+_dupTxt+'</b>', "done");
+        (L?"Đã thêm ":"Added ")+'<b>'+(res.appended||0)+'</b>'+(L?" · giữ ":" · kept ")+'<b>'+(res.kept||0)+'</b>'+(L?" · bôi màu trùng ":" · flagged dup ")+'<b>'+_dupTxt+'</b>', "done");
 
       var d = res.deleted||{};
       var ts = res.typeSrc||{};
@@ -2154,12 +2154,8 @@ function umRun(){
       lines.push('<div class="row wn">'+(L?"Xoá brand lạ không phải nhãn khoa":"Removed non-ophthalmic unknown brand")+': <b>'+(d.newbrand||0)+'</b></div>');
       lines.push('<div class="row">'+(L?"Nguồn Knife Type":"Knife Type source")+' — token: '+(ts.token||0)+' · code/master: '+(ts.code||0)+' · brand+giá: '+(ts.brandPrice||0)+' · '+(L?"chưa rõ":"unknown")+': '+(ts.none||0)+'</div>');
       if(res.masterAdded) lines.push('<div class="row">Master_Dao: +'+res.masterAdded+' '+(L?"mã hãng mới":"new brand codes")+'</div>');
-      var dup = res.dupDeleted||0;
-      if(dup < 0){
-        lines.push('<div class="row er">🛡 '+(L?"Xoá trùng ĐÃ BỊ CHẶN (nghi lệch cột): định xoá ":"Dedup BLOCKED (suspected column misalignment): would delete ")+Math.abs(dup)+(L?" dòng >40% → không xoá gì. Kiểm tra lại cấu trúc file A→V.":" rows >40% → nothing deleted. Check file A→V layout.")+'</div>');
-      } else {
-        lines.push('<div class="row ok">🧹 '+(L?"Đã xoá trùng (A→V giống hệt, toàn sheet)":"Deduped (identical A→V, whole sheet)")+': <b>'+dup+'</b></div>');
-      }
+      var dup = res.dupHighlighted||0;
+      lines.push('<div class="row wn">🎨 '+(L?"Đã BÔI MÀU dòng trùng (B→Y giống hệt, toàn sheet) — KHÔNG xoá, soát tay":"Highlighted duplicate rows (identical B→Y, whole sheet) — not deleted")+': <b>'+dup+'</b></div>');
       lines.push('<div class="row" style="color:var(--t2)">'+(L?"Cập nhật lúc":"Updated at")+': '+esc((res.meta&&res.meta.exported)||"")+'</div>');
 
       /* Cảnh báo nếu giữ = 0 nhưng có thêm dòng → nhắc kiểm tra + hiện mẫu dòng bị xoá */

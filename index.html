@@ -530,6 +530,21 @@ html[data-theme="dark"] .mp-pop{box-shadow:0 14px 42px rgba(0,0,0,.55);}
 .um-log .row:last-child{border-bottom:none;}
 .um-spin{display:inline-block;width:15px;height:15px;border:2.5px solid var(--br);border-top-color:var(--blue);border-radius:50%;animation:umspin .7s linear infinite;vertical-align:-3px;margin-right:7px;}
 @keyframes umspin{100%{transform:rotate(360deg);}}
+.um-prog{margin-top:16px;}
+.um-prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.um-prog-top span:first-child{font-weight:800;font-size:14px;color:var(--t1);}
+.um-prog-pct{font-weight:900;font-size:15px;color:var(--blue);font-variant-numeric:tabular-nums;}
+.um-prog-bar{height:11px;border-radius:99px;background:var(--sf2);border:1px solid var(--br);overflow:hidden;}
+.um-prog-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--sky));transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(58,92,170,.4);}
+.um-prog-fill.done{background:linear-gradient(90deg,var(--pos),#5FD37E);box-shadow:0 0 10px rgba(46,125,50,.4);}
+.um-prog-fill.err{background:linear-gradient(90deg,var(--neg),#F4756E);box-shadow:0 0 10px rgba(198,40,40,.4);}
+.um-prog-note{margin-top:8px;font-size:12.5px;color:var(--t2);line-height:1.5;min-height:18px;}
+.um-prog-note b{color:var(--blue);font-weight:700;}
+.um-samp{margin-top:12px;padding:11px 14px;border-radius:10px;background:var(--nb);border:1px solid var(--br);font-size:12px;line-height:1.65;color:var(--t1);max-height:180px;overflow:auto;}
+.um-samp .st{font-weight:800;color:var(--neg);margin-bottom:5px;font-size:12.5px;}
+.um-samp .si{padding:2px 0;border-bottom:1px dashed var(--br);}
+.um-samp .si:last-child{border-bottom:none;}
+.um-samp .rz{color:var(--warn);font-weight:700;}
 .modal-bx{background:var(--sf);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.4);width:min(820px,100%);max-height:88vh;overflow-y:auto;}
 .modal-hd{padding:16px 22px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;border-radius:14px 14px 0 0;}
 .modal-hd h2{font-size:16px;font-weight:800;flex:1;}
@@ -1247,6 +1262,11 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
         <input type="file" id="um-file" accept=".xlsx,.xls" style="display:none" onchange="umPickFile(event)">
       </div>
       <div id="um-info" class="um-info" style="display:none"></div>
+      <div id="um-prog" class="um-prog" style="display:none">
+        <div class="um-prog-top"><span id="um-prog-stage">—</span><span id="um-prog-pct">0%</span></div>
+        <div class="um-prog-bar"><div id="um-prog-fill" class="um-prog-fill"></div></div>
+        <div id="um-prog-note" class="um-prog-note"></div>
+      </div>
       <div id="um-log" class="um-log" style="display:none"></div>
     </div>
     <div class="modal-ft">
@@ -1941,11 +1961,14 @@ function fetchData(){
  *  → backend tự APPEND + LÀM SẠCH (chỉ dòng mới) + XOÁ TRÙNG toàn sheet → reload.
  *  Dùng SheetJS (XLSX) đã nạp sẵn ở <head>. POST qua fcPostJSON (text/plain, CORS-safe).
  * ════════════════════════════════════════════════════════════════════════════ */
-var UM = { rows:null, fileName:"", busy:false };
+var UM = { rows:null, fileName:"", busy:false, _timer:null };
 
 function openUploadModal(){
   UM.rows=null; UM.fileName=""; UM.busy=false;
+  if(UM._timer){ clearInterval(UM._timer); UM._timer=null; }
   var info=document.getElementById("um-info"); if(info){ info.style.display="none"; info.innerHTML=""; }
+  var prog=document.getElementById("um-prog"); if(prog){ prog.style.display="none"; }
+  var fill=document.getElementById("um-prog-fill"); if(fill){ fill.style.width="0%"; fill.classList.remove("done","err"); }
   var log=document.getElementById("um-log"); if(log){ log.style.display="none"; log.innerHTML=""; }
   var dz=document.getElementById("um-dropzone"); if(dz){ dz.classList.remove("busy","drag"); }
   var dzt=document.getElementById("um-dz-t"); if(dzt) dzt.textContent = (LANG==="vi"?"Kéo & thả file Excel vào đây, hoặc bấm để chọn":"Drag & drop the Excel file here, or click to choose");
@@ -2045,6 +2068,19 @@ function umShowInfo(wsName, totalRows, dataRows, warnStruct){
 
 function umLog(html_){ var l=document.getElementById("um-log"); l.style.display="block"; l.innerHTML=html_; }
 
+/* Cập nhật thanh tiến độ + note */
+function umSetProg(pct, stage, note, cls){
+  var box=document.getElementById("um-prog"); if(box) box.style.display="block";
+  var fill=document.getElementById("um-prog-fill");
+  var pctEl=document.getElementById("um-prog-pct");
+  var stEl=document.getElementById("um-prog-stage");
+  var noteEl=document.getElementById("um-prog-note");
+  if(fill){ fill.style.width=Math.max(0,Math.min(100,pct))+"%"; fill.classList.remove("done","err"); if(cls) fill.classList.add(cls); }
+  if(pctEl) pctEl.textContent=Math.round(pct)+"%";
+  if(stEl && stage!=null) stEl.textContent=stage;
+  if(noteEl && note!=null) noteEl.innerHTML=note;
+}
+
 function umRun(){
   if(!UM.rows || !UM.rows.length){ showToast(LANG==="vi"?"Chưa có dữ liệu.":"No data.","warn"); return; }
   if(UM.busy) return;
@@ -2054,48 +2090,100 @@ function umRun(){
   var runBtn = document.getElementById("um-run");
   runBtn.disabled = true;
   runBtn.innerHTML = '<span class="um-spin"></span>'+(L?"Đang xử lý trên Sheet…":"Processing on Sheet…");
-  umLog('<div class="row">'+(L?"Đang gửi ":"Sending ")+UM.rows.length+(L?" dòng lên backend & làm sạch… (có thể mất 10–60s tuỳ số dòng)":" rows to backend & cleaning… (may take 10–60s)")+'</div>');
+  document.getElementById("um-log").style.display="none";
+  document.getElementById("um-log").innerHTML="";
+
+  var n = UM.rows.length;
+  /* Tiến độ theo GIAI ĐOẠN ước lượng (1 request POST không stream được % thật từ GAS).
+     4 giai đoạn: gửi/append → làm sạch cột → phân loại/lọc → xoá trùng. Khi có kết quả → 100%. */
+  var stages = L ? [
+    {p:8,  s:"1/4 · Gửi & thêm dữ liệu",    t:'Đang tải <b>'+n+'</b> dòng lên Google Sheet và chèn vào cuối bảng (cột A→V).'},
+    {p:34, s:"2/4 · Làm sạch cột",          t:'Chuẩn hoá <b>Hãng sản xuất</b> & <b>Xuất xứ</b>, điền cột W→AC (Year, Month, Region, Price_Tier, Province…). Học hãng chuẩn từ dữ liệu cũ + danh sách hãng đã biết.'},
+    {p:66, s:"3/4 · Phân loại & lọc",        t:'Lọc giá <b>30k–400k</b>, xác định <b>Knife Type</b> (Stab/Slit/Cresent/MVR), loại dòng rác & dao không phải nhãn khoa. Bổ sung hãng mới vào Master.'},
+    {p:88, s:"4/4 · Xoá trùng",             t:'So khớp <b>B→V</b> trên toàn bảng, bỏ dòng trùng gói cũ, giữ dòng đầy đủ nhất.'}
+  ] : [
+    {p:8,  s:"1/4 · Send & append",   t:'Uploading <b>'+n+'</b> rows to the Sheet and appending (A→V).'},
+    {p:34, s:"2/4 · Clean columns",   t:'Normalizing <b>Manufacturer</b> & <b>Country</b>, filling W→AC. Learning canonical brands from existing data + known brands.'},
+    {p:66, s:"3/4 · Classify & filter",t:'Price filter <b>30k–400k</b>, deciding <b>Knife Type</b>, removing junk & non-ophthalmic rows. Updating Master.'},
+    {p:88, s:"4/4 · Dedupe",          t:'Matching <b>B→V</b> across the sheet, dropping duplicates.'}
+  ];
+  /* ước lượng thời lượng theo số dòng: ~40ms/dòng, tối thiểu 3.5s/giai đoạn cuối */
+  var perStage = Math.max(1400, Math.min(9000, n*38));
+  var si = 0;
+  umSetProg(stages[0].p, stages[0].s, stages[0].t);
+  UM._timer = setInterval(function(){
+    si++;
+    if(si < stages.length){
+      umSetProg(stages[si].p, stages[si].s, stages[si].t);
+    } else {
+      /* đã qua hết 4 giai đoạn nhưng chưa có phản hồi → bò dần 88→96% để không đứng im */
+      var cur = parseFloat(document.getElementById("um-prog-fill").style.width)||88;
+      if(cur < 96) umSetProg(cur+1, null, null);
+    }
+  }, perStage);
+
+  function umStop(){ if(UM._timer){ clearInterval(UM._timer); UM._timer=null; } }
 
   fcPostJSON(GAS_URL, { action:"uploadTender", rows:UM.rows, fileName:UM.fileName })
     .then(function(res){
+      umStop();
       UM.busy = false;
       document.getElementById("um-dropzone").classList.remove("busy");
       runBtn.disabled = false;
       runBtn.innerHTML = "⚙ "+(L?"Làm sạch & cập nhật":"Clean & update");
 
       if(!res || res.ok===false){
+        umSetProg(100, L?"Lỗi":"Error", esc((res&&res.error)||"unknown"), "err");
         umLog('<div class="row er">✕ '+(L?"Lỗi: ":"Error: ")+esc((res&&res.error)||"unknown")+'</div>');
         showToast(L?"Nhập thất bại":"Import failed","warn");
         return;
       }
+      umSetProg(100, L?"Hoàn tất":"Done",
+        (L?"Đã thêm ":"Added ")+'<b>'+(res.appended||0)+'</b>'+(L?" · giữ ":" · kept ")+'<b>'+(res.kept||0)+'</b>'+(L?" · xoá trùng ":" · deduped ")+'<b>'+(res.dupDeleted||0)+'</b>', "done");
+
       var d = res.deleted||{};
       var ts = res.typeSrc||{};
+      var totalDel = (d.price||0)+(d.rac||0)+(d.newbrand||0);
       var lines = [];
       lines.push('<div class="row ok">✓ '+(L?"Đã thêm":"Appended")+': <b>'+(res.appended||0)+'</b> '+(L?"dòng":"rows")+'</div>');
       lines.push('<div class="row">'+(L?"Đã làm sạch (cột W→AC)":"Cleaned (cols W→AC)")+': <b>'+(res.cleaned||0)+'</b></div>');
       lines.push('<div class="row ok">'+(L?"Giữ & phân loại dao nhãn khoa":"Kept & classified")+': <b>'+(res.kept||0)+'</b></div>');
-      lines.push('<div class="row wn">'+(L?"Xoá ngoài khoảng giá 30k–400k":"Removed (price out of 30k–400k)")+': '+(d.price||0)+'</div>');
-      lines.push('<div class="row wn">'+(L?"Xoá dòng rác (điện/lưỡi/cán/tiêu bản/…) ":"Removed junk rows")+': '+(d.rac||0)+'</div>');
-      lines.push('<div class="row wn">'+(L?"Xoá brand lạ không phải nhãn khoa":"Removed non-ophthalmic unknown brand")+': '+(d.newbrand||0)+'</div>');
+      lines.push('<div class="row wn">'+(L?"Xoá ngoài khoảng giá 30k–400k":"Removed (price out of 30k–400k)")+': <b>'+(d.price||0)+'</b></div>');
+      lines.push('<div class="row wn">'+(L?"Xoá dòng rác (điện/lưỡi/cán/tiêu bản/…)":"Removed junk rows")+': <b>'+(d.rac||0)+'</b></div>');
+      lines.push('<div class="row wn">'+(L?"Xoá brand lạ không phải nhãn khoa":"Removed non-ophthalmic unknown brand")+': <b>'+(d.newbrand||0)+'</b></div>');
       lines.push('<div class="row">'+(L?"Nguồn Knife Type":"Knife Type source")+' — token: '+(ts.token||0)+' · code/master: '+(ts.code||0)+' · brand+giá: '+(ts.brandPrice||0)+' · '+(L?"chưa rõ":"unknown")+': '+(ts.none||0)+'</div>');
       if(res.masterAdded) lines.push('<div class="row">Master_Dao: +'+res.masterAdded+' '+(L?"mã hãng mới":"new brand codes")+'</div>');
       lines.push('<div class="row ok">🧹 '+(L?"Đã xoá trùng (B→V, toàn sheet)":"Deduped (B→V, whole sheet)")+': <b>'+(res.dupDeleted||0)+'</b></div>');
       lines.push('<div class="row" style="color:var(--t2)">'+(L?"Cập nhật lúc":"Updated at")+': '+esc((res.meta&&res.meta.exported)||"")+'</div>');
+
+      /* Cảnh báo nếu giữ = 0 nhưng có thêm dòng → nhắc kiểm tra + hiện mẫu dòng bị xoá */
+      if((res.kept||0)===0 && (res.appended||0)>0){
+        lines.push('<div class="row er">⚠ '+(L?"Không giữ được dòng nào! Xem mẫu dòng bị xoá bên dưới để biết lý do (thường do giá không đọc được, hoặc không phải dao nhãn khoa).":"No rows kept! See deleted samples below (usually price not parsed, or not ophthalmic knives).")+'</div>');
+      }
       umLog(lines.join(""));
 
-      showToast((L?"Nhập thành công · đang tải lại dữ liệu…":"Imported · reloading…"),"success");
-      /* Reload dashboard để phản ánh data mới */
-      setTimeout(function(){
-        try{
-          reloadData();
-        }catch(e){ console.warn(e); }
-      }, 600);
+      /* Mẫu dòng bị xoá (chẩn đoán) */
+      var samp = res.sampleDeleted||[];
+      if(samp.length){
+        var sh = '<div class="um-samp"><div class="st">'+(L?"Mẫu dòng bị xoá (tối đa 8) — lý do:":"Deleted samples (up to 8) — reasons:")+'</div>';
+        samp.forEach(function(s){
+          sh += '<div class="si"><span class="rz">['+esc(s.reason)+']</span> '+esc(s.name||"(trống)")+
+                (s.brand?' · '+esc(s.brand):'')+(s.price?' · '+(L?"giá gốc: ":"raw price: ")+esc(s.price):'')+'</div>';
+        });
+        sh += '</div>';
+        document.getElementById("um-log").insertAdjacentHTML("beforeend", sh);
+      }
+
+      showToast((L?"Đã xử lý xong · đang tải lại dữ liệu…":"Done · reloading…"),"success");
+      setTimeout(function(){ try{ reloadData(); }catch(e){ console.warn(e); } }, 700);
     })
     .catch(function(err){
+      umStop();
       UM.busy = false;
       document.getElementById("um-dropzone").classList.remove("busy");
       runBtn.disabled = false;
       runBtn.innerHTML = "⚙ "+(L?"Làm sạch & cập nhật":"Clean & update");
+      umSetProg(100, L?"Lỗi mạng":"Network error", esc(String(err&&err.message||err)), "err");
       umLog('<div class="row er">✕ '+esc(String(err&&err.message||err))+'</div>');
       showToast(L?"Nhập thất bại (mạng/CORS)":"Import failed (network/CORS)","warn");
     });

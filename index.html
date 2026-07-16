@@ -884,7 +884,7 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .pr-act{display:flex;gap:6px;flex-shrink:0;}
 /* Gantt */
 .gantt-wrap{overflow-x:auto;padding-bottom:4px;}
-.gantt-row{display:grid;grid-template-columns:230px repeat(12,minmax(46px,1fr)) 84px;align-items:stretch;min-width:900px;}
+.gantt-row{display:grid;grid-template-columns:250px repeat(12,minmax(64px,1fr)) 92px;align-items:stretch;min-width:1080px;}
 .gantt-head .gantt-cell,.gantt-head .gantt-lbl,.gantt-head .gantt-tot{font-size:10.5px;font-weight:800;color:var(--t3);letter-spacing:.03em;padding:8px 4px;text-transform:uppercase;}
 .gantt-lbl{display:flex;align-items:center;gap:7px;padding:7px 10px;border-bottom:1px solid var(--br);overflow:hidden;}
 .gnm{font-weight:700;font-size:12.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -933,7 +933,8 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .popp-bar{height:8px;border-radius:6px;background:var(--br);overflow:hidden;}
 .popp-fill{height:100%;border-radius:6px;transition:width .3s;}
 /* ── gantt per-month value ── */
-.gmv{font-size:9.5px;font-weight:800;color:currentColor;opacity:.85;font-variant-numeric:tabular-nums;white-space:nowrap;transform:scale(.92);}
+.gmv{font-size:12px;font-weight:800;color:currentColor;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1;}
+.gantt-cell.on{min-height:30px;}
 .gantt-cell.on.gx .gmv{color:#0E2F5F;}
 .gantt-cell.on.gh1 .gmv{color:#1B6B27;}
 .gantt-cell.on.gh2 .gmv{color:#9A7000;}
@@ -966,6 +967,76 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .terr-qi:focus{outline:none;border-color:var(--blue);background:var(--sf);box-shadow:0 0 0 2px rgba(58,92,170,.14);}
 .terr-rev{margin-left:auto;font-size:12.5px;color:var(--t2);white-space:nowrap;}
 .terr-rev b{color:var(--pos);font-size:15px;font-variant-numeric:tabular-nums;}
+
+/* ── v5.1: tab totals ── */
+.plan-gtab{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:150px;text-align:left;}
+.pgt-l{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;}
+.pgt-n{font-size:12px;font-weight:800;opacity:.95;}
+.pgt-n b{font-size:14px;}
+.pgt-x{font-size:10px;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums;}
+.plan-gtab.on .pgt-x{opacity:.85;}
+
+/* ── v5.1: territory search list (compact, click-to-expand) ── */
+.terr-reslist{display:flex;flex-direction:column;gap:6px;max-height:640px;overflow-y:auto;padding:2px;}
+.terr-li{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--br);border-radius:10px;
+  background:var(--sf);cursor:pointer;transition:all .12s;}
+.terr-li:hover{border-color:var(--blue);background:var(--sf2);}
+.terr-li.open{border-color:var(--navy2);border-bottom-left-radius:0;border-bottom-right-radius:0;background:var(--pale);}
+.terr-li-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.terr-li-nm{font-weight:700;font-size:14px;color:var(--t1);flex:1;line-height:1.35;}      /* KHÔNG ellipsis → full name */
+.terr-li-city{font-size:11.5px;color:var(--sky);background:var(--pale);padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.terr-li.open .terr-li-city{background:#fff;}
+.terr-li-badge{font-size:10.5px;font-weight:800;color:var(--pos);background:rgba(46,125,50,.12);padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.terr-li-caret{font-size:10px;color:var(--t3);flex-shrink:0;}
+.terr-li-body{border:1px solid var(--navy2);border-top:none;border-radius:0 0 10px 10px;padding:15px;background:var(--sf);margin-bottom:2px;}
+.terr-more{text-align:center;font-size:11.5px;color:var(--t3);padding:8px;font-style:italic;}
+
+/* demand strip */
+.terr-demand{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.td-cell{background:var(--sf2);border:1px solid var(--br);border-radius:10px;padding:10px 12px;}
+.td-l{font-size:10.5px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.03em;margin-bottom:3px;}
+.td-v{font-size:19px;font-weight:900;color:var(--navy2);font-variant-numeric:tabular-nums;}
+.td-v span{font-size:11px;font-weight:700;color:var(--t3);}
+.td-v.pos{color:var(--pos);} .td-v.neg{color:var(--neg);}
+
+/* big editor */
+.terr-editbox{background:var(--sf2);border:1px solid var(--br);border-radius:11px;padding:14px;margin-bottom:14px;}
+.terr-edit.big{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:13px;}
+.terr-note.big{width:100%;border:1.5px solid var(--br);border-radius:9px;padding:10px 12px;font-family:var(--ff);
+  font-size:14px;font-weight:500;background:var(--sf);color:var(--t1);resize:vertical;min-height:52px;text-transform:none;letter-spacing:0;}
+.terr-note.big:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(58,92,170,.14);}
+.plan-sel.big{padding:9px 12px;font-size:14px;font-weight:800;min-width:130px;}
+.terr-qrow.big{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;padding-top:13px;border-top:1px solid var(--br);}
+.terr-q.big{display:flex;flex-direction:column;gap:5px;}
+.terr-qi.big{width:100px;border:1.5px solid var(--br);border-radius:9px;padding:10px;text-align:center;
+  font-family:var(--ff);font-size:19px;font-weight:900;background:var(--sf);color:var(--t1);font-variant-numeric:tabular-nums;}
+.terr-qi.big:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(58,92,170,.14);}
+.terr-rev.big{margin-left:auto;font-size:13px;color:var(--t2);white-space:nowrap;align-self:center;}
+.terr-rev.big b{color:var(--pos);font-size:18px;font-variant-numeric:tabular-nums;}
+
+/* history */
+.terr-hist{border:1px solid var(--br);border-radius:11px;padding:13px;background:var(--sf);}
+.terr-hist.empty{color:var(--t3);font-style:italic;font-size:12.5px;}
+.terr-hist-h{font-weight:800;font-size:13px;color:var(--t1);margin-bottom:10px;}
+.terr-freqrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:11px;padding-bottom:11px;border-bottom:1px dashed var(--br);}
+.terr-freq-l{font-size:11.5px;font-weight:800;color:var(--t3);}
+.terr-freq{font-size:11.5px;padding:3px 10px;border-radius:20px;background:var(--sf2);border:1px solid var(--br);color:var(--t2);}
+.terr-freq b{color:var(--t1);font-variant-numeric:tabular-nums;}
+.terr-freq.mani{background:rgba(212,160,23,.14);border-color:rgba(212,160,23,.4);color:#8a6d0f;font-weight:800;}
+.terr-hrows{display:flex;flex-direction:column;gap:5px;}
+.terr-hrow{display:grid;grid-template-columns:120px 78px 110px 90px 90px 1fr;gap:8px;align-items:center;
+  padding:7px 9px;border-radius:8px;background:var(--sf2);font-size:11.5px;}
+.terr-h-brand{font-weight:800;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.terr-h-brand.mani{color:#8a6d0f;}
+.terr-h-qty,.terr-h-price,.terr-h-when{color:var(--t2);font-variant-numeric:tabular-nums;}
+.terr-h-tag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--nb);color:var(--t3);text-align:center;white-space:nowrap;}
+.terr-h-tag.on{background:rgba(46,125,50,.14);color:var(--pos);}
+.terr-h-kqtt{font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:720px){.terr-demand{grid-template-columns:1fr;}.terr-hrow{grid-template-columns:1fr 1fr;}.terr-h-kqtt{display:none;}}
+
+/* rival block in detail drawer */
+.pd-rival .pd-brand.rival{background:rgba(224,122,46,.16);color:#b85f1e;padding:2px 9px;border-radius:6px;font-weight:800;}
+.pd-brand.rival{background:rgba(224,122,46,.16);color:#b85f1e;padding:2px 9px;border-radius:6px;font-weight:800;}
 
 /* ── FY68 Plan v2: gantt tabs + clickable rows + detail drawer ── */
 .plan-gtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
@@ -1994,7 +2065,10 @@ function fetchData(){
           method:r.method||"", year:+r.year||0,
           month:r.month||"", kqtt:r.kqtt||"",
           pname:r.pname||"", pcode:r.pcode||"", tspec:r.tspec||"",
-          qty:qty, price:price, val:qty*price
+          qty:qty, price:price, val:qty*price,
+          /* ── v2 fields cho logic "Mở mới" (Tab 5 plan) ── */
+          cdur:+r.cdur||0, issSer:+r.issSer||0, expSer:+r.expSer||0,
+          issStr:r.issStr||"", expStr:r.expStr||""
         };
       });
       buildIndex();
@@ -5982,6 +6056,7 @@ if(!S.plan) S.plan = {
   acct:{},            // "<FY>|<accNorm>" → {account,city,opp,note,msl,mst,mcu,...}  (sheet ACCT_PLAN)
   acctDirty:{}, acctSaving:false,
   terrView:"gantt",   // panel địa bàn: 'gantt' | 'board'
+  terrOpen:null,      // key BV đang mở bảng edit trong danh sách search
   dirty:{}, saving:false, loaded:false, acctLoaded:false, chart:null
 };
 if(S.plan.fy===undefined) S.plan.fy="FY68";
@@ -6142,7 +6217,7 @@ function planAutoRenewRows(){
 /* ── Nhóm ③ Mở mới (+ Duy trì điền tay không gắn pkg): dòng thuần thủ công.
       Bỏ qua key "MTA|…" (đó là override cho auto-renew, đã xử lý ở planAutoRenewRows). ── */
 function planManualRows(){
-  return Object.keys(S.plan.manual).filter(function(k){ return k.indexOf("MTA|")!==0; })
+  return Object.keys(S.plan.manual).filter(function(k){ return k.indexOf("MTA|")!==0 && k.indexOf("NEW|")!==0; })
     .map(function(k){
     var m=S.plan.manual[k];
     return { rowKey:k, group:m.group||"Mở mới", account:m.account||"", city:m.city||"",
@@ -6152,8 +6227,86 @@ function planManualRows(){
   });
 }
 
+/* ════════════════════════════════════════════════════════════════════════════════════════════
+   Nhóm ③ MỞ MỚI / CONVERT — nguồn = DATA TỔNG (ROWS, đã lọc North), KHÔNG phải feed Hùng Vĩ.
+   ────────────────────────────────────────────────────────────────────────────────────────────
+   Mục tiêu: các gói dao mà HÃNG KHÁC (không phải Mani) đang giữ → cơ hội Mani nhảy vào kỳ kế.
+   Quy tắc:
+     • Gom ROWS theo GÓI = (buyer ⊕ kqtt).  Mỗi gói: winner brand, SL theo loại dao, giá, ngày ra
+       quyết định (issSer) + hiệu lực (cdur) → tính khoảng còn hiệu lực.
+     • (6.1) LOẠI gói mà Mani đang trúng & CÒN hiệu lực trong kỳ FY đang xem (Mani giữ rồi thì
+       không phải "mở mới"). Gói hãng khác đang còn hiệu lực = đối thủ đang giữ → cơ hội mở mới:
+       ta điền dự báo cho "GÓI KẾ TIẾP" bắt đầu ngay sau khi gói hiện tại hết hạn, chỉ tính phần
+       tháng rơi vào FY đang xem. Doanh số hiện tại của đối thủ vẫn hiện (tham chiếu, không tính $).
+     • (6.2) Bệnh viện TỪNG có gói (đã hết hiệu lực) nhưng HIỆN không có gói nào còn hiệu lực tới
+       kỳ FY đang xem → cũng là mở mới (gói kế tiếp bắt đầu ngay đầu kỳ FY).
+   Ghi chú: SL Mani dự kiến của gói kế = SL gói hiện tại (đối thủ) làm mặc định, user sửa được;
+            override lưu ở S.plan.manual với key "NEW|<buyer>|<kqtt>".
+   ════════════════════════════════════════════════════════════════════════════════════════════ */
+function planTotalPkgs(){
+  var pk={};
+  (ROWS||[]).forEach(function(r){
+    if(!r.buyer) return;
+    var kn=r.ptype||planKnifeShort(r.pcode)||"";
+    var key=norm(r.buyer)+"||"+(r.kqtt||"");
+    if(!pk[key]) pk[key]={ buyer:r.buyer, buyerNorm:norm(r.buyer), prov:r.prov||"", kqtt:r.kqtt||"",
+      brand:r.brand||"?", brandNorm:norm(r.brand||""), issSer:0, cdur:0, qty:0, val:0,
+      knives:{ Slit:0, Stab:0, "Cresent":0, MVR:0, other:0 }, price:0, priceN:0 };
+    var p=pk[key];
+    var q=+r.qty||0; p.qty+=q; p.val+=(+r.price||0)*q;
+    if(+r.price>0){ p.price+=(+r.price)*q; p.priceN+=q; }
+    if((+r.issSer||0)>p.issSer){ p.issSer=+r.issSer; p.brand=r.brand||p.brand; p.brandNorm=norm(r.brand||p.brand); }
+    if((+r.cdur||0)>p.cdur) p.cdur=+r.cdur;
+    var t=/slit/i.test(kn)?"Slit":/stab/i.test(kn)?"Stab":/cres/i.test(kn)?"Cresent":/mvr/i.test(kn)?"MVR":"other";
+    p.knives[t]+=q;
+  });
+  Object.keys(pk).forEach(function(k){ var p=pk[k]; p.priceAvg=p.priceN? Math.round(p.price/p.priceN):0;
+    p.issIdx=p.issSer? planSerToIdx(p.issSer):0; p.dur=p.cdur>0?p.cdur:12;
+    p.endIdx=p.issIdx? p.issIdx+p.dur-1:0; });
+  return pk;
+}
+
+function planNewRows(){
+  var BASE=PLAN_BASE(), END=PLAN_END();
+  var pkgs=planTotalPkgs();
+  var maniHold={};
+  Object.keys(pkgs).forEach(function(k){ var p=pkgs[k];
+    if(p.brandNorm==="mani" && p.endIdx>=BASE && p.issIdx<=END) maniHold[p.buyerNorm]=1; });
+  var byBuyer={};
+  Object.keys(pkgs).forEach(function(k){ var p=pkgs[k];
+    if(p.brandNorm==="mani") return;
+    var b=p.buyerNorm; if(!byBuyer[b] || p.issIdx>byBuyer[b].issIdx) byBuyer[b]=p; });
+  var out=[];
+  Object.keys(byBuyer).forEach(function(b){
+    if(maniHold[b]) return;
+    var p=byBuyer[b];
+    var nextStart = p.endIdx>=BASE ? p.endIdx+1 : BASE;
+    if(nextStart>END) return;
+    if(nextStart<BASE) nextStart=BASE;
+    var expired = p.endIdx>0 && p.endIdx<BASE;
+    var rowKey="NEW|"+b+"|"+(p.kqtt||"");
+    var man=S.plan.manual[rowKey];
+    var defMSL=p.knives.Slit||0, defMST=p.knives.Stab||0, defMCU=p.knives["Cresent"]||0;
+    out.push({
+      rowKey:rowKey, group:"Mở mới", account:p.buyer, city:p.prov, tbmt:p.kqtt||"",
+      mst: man&&man.mst!=null? +man.mst : defMST,
+      msl: man&&man.msl!=null? +man.msl : defMSL,
+      mcu: man&&man.mcu!=null? +man.mcu : defMCU,
+      startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : nextStart,
+      startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(nextStart),
+      dur: man&&man.dur!=null? +man.dur : p.dur,
+      opp: man&&man.opp? man.opp : (expired?"Cao":"Trung bình"),
+      note: man&&man.note? man.note : "",
+      _auto:false, _new:true, _expired:expired,
+      _rivalBrand:p.brand, _rivalQty:p.qty, _rivalPrice:p.priceAvg,
+      _rivalEnd: p.endIdx? planIdxToMo(p.endIdx):"", _rivalKnives:p.knives
+    });
+  });
+  return out;
+}
+
 function planAllRows(){
-  return planExistingRows().concat(planAutoRenewRows()).concat(planManualRows());
+  return planExistingRows().concat(planAutoRenewRows()).concat(planNewRows()).concat(planManualRows());
 }
 
 /* ── Nạp dòng plan đã lưu từ FC_LOG (group = Duy trì / Mở mới) ── */
@@ -6492,10 +6645,25 @@ function renderPlan(){
   /* ── GANTT với TAB nhóm + search ── */
   var tabs=["all","Existing","Duy trì","Mở mới"];
   var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
-  incl.forEach(function(r){ if(r._c.total>0){ counts.all++; counts[r.group]++; } });
+  /* tổng theo nhóm: SL dao dự kiến (theo loại) + doanh số $ — chỉ tính phần rơi vào kỳ (overlap) */
+  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0}, "Existing":{n:0,usd:0,msl:0,mst:0,mcu:0},
+            "Duy trì":{n:0,usd:0,msl:0,mst:0,mcu:0}, "Mở mới":{n:0,usd:0,msl:0,mst:0,mcu:0} };
+  incl.forEach(function(r){
+    if(r._c.total<=0) return;
+    counts.all++; counts[r.group]++;
+    /* SL dao quy theo phần hiệu lực trong kỳ: prorate theo overlap/dur để "SL bán trong kỳ" hợp lý */
+    var frac = (r.dur>0)? Math.min(1, (r._c.overlap||0)/r.dur) : 1;
+    var msl=Math.round((+r.msl||0)*frac), mst=Math.round((+r.mst||0)*frac), mcu=Math.round((+r.mcu||0)*frac);
+    [agg.all, agg[r.group]].forEach(function(a){ a.n++; a.usd+=r._c.usdFY68; a.msl+=msl; a.mst+=mst; a.mcu+=mcu; });
+  });
+  function aggKnives(a){ return a.msl+a.mst+a.mcu; }
   var tabBtns=tabs.map(function(tk){
+    var a=agg[tk];
     return '<button class="plan-gtab '+(S.plan.ganttTab===tk?"on":"")+'" onclick="planSetGTab(\''+tk+'\')">'
-      +PLAN_TAB_LABEL[tk]()+' <span class="pgc">'+counts[tk]+'</span></button>';
+      +'<span class="pgt-l">'+PLAN_TAB_LABEL[tk]()+' <span class="pgc">'+counts[tk]+'</span></span>'
+      +'<span class="pgt-n"><b>'+hvNum(aggKnives(a))+'</b> '+(LANG==="vi"?"dao":"knives")+' · '+hvUSD(a.usd)+'</span>'
+      +'<span class="pgt-x">MSL '+hvNum(a.msl)+' · MST '+hvNum(a.mst)+' · MCU '+hvNum(a.mcu)+'</span>'
+      +'</button>';
   }).join("");
 
   var q=norm(S.plan.q||"");
@@ -6520,7 +6688,7 @@ function renderPlan(){
   /* ── TERRITORY BOARD: smart-search địa bàn → xem KQ trúng gần nhất + điền/sửa kế hoạch (lưu ACCT_PLAN) ── */
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
     +'<div class="ct">📍 '+(LANG==="vi"?"Kế hoạch địa bàn ("+FYK+")":"Territory plan ("+FYK+")")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"tìm & bấm 1 địa bàn → xem lịch sử trúng thầu gần nhất, đánh giá cơ hội, cập nhật tình hình, điền SL Mani (MSL/MST/MCU). Mọi thay đổi lưu vào sheet ACCT_PLAN.":"search & click a territory → latest award history, opportunity, situation, Mani qty. Saved to ACCT_PLAN.")+'</div></div>'
+    +'<div class="cs">'+(LANG==="vi"?"gõ để tìm → bấm 1 địa bàn trong danh sách để mở bảng lập kế hoạch (Demand, lịch sử trúng thầu, đánh giá cơ hội, SL Mani). Lưu vào sheet ACCT_PLAN.":"search → click a territory to open its planning panel (demand, award history, opportunity, Mani qty). Saved to ACCT_PLAN.")+'</div></div>'
     +'<div class="cb">'
       +'<div class="ac-search" style="margin-bottom:12px"><span class="ac-search-ic">🔍</span>'
       +'<input id="plan-q" class="ac-search-i" placeholder="'+(LANG==="vi"?"Tìm tỉnh / bệnh viện… (VD: Quân Y 103, Nghệ An)":"Search province / hospital…")+'" value="'+esc(S.plan.qAdd||"")+'" oninput="planOnSearch(this.value)">'
@@ -6718,6 +6886,23 @@ function planOpenDetail(rowKey){
     lrHtml='<div class="pd-card pd-empty">'+(LANG==="vi"?"Chưa có dữ liệu trúng thầu cho bệnh viện này trong hệ thống.":"No award history found for this hospital.")+'</div>';
   }
 
+  /* Với dòng "Mở mới": hiện block đối thủ đang giữ gói (tham chiếu) — highlight hãng trúng */
+  var rivalHtml="";
+  if(r._new){
+    var rk=r._rivalKnives||{};
+    var rvChips=["Slit","Stab","Cresent","MVR"].filter(function(t){return rk[t];}).map(function(t){
+      return '<span class="pd-kchip">'+t+': <b>'+hvNum(rk[t])+'</b></span>'; }).join(" ");
+    rivalHtml='<div class="pd-card pd-rival"><div class="pd-h">⚔️ '+(LANG==="vi"?"Đối thủ đang giữ gói hiện tại (tham chiếu)":"Rival currently holding (reference)")+'</div>'
+      +'<div class="pd-win">'+(LANG==="vi"?"Hãng trúng":"Winner")+': <span class="pd-brand rival">'+esc(r._rivalBrand||"?")+'</span>'
+        +' · <b>'+hvNum(r._rivalQty||0)+'</b> '+(LANG==="vi"?"cái":"pcs")
+        +(r._rivalPrice?' · '+(LANG==="vi"?"giá TB":"avg")+' '+fcMoneyVND(r._rivalPrice):'')+'</div>'
+      +(rvChips?'<div class="pd-knives">'+rvChips+'</div>':'')
+      +'<div class="pd-tbmt">'+(r._expired
+          ?(LANG==="vi"?"⚠️ Gói đã HẾT hiệu lực — bệnh viện chưa có thầu mới → cơ hội mở mới sớm":"⚠️ Expired — no active tender → early opportunity")
+          :(LANG==="vi"?"Gói còn hiệu lực đến ":"Valid until ")+esc(r._rivalEnd||"?")+(LANG==="vi"?" → dự báo gói KẾ TIẾP":" → forecasting NEXT package"))+'</div>'
+      +'</div>';
+  }
+
   /* Editable SL Mani dự kiến (MSL/MST/MCU) — cho cả Existing lẫn manual */
   function qCell(field,label,color){
     var val=r[field]||0;
@@ -6754,7 +6939,7 @@ function planOpenDetail(rowKey){
   document.getElementById("drill-exp").textContent="⛶";
   document.getElementById("drill-t").textContent=r.account||"—";
   document.getElementById("drill-s").textContent=(r.city||"")+" · "+PLAN_FYKEY()+" plan";
-  document.getElementById("drill-body").innerHTML=head+lrHtml+editHtml;
+  document.getElementById("drill-body").innerHTML=head+lrHtml+rivalHtml+editHtml;
   /* nút xoá vào thanh action nếu có chỗ */
   var actWrap=document.querySelector("#drill-pn .drill-hd");
   document.getElementById("drill").classList.add("on");
@@ -6769,9 +6954,10 @@ function planDetailEdit(rowKey, field, val){
      Duy trì auto-renew (rowKey "MTA|…") = editable → tạo bản override trong S.plan.manual nếu chưa có,
      seed bằng giá trị auto-tính hiện tại để chỉnh 1 field không mất field khác. */
   var m=S.plan.manual[rowKey];
-  if(!m && rowKey.indexOf("MTA|")===0){
-    var cur=planAutoRenewRows().filter(function(x){return x.rowKey===rowKey;})[0];
-    if(cur){ m=S.plan.manual[rowKey]={ group:"Duy trì", account:cur.account, city:cur.city, tbmt:cur.tbmt||"",
+  if(!m && (rowKey.indexOf("MTA|")===0 || rowKey.indexOf("NEW|")===0)){
+    var src = rowKey.indexOf("MTA|")===0 ? planAutoRenewRows() : planNewRows();
+    var cur=src.filter(function(x){return x.rowKey===rowKey;})[0];
+    if(cur){ m=S.plan.manual[rowKey]={ group:cur.group, account:cur.account, city:cur.city, tbmt:cur.tbmt||"",
       mst:cur.mst, msl:cur.msl, mcu:cur.mcu, startMonth:cur.startMonth||planIdxToMo(cur.startIdx), dur:cur.dur,
       opp:cur.opp||"Trung bình", note:cur.note||"" }; }
   }
@@ -6848,18 +7034,50 @@ function planEnsurePickHandlers(rows){
 /* ════════════════════════════════════════════════════════════════════════════════════════════
    TERRITORY BOARD — smart-search địa bàn + editable + lịch sử trúng thầu (ACCT_PLAN)
    ════════════════════════════════════════════════════════════════════════════════════════════ */
+/* ── Demand + lịch sử trúng thầu đầy đủ của 1 địa bàn (BV) — từ data tổng ROWS ── */
+function planTerrIntel(account){
+  var an=norm(account||""); if(!an) return { demandTotal:0, demandYr:0, byBrand:[], byPkg:[], maniWon:false, years:0 };
+  var rows=(ROWS||[]).filter(function(r){ return norm(r.buyer||"")===an; });
+  if(!rows.length) return { demandTotal:0, demandYr:0, byBrand:[], byPkg:[], maniWon:false, years:0 };
+  var yrs={}, brandAgg={}, pkgAgg={}, maniWon=false, totQ=0;
+  rows.forEach(function(r){
+    var q=+r.qty||0; totQ+=q; if(r.year) yrs[r.year]=1;
+    var b=r.brand||"?"; if(!brandAgg[b]) brandAgg[b]={brand:b,qty:0,val:0,n:0,priceN:0,price:0};
+    var ba=brandAgg[b]; ba.qty+=q; ba.val+=(+r.price||0)*q; ba.n++;
+    if(+r.price>0){ ba.price+=(+r.price)*q; ba.priceN+=q; }
+    if(norm(b)==="mani") maniWon=true;
+    var pk=(r.kqtt||"")+"||"+b;
+    if(!pkgAgg[pk]) pkgAgg[pk]={kqtt:r.kqtt||"",brand:b,qty:0,issSer:0,price:0,priceN:0,cdur:+r.cdur||0,month:r.month||""};
+    var pa=pkgAgg[pk]; pa.qty+=q; if(+r.price>0){pa.price+=(+r.price)*q;pa.priceN+=q;}
+    if((+r.issSer||0)>pa.issSer){pa.issSer=+r.issSer;pa.month=r.month||pa.month;}
+    if((+r.cdur||0)>pa.cdur)pa.cdur=+r.cdur;
+  });
+  var nYears=Math.max(1,Object.keys(yrs).length);
+  var byBrand=Object.keys(brandAgg).map(function(k){var a=brandAgg[k];a.priceAvg=a.priceN?Math.round(a.price/a.priceN):0;return a;})
+    .sort(function(a,b){return b.qty-a.qty;});
+  var byPkg=Object.keys(pkgAgg).map(function(k){var a=pkgAgg[k];a.priceAvg=a.priceN?Math.round(a.price/a.priceN):0;
+    a.issIdx=a.issSer?planSerToIdx(a.issSer):0; a.endIdx=a.issIdx?a.issIdx+(a.cdur>0?a.cdur:12)-1:0; return a;})
+    .sort(function(a,b){return b.issSer-a.issSer;});
+  return { demandTotal:totQ, demandYr:Math.round(totQ/nYears), byBrand:byBrand, byPkg:byPkg, maniWon:maniWon, years:nYears };
+}
+
 function planTerritoryHTML(){
   var q=norm(S.plan.qAdd||"");
-  if(!q) return '<div class="plan-hint">'+(LANG==="vi"?"Gõ tên tỉnh hoặc bệnh viện để xem & lập kế hoạch địa bàn…":"Type a province or hospital to view & plan…")+'</div>';
+  if(!q || q.length<2){
+    return '<div class="plan-hint">'+(LANG==="vi"
+      ?"Gõ ≥2 ký tự tên tỉnh hoặc bệnh viện để tìm. Bấm vào 1 địa bàn trong danh sách để mở bảng lập kế hoạch & xem lịch sử trúng thầu."
+      :"Type ≥2 characters to search. Click a territory to open its planning panel & award history.")+'</div>';
+  }
   var map=planHospitalsByProvince();
-  var items=[], cnt=0;
+  var items=[], cnt=0, more=0;
   Object.keys(map).forEach(function(pk){
     var P=map[pk];
     var provMatch=norm(P.prov).indexOf(q)>=0;
     Object.keys(P.hospitals).forEach(function(hk){
       var h=P.hospitals[hk];
       if(!(provMatch || norm(h.name).indexOf(q)>=0)) return;
-      if(cnt++>50) return;
+      cnt++;
+      if(cnt>40){ more++; return; }
       items.push({ name:h.name, city:P.prov, tbmt:h.tbmt||"" });
     });
   });
@@ -6867,61 +7085,97 @@ function planTerritoryHTML(){
   // ưu tiên BV đã có record kế hoạch (đã điền) lên đầu
   items.sort(function(a,b){
     var ra=S.plan.acct[planAcctKey(a.name)]?1:0, rb=S.plan.acct[planAcctKey(b.name)]?1:0;
-    return rb-ra;
+    if(ra!==rb) return rb-ra;
+    return a.name.localeCompare(b.name);
   });
-  return '<div class="terr-list">'+items.map(planTerrCardHTML).join("")+'</div>';
+  /* ── Stage 1: DANH SÁCH gọn (bấm để mở) — KHÔNG tự mở bảng edit ── */
+  var listH='<div class="terr-reslist">'+items.map(function(it){
+    var key=planAcctKey(it.name);
+    var opened=(S.plan.terrOpen===key);
+    var rec=S.plan.acct[key];
+    var filled=rec && ((+rec.msl||0)+(+rec.mst||0)+(+rec.mcu||0))>0;
+    var oppCol=rec? (PLAN_OPPCOL[rec.opp||"Trung bình"]||"#9AA6B2"):"#CBD3DE";
+    var esN=esc(it.name).replace(/'/g,"\\'"), esC=esc(it.city||"").replace(/'/g,"\\'");
+    return '<div class="terr-li'+(opened?" open":"")+'" onclick="planTerrToggle(\''+key+'\',\''+esN+'\',\''+esC+'\')">'
+      +'<span class="terr-li-dot" style="background:'+oppCol+'"></span>'
+      +'<span class="terr-li-nm">'+esc(it.name)+'</span>'
+      +'<span class="terr-li-city">'+esc(it.city||"")+'</span>'
+      +(filled?'<span class="terr-li-badge">✓ '+(LANG==="vi"?"đã điền":"filled")+'</span>':'')
+      +'<span class="terr-li-caret">'+(opened?"▲":"▼")+'</span>'
+      +'</div>'
+      +(opened?'<div class="terr-li-body">'+planTerrExpandHTML(it)+'</div>':'');
+  }).join("")+(more?'<div class="terr-more">+'+more+(LANG==="vi"?" kết quả nữa — gõ cụ thể hơn để thu hẹp":" more — refine your search")+'</div>':'')+'</div>';
+  return listH;
+}
+function planTerrToggle(key, name, city){
+  S.plan.terrOpen = (S.plan.terrOpen===key)? null : key;
+  renderTerritoryOnly();
 }
 
-/* 1 card địa bàn: lịch sử trúng gần nhất + editable (cơ hội/tình hình/SL Mani) + doanh số dòng */
-function planTerrCardHTML(it){
+/* ── Stage 2: BẢNG mở rộng cho địa bàn được bấm — demand + full history + editor lớn ── */
+function planTerrExpandHTML(it){
   var rec=acctGet(it.name, it.city);
-  var lr=planLatestResult(it.name);
   var key=planAcctKey(it.name);
   var revUSD=acctRevenueUSD(rec);
-  var oppCol=PLAN_OPPCOL[rec.opp||"Trung bình"]||"#F0A800";
+  var intel=planTerrIntel(it.name);
   var esN=esc(it.name).replace(/'/g,"\\'"), esC=esc(it.city||"").replace(/'/g,"\\'");
 
-  /* Lịch sử trúng thầu gần nhất */
-  var lrHtml;
-  if(lr && lr.winner){
-    var w=lr.winner;
-    var isMani=norm(w.brand)==="mani";
-    var knifeChips=Object.keys(w.knives).map(function(kn){ return '<span class="tk-chip">'+esc(kn)+': <b>'+hvNum(w.knives[kn])+'</b></span>'; }).join(" ");
-    var priceStr = w.price? (" · "+(LANG==="vi"?"giá":"price")+" "+fcMoneyVND(w.price)) : (lr.latest&&lr.latest.price? (" · "+fcMoneyVND(lr.latest.price)):"");
-    lrHtml='<div class="terr-award"><span class="ta-h">🏆 '+(LANG==="vi"?"Trúng gần nhất":"Latest award")+':</span> '
-      +'<span class="pd-brand '+(isMani?"mani":"")+'">'+esc(w.brand)+'</span> · <b>'+hvNum(w.qty)+'</b> '+(LANG==="vi"?"cái":"pcs")
-      +(w.tbmt?' · <span class="mono" style="font-size:11px;color:var(--t3)">'+esc(w.tbmt)+'</span>':'')
-      +(knifeChips?'<div class="terr-kchips">'+knifeChips+'</div>':'')
-      +'</div>';
-  } else {
-    lrHtml='<div class="terr-award empty">'+(LANG==="vi"?"Chưa có lịch sử trúng thầu cho địa bàn này.":"No award history for this territory.")+'</div>';
-  }
+  /* Demand + Mani-status strip */
+  var demandH='<div class="terr-demand">'
+    +'<div class="td-cell"><div class="td-l">'+(LANG==="vi"?"Demand tích luỹ":"Total demand")+'</div><div class="td-v">'+hvNum(intel.demandTotal)+' <span>'+(LANG==="vi"?"dao":"pcs")+'</span></div></div>'
+    +'<div class="td-cell"><div class="td-l">'+(LANG==="vi"?"Demand TB/năm":"Demand/yr")+'</div><div class="td-v">'+hvNum(intel.demandYr)+' <span>'+(LANG==="vi"?"dao/năm":"pcs/yr")+'</span></div></div>'
+    +'<div class="td-cell"><div class="td-l">Mani</div><div class="td-v '+(intel.maniWon?"pos":"neg")+'" style="font-size:14px">'+(intel.maniWon?(LANG==="vi"?"✓ Đã từng trúng":"✓ Won before"):(LANG==="vi"?"✗ Chưa từng trúng":"✗ Never won"))+'</div></div>'
+    +'</div>';
 
+  /* Editor lớn */
   function qi(field,label,col){
     var v=rec[field]==null?"":rec[field];
-    return '<div class="terr-q"><span class="terr-ql" style="color:'+col+'">'+label+'</span>'
-      +'<input class="terr-qi" data-focus="terr_'+key+'_'+field+'" value="'+v+'" onfocus="this.select()" '
+    return '<div class="terr-q big"><span class="terr-ql" style="color:'+col+'">'+label+'</span>'
+      +'<input class="terr-qi big" data-focus="terr_'+key+'_'+field+'" value="'+v+'" onfocus="this.select()" '
       +'oninput="S._terrFocus=\'terr_'+key+'_'+field+'\';acctEdit(\''+esN+'\',\''+esC+'\',\''+field+'\',this.value)"></div>';
   }
-  var oppSel='<select class="plan-sel" onchange="acctEdit(\''+esN+'\',\''+esC+'\',\'opp\',this.value)">'
+  var oppSel='<select class="plan-sel big" onchange="acctEdit(\''+esN+'\',\''+esC+'\',\'opp\',this.value)">'
     +["Cao","Trung bình","Thấp"].map(function(o){return '<option '+((rec.opp||"Trung bình")===o?"selected":"")+'>'+o+'</option>';}).join("")+'</select>';
-
-  return '<div class="terr-card" data-key="'+key+'">'
-    +'<div class="terr-hd"><div class="terr-nm"><span class="terr-opp-dot" style="background:'+oppCol+'"></span>'+esc(it.name)+'</div>'
-      +'<div class="terr-city">'+esc(it.city||"")+'</div></div>'
-    + lrHtml
-    +'<div class="terr-edit">'
+  var editH='<div class="terr-editbox">'
+    +'<div class="terr-edit big">'
       +'<label class="terr-fld"><span>'+(LANG==="vi"?"Đánh giá cơ hội":"Opportunity")+'</span>'+oppSel+'</label>'
-      +'<label class="terr-fld grow"><span>'+(LANG==="vi"?"Cập nhật tình hình":"Situation update")+'</span>'
-        +'<input class="terr-note" data-focus="terr_'+key+'_note" value="'+esc(rec.note||"")+'" placeholder="'+(LANG==="vi"?"VD: đang chờ gói mới, đối thủ giảm giá…":"e.g. new tender pending…")+'" '
-        +'oninput="S._terrFocus=\'terr_'+key+'_note\';acctEdit(\''+esN+'\',\''+esC+'\',\'note\',this.value)"></label>'
+      +'<label class="terr-fld grow"><span>'+(LANG==="vi"?"Cập nhật tình hình / Hành động":"Situation / Action")+'</span>'
+        +'<textarea class="terr-note big" rows="2" data-focus="terr_'+key+'_note" placeholder="'+(LANG==="vi"?"VD: đang chờ gói mới Q3, đối thủ KAI giảm giá, đã tiếp cận trưởng khoa…":"e.g. new tender Q3 pending…")+'" '
+        +'oninput="S._terrFocus=\'terr_'+key+'_note\';acctEdit(\''+esN+'\',\''+esC+'\',\'note\',this.value)">'+esc(rec.note||"")+'</textarea></label>'
     +'</div>'
-    +'<div class="terr-qrow">'
-      +'<div class="terr-qlbl">'+(LANG==="vi"?"SL Mani dự kiến bán ("+FYKshort()+"):":"Expected Mani qty:")+'</div>'
+    +'<div class="terr-qrow big">'
+      +'<div class="terr-qlbl">'+(LANG==="vi"?"SL Mani dự kiến bán ("+PLAN_FYKEY()+"):":"Expected Mani qty ("+PLAN_FYKEY()+"):")+'</div>'
       + qi("msl","MSL · Slit",HV_KCOL.MSL) + qi("mst","MST · Stab",HV_KCOL.MST) + qi("mcu","MCU · Cresc.",HV_KCOL.MCU)
-      +'<div class="terr-rev">'+(LANG==="vi"?"DS dòng":"Rev")+': <b class="terr-rev-v" data-key="'+key+'">'+hvUSD(revUSD)+'</b></div>'
-    +'</div>'
-    +'</div>';
+      +'<div class="terr-rev big">'+(LANG==="vi"?"Doanh số dòng":"Row revenue")+': <b class="terr-rev-v" data-key="'+key+'">'+hvUSD(revUSD)+'</b></div>'
+    +'</div></div>';
+
+  /* Lịch sử trúng thầu (nhiều gói) + hãng hay thắng */
+  var histH='';
+  if(intel.byPkg.length){
+    var freq=intel.byBrand.slice(0,4).map(function(b){
+      var isM=norm(b.brand)==="mani";
+      return '<span class="terr-freq'+(isM?" mani":"")+'">'+esc(b.brand)+' <b>'+hvNum(b.qty)+'</b>'+(b.priceAvg?' · '+fcMoneyVND(b.priceAvg):'')+'</span>';
+    }).join(" ");
+    var rowsH=intel.byPkg.slice(0,6).map(function(p){
+      var isM=norm(p.brand)==="mani";
+      var active=p.endIdx>=PLAN_BASE();
+      return '<div class="terr-hrow">'
+        +'<span class="terr-h-brand'+(isM?" mani":"")+'">'+esc(p.brand)+'</span>'
+        +'<span class="terr-h-qty">'+hvNum(p.qty)+' '+(LANG==="vi"?"cái":"pcs")+'</span>'
+        +'<span class="terr-h-price">'+(p.priceAvg?fcMoneyVND(p.priceAvg):"—")+'</span>'
+        +'<span class="terr-h-when">'+esc(p.month||"?")+(p.cdur?' · '+p.cdur+(LANG==="vi"?"th":"mo"):'')+'</span>'
+        +'<span class="terr-h-tag '+(active?"on":"")+'">'+(active?(LANG==="vi"?"còn hiệu lực":"active"):(LANG==="vi"?"hết hiệu lực":"expired"))+'</span>'
+        +(p.kqtt?'<span class="terr-h-kqtt mono">'+esc(p.kqtt)+'</span>':'')
+        +'</div>';
+    }).join("");
+    histH='<div class="terr-hist"><div class="terr-hist-h">📜 '+(LANG==="vi"?"Lịch sử trúng thầu địa bàn":"Territory award history")+'</div>'
+      +'<div class="terr-freqrow"><span class="terr-freq-l">'+(LANG==="vi"?"Hãng hay trúng:":"Frequent winners:")+'</span> '+freq+'</div>'
+      +'<div class="terr-hrows">'+rowsH+'</div></div>';
+  } else {
+    histH='<div class="terr-hist empty">'+(LANG==="vi"?"Chưa có lịch sử trúng thầu cho địa bàn này trong dữ liệu tổng.":"No award history in total data.")+'</div>';
+  }
+
+  return demandH + editH + histH;
 }
 function FYKshort(){ return PLAN_FYKEY(); }
 
@@ -6944,8 +7198,8 @@ function acctUpdateLive(){
   Object.keys(S.plan.acct).forEach(function(k){
     var el=document.querySelector('.terr-rev-v[data-key="'+k+'"]');
     if(el){ el.textContent=hvUSD(acctRevenueUSD(S.plan.acct[k])); }
-    var card=document.querySelector('.terr-card[data-key="'+k+'"] .terr-opp-dot');
-    if(card){ var o=S.plan.acct[k].opp||"Trung bình"; card.style.background=PLAN_OPPCOL[o]||"#F0A800"; }
+    var dot=document.querySelector('.terr-li[onclick*="'+k.split("|")[1]+'"] .terr-li-dot');
+    var o=S.plan.acct[k].opp||"Trung bình";
   });
   /* opp-tier strip */
   var opp=acctByOpp(), oppTot=opp["Cao"].usd+opp["Trung bình"].usd+opp["Thấp"].usd;
@@ -6959,12 +7213,9 @@ function acctUpdateLive(){
   var dn=Object.keys(S.plan.dirty).length, an=Object.keys(S.plan.acctDirty).length, td=dn+an;
   var tag=document.querySelector("#sec-plan .plan-dirty-tag");
   if(tag){ tag.classList.toggle("on",td>0); tag.textContent=td?(td+" "+(LANG==="vi"?"thay đổi chưa lưu":"unsaved")):(LANG==="vi"?"Đã lưu":"All saved"); }
-  /* restore focus */
-  if(S._terrFocus){ var fEl=document.querySelector('[data-focus="'+S._terrFocus+'"]');
-    if(fEl && document.activeElement!==fEl){ /* giữ nguyên nếu đang focus */ } }
 }
 
-/* ── Smart search kết quả (panel cũ — giữ để tương thích, không dùng ở render v5) ── */
+/* ── Smart search kết quả ── */
 function planOnSearch(v){ S.plan.qAdd=v; renderTerritoryOnly(); }
 /* re-render riêng phần territory để giữ focus mượt khi gõ search */
 function renderTerritoryOnly(){

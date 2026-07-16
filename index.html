@@ -2062,8 +2062,8 @@ function umShowInfo(wsName, totalRows, dataRows, warnStruct){
     '<div>'+(L?"Sheet: ":"Sheet: ")+'<b>'+esc(wsName)+'</b> · '+(L?"tổng dòng":"total rows")+': '+totalRows+'</div>'+
     '<div>'+(L?"Số dòng dữ liệu sẽ nhập (từ dòng 3, cột A→V): ":"Data rows to import (from row 3, cols A→V): ")+'<b>'+dataRows+'</b></div>'+
     '<div style="margin-top:6px;font-size:12px;color:var(--t2)">'+
-      (L?"Backend sẽ: thêm vào cuối sheet → làm sạch riêng các dòng mới → XOÁ dòng input bị lặp (B→Y đã tồn tại) → ghi nguồn/kỳ vào cột AG."
-        :"Backend will: append → clean new rows → delete input duplicates (B→Y already existing) → write source/period to col AG.")+'</div>'+warnHtml;
+      (L?"Backend sẽ: thêm vào cuối sheet → làm sạch riêng các dòng mới → XOÁ dòng input bị lặp (B→Q đã tồn tại) → ghi nguồn/kỳ vào cột AG."
+        :"Backend will: append → clean new rows → delete input duplicates (B→Q already existing) → write source/period to col AG.")+'</div>'+warnHtml;
 }
 
 function umLog(html_){ var l=document.getElementById("um-log"); l.style.display="block"; l.innerHTML=html_; }
@@ -2100,12 +2100,12 @@ function umRun(){
     {p:8,  s:"1/4 · Gửi & thêm dữ liệu",    t:'Đang tải <b>'+n+'</b> dòng lên Google Sheet và chèn vào cuối bảng (cột A→V).'},
     {p:34, s:"2/4 · Làm sạch cột",          t:'Chuẩn hoá <b>Hãng sản xuất</b> & <b>Xuất xứ</b>, điền cột W→AC (Year, Month, Region, Price_Tier, Province…). Học hãng chuẩn từ dữ liệu cũ + danh sách hãng đã biết.'},
     {p:66, s:"3/4 · Phân loại & lọc",        t:'Lọc giá <b>40k–400k</b>, xác định <b>Knife Type</b> (Stab/Slit/Cresent/MVR), loại dòng rác & dao không phải nhãn khoa. Bổ sung hãng mới vào Master.'},
-    {p:88, s:"4/4 · Đối chiếu trùng",         t:'So khớp <b>B→Y</b> với data đang có — <b>xoá</b> dòng input đã tồn tại.'}
+    {p:88, s:"4/4 · Đối chiếu trùng",         t:'So khớp <b>B→Q</b> với data đang có — <b>xoá</b> dòng input đã tồn tại.'}
   ] : [
     {p:8,  s:"1/4 · Send & append",   t:'Uploading <b>'+n+'</b> rows to the Sheet and appending (A→V).'},
     {p:34, s:"2/4 · Clean columns",   t:'Normalizing <b>Manufacturer</b> & <b>Country</b>, filling W→AC. Learning canonical brands from existing data + known brands.'},
     {p:66, s:"3/4 · Classify & filter",t:'Price filter <b>40k–400k</b>, deciding <b>Knife Type</b>, removing junk & non-ophthalmic rows. Updating Master.'},
-    {p:88, s:"4/4 · Dedup vs existing", t:'Matching <b>B→Y</b> against existing rows — deleting input duplicates.'}
+    {p:88, s:"4/4 · Dedup vs existing", t:'Matching <b>B→Q</b> against existing rows — deleting input duplicates.'}
   ];
   /* ước lượng thời lượng theo số dòng: ~40ms/dòng, tối thiểu 3.5s/giai đoạn cuối */
   var perStage = Math.max(1400, Math.min(9000, n*38));
@@ -2155,7 +2155,7 @@ function umRun(){
       lines.push('<div class="row">'+(L?"Nguồn Knife Type":"Knife Type source")+' — token: '+(ts.token||0)+' · code/master: '+(ts.code||0)+' · brand+giá: '+(ts.brandPrice||0)+' · '+(L?"chưa rõ":"unknown")+': '+(ts.none||0)+'</div>');
       if(res.masterAdded) lines.push('<div class="row">Master_Dao: +'+res.masterAdded+' '+(L?"mã hãng mới":"new brand codes")+'</div>');
       var dup = res.dupDeleted||0;
-      lines.push('<div class="row wn">🧹 '+(L?"Đã XOÁ dòng input bị lặp (B→Y trùng data đang có)":"Deleted input duplicates (B→Y already existing)")+': <b>'+dup+'</b></div>');
+      lines.push('<div class="row wn">🧹 '+(L?"Đã XOÁ dòng input bị lặp (B→Q trùng data đang có)":"Deleted input duplicates (B→Q already existing)")+': <b>'+dup+'</b></div>');
       if(res.batchInfo){ lines.push('<div class="row ok">🏷 '+(L?"Đã ghi cột AG":"Wrote col AG")+': <b>'+esc(res.batchInfo)+'</b></div>'); }
       lines.push('<div class="row" style="color:var(--t2)">'+(L?"Cập nhật lúc":"Updated at")+': '+esc((res.meta&&res.meta.exported)||"")+'</div>');
 

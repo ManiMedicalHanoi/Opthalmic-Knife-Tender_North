@@ -884,7 +884,66 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .pr-act{display:flex;gap:6px;flex-shrink:0;}
 /* Gantt */
 .gantt-wrap{overflow-x:auto;padding-bottom:4px;}
-.gantt-row{display:grid;grid-template-columns:250px repeat(12,minmax(64px,1fr)) 92px;align-items:stretch;min-width:1080px;}
+.gantt-row{display:grid;grid-template-columns:150px 230px 84px repeat(12,minmax(64px,1fr)) 92px;align-items:stretch;min-width:1330px;}
+.gantt-prov{display:flex;align-items:center;padding:0 10px;border-right:1px solid var(--br);font-size:12.5px;color:var(--t2);overflow:hidden;}
+.gantt-prov.gh{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.02em;}
+.gprov-txt{white-space:normal;line-height:1.3;font-weight:600;color:var(--sky);}
+.gtagwrap{margin-left:6px;}
+/* province + hospital search bar above headers */
+.gantt-provbar{display:grid;grid-template-columns:150px 230px 1fr;gap:0;min-width:1330px;margin-bottom:2px;}
+.gpb{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--br);border-radius:8px;padding:5px 9px;margin-right:6px;}
+.gpb-ic{font-size:12px;opacity:.6;}
+.gpb-i{flex:1;border:none;background:transparent;outline:none;font-family:var(--ff);font-size:13px;font-weight:600;color:var(--t1);min-width:0;}
+.gpb-x{border:none;background:transparent;cursor:pointer;color:var(--t3);font-size:13px;padding:0 2px;}
+.gantt-vol{display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--navy2);
+  font-variant-numeric:tabular-nums;border-right:1px solid var(--br);}
+.gantt-vol.gh{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.02em;}
+.gantt-cell.rival{background:repeating-linear-gradient(45deg,#EEF1F5,#EEF1F5 4px,#E3E8EF 4px,#E3E8EF 8px);}
+.grv{color:#9AA6B2;font-weight:800;}
+.grow-tag{font-style:normal;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:4px;}
+.grow-tag.riv{background:rgba(224,122,46,.14);color:#b85f1e;}
+.grow-tag.exp{background:rgba(198,40,40,.12);color:var(--neg);}
+.grow-tag.rnw{background:rgba(46,125,50,.12);color:var(--pos);}
+/* v6 search + add-from-master */
+.plan-search-wrap{margin:0 0 12px;}
+.plan-add-box{margin-top:8px;border:1px solid var(--br);border-radius:10px;background:var(--sf2);padding:8px;}
+.plan-add-h{font-size:12.5px;font-weight:800;color:var(--navy2);margin-bottom:6px;padding:2px 4px;}
+.plan-add-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:8px;cursor:pointer;transition:background .12s;}
+.plan-add-row:hover{background:var(--pale);}
+.pa-nm{font-weight:700;font-size:13.5px;color:var(--t1);flex:1;line-height:1.35;}
+.pa-pv{font-size:11.5px;color:var(--sky);background:var(--pale);padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.plan-add-row:hover .pa-pv{background:#fff;}
+.pa-ty{font-size:10.5px;color:var(--t3);white-space:nowrap;}
+.pa-add{font-size:12px;font-weight:800;color:var(--pos);white-space:nowrap;}
+.plan-add-hint{margin-top:6px;font-size:11.5px;color:var(--warn);font-style:italic;padding:2px 4px;}
+.plan-add-none{font-size:12px;color:var(--t3);font-style:italic;padding:4px;}
+.plan-manual-add{margin-top:8px;border-top:1px dashed var(--br);padding-top:9px;}
+.pma-h{font-size:11.5px;color:var(--t2);margin-bottom:7px;font-weight:600;}
+.pma-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.pma-name{flex:1;min-width:180px;border:1.5px solid var(--br);border-radius:8px;padding:8px 10px;font-family:var(--ff);font-size:13px;background:var(--sf);color:var(--t1);}
+.pma-name:focus{outline:none;border-color:var(--blue);}
+.pma-prov{border:1.5px solid var(--br);border-radius:8px;padding:8px 10px;font-family:var(--ff);font-size:13px;background:var(--sf);color:var(--t1);min-width:150px;}
+.pma-btn{border:none;background:var(--navy2);color:#fff;border-radius:8px;padding:9px 14px;font-family:var(--ff);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;}
+.pma-btn:hover{opacity:.9;}
+/* mani detail in demand strip */
+.td-cell.td-mani{grid-column:span 1;}
+.td-mani-detail{margin-top:5px;font-size:11.5px;line-height:1.5;color:var(--t2);font-variant-numeric:tabular-nums;font-weight:600;}
+/* bigger tab fonts (mục 4) */
+.pgt-l{font-size:14px !important;}
+.pgt-n{font-size:13px !important;}
+.pgt-n b{font-size:15px !important;}
+.pgt-x{font-size:11px !important;}
+.plan-gtab{min-width:164px !important;}
+/* mục 4 — tăng cỡ chữ vùng drawer */
+.terr-fld>span{font-size:12px !important;}
+.terr-qlbl{font-size:13px !important;}
+.terr-ql{font-size:11.5px !important;}
+.terr-freq{font-size:12.5px !important;}
+.terr-hrow2{font-size:12.5px !important;}
+.td-l{font-size:11.5px !important;}
+.pd-h{font-size:14.5px !important;}
+.pd-win,.pd-tbmt{font-size:13.5px !important;}
+.pd-kchip{font-size:12.5px !important;}
 .gantt-head .gantt-cell,.gantt-head .gantt-lbl,.gantt-head .gantt-tot{font-size:10.5px;font-weight:800;color:var(--t3);letter-spacing:.03em;padding:8px 4px;text-transform:uppercase;}
 .gantt-lbl{display:flex;align-items:center;gap:7px;padding:7px 10px;border-bottom:1px solid var(--br);overflow:hidden;}
 .gnm{font-weight:700;font-size:12.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -6060,9 +6119,11 @@ function planFyOptions(){
 if(!S.plan) S.plan = {
   fy:"FY68",          // ⭐ kỳ đang xem (mặc định FY68)
   price: { MST:140000, MSL:240000, MCU:250000 }, fx:26400,
-  oppFilter:"ALL", inclExisting:true, inclRemaining:true, q:"", qAdd:"", ganttTab:"all", detail:null,
+  oppFilter:"ALL", inclExisting:true, inclRemaining:true, q:"", qprov:"", qAdd:"", ganttTab:"all", detail:null,
   manual:{},          // rowKey → {group,account,city,tbmt,mst,msl,mcu,startMonth,dur,opp,note}
   acct:{},            // "<FY>|<accNorm>" → {account,city,opp,note,msl,mst,mcu,...}  (sheet ACCT_PLAN)
+  master:[],          // danh sách chủ đầu tư (Master Hospital name): [{name,prov,type}]
+  provinces:[],       // danh sách tỉnh/thành chuẩn (Master City name)
   acctDirty:{}, acctSaving:false,
   terrView:"gantt",   // panel địa bàn: 'gantt' | 'board'
   terrOpen:null,      // key BV đang mở bảng edit trong danh sách search
@@ -6226,13 +6287,19 @@ function planAutoRenewRows(){
 /* ── Nhóm ③ Mở mới (+ Duy trì điền tay không gắn pkg): dòng thuần thủ công.
       Bỏ qua key "MTA|…" (đó là override cho auto-renew, đã xử lý ở planAutoRenewRows). ── */
 function planManualRows(){
-  return Object.keys(S.plan.manual).filter(function(k){ return k.indexOf("MTA|")!==0 && k.indexOf("NEW|")!==0; })
+  /* Loại override cho auto-renew (MTA|) và auto Mở mới (NEW|<buyer>|<kqtt>),
+     NHƯNG GIỮ chủ đầu tư thêm tay từ Master list (NEW|MAN|<name>). */
+  return Object.keys(S.plan.manual).filter(function(k){
+      if(k.indexOf("MTA|")===0) return false;
+      if(k.indexOf("NEW|")===0 && k.indexOf("NEW|MAN|")!==0) return false;
+      return true;
+    })
     .map(function(k){
     var m=S.plan.manual[k];
     return { rowKey:k, group:m.group||"Mở mới", account:m.account||"", city:m.city||"",
       tbmt:m.tbmt||"", mst:+m.mst||0, msl:+m.msl||0, mcu:+m.mcu||0,
       startIdx:m.startMonth? planMoToIdx(m.startMonth):0, startMonth:m.startMonth||"",
-      dur:+m.dur||12, opp:m.opp||"Trung bình", note:m.note||"", _auto:false };
+      dur:+m.dur||12, opp:m.opp||"Trung bình", note:m.note||"", _auto:false, _new:true, _manualAdd:true };
   });
 }
 
@@ -6295,12 +6362,14 @@ function planNewRows(){
     var expired = p.endIdx>0 && p.endIdx<BASE;
     var rowKey="NEW|"+b+"|"+(p.kqtt||"");
     var man=S.plan.manual[rowKey];
-    var defMSL=p.knives.Slit||0, defMST=p.knives.Stab||0, defMCU=p.knives["Cresent"]||0;
+    /* ⚠ Mở mới: SL Mani MẶC ĐỊNH = 0 (chưa có kế hoạch) → doanh số $0 tới khi user điền.
+       SL của đối thủ (p.knives) chỉ để THAM CHIẾU, KHÔNG tính vào doanh số Mani. */
+    var refMSL=p.knives.Slit||0, refMST=p.knives.Stab||0, refMCU=p.knives["Cresent"]||0;
     out.push({
       rowKey:rowKey, group:"Mở mới", account:p.buyer, city:p.prov, tbmt:p.kqtt||"",
-      mst: man&&man.mst!=null? +man.mst : defMST,
-      msl: man&&man.msl!=null? +man.msl : defMSL,
-      mcu: man&&man.mcu!=null? +man.mcu : defMCU,
+      mst: man&&man.mst!=null? +man.mst : 0,
+      msl: man&&man.msl!=null? +man.msl : 0,
+      mcu: man&&man.mcu!=null? +man.mcu : 0,
       startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : nextStart,
       startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(nextStart),
       dur: man&&man.dur!=null? +man.dur : p.dur,
@@ -6308,7 +6377,9 @@ function planNewRows(){
       note: man&&man.note? man.note : "",
       _auto:false, _new:true, _expired:expired,
       _rivalBrand:p.brand, _rivalQty:p.qty, _rivalPrice:p.priceAvg,
-      _rivalEnd: p.endIdx? planIdxToMo(p.endIdx):"", _rivalKnives:p.knives
+      _rivalEnd: p.endIdx? planIdxToMo(p.endIdx):"", _rivalKnives:p.knives,
+      _rivalStartIdx:p.issIdx||0, _rivalEndIdx:p.endIdx||0,
+      _refMSL:refMSL, _refMST:refMST, _refMCU:refMCU   // gợi ý điền (tham chiếu gói đối thủ gần nhất)
     });
   });
   return out;
@@ -6338,16 +6409,24 @@ function planMergeLog(logMap){
    ════════════════════════════════════════════════════════════════════════════════════════════ */
 function acctLoad(force){
   if(S.plan.acctLoaded && !force) return Promise.resolve();
-  return fetch(NPP_URL.HUNGVI+"?action=acctPlan",{method:"GET",redirect:"follow"})
+  var pAcct=fetch(NPP_URL.HUNGVI+"?action=acctPlan",{method:"GET",redirect:"follow"})
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(d && d.ok!==false && d.plan){
         S.plan.acct = S.plan.acct || {};
         Object.keys(d.plan).forEach(function(k){ S.plan.acct[k]=d.plan[k]; });
       }
-      S.plan.acctLoaded=true;
     })
-    .catch(function(e){ console.warn("acctPlan load fail",e); S.plan.acctLoaded=true; });
+    .catch(function(e){ console.warn("acctPlan load fail",e); });
+  var pMaster=fetch(NPP_URL.HUNGVI+"?action=masterList",{method:"GET",redirect:"follow"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){ if(d && d.ok!==false && d.master && d.master.length){ S.plan.master=d.master; } })
+    .catch(function(e){ console.warn("masterList load fail",e); });
+  var pProv=fetch(NPP_URL.HUNGVI+"?action=provinceList",{method:"GET",redirect:"follow"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){ if(d && d.ok!==false && d.provinces && d.provinces.length){ S.plan.provinces=d.provinces; } })
+    .catch(function(e){ console.warn("provinceList load fail",e); });
+  return Promise.all([pAcct,pMaster,pProv]).then(function(){ S.plan.acctLoaded=true; });
 }
 /* lấy record địa bàn cho BV (kỳ hiện tại) — tạo rỗng nếu chưa có */
 function acctGet(account, city){
@@ -6651,44 +6730,10 @@ function renderPlan(){
     +'<button id="plan-sync-btn" class="plan-sync" style="background:var(--navy2);color:#fff;border-color:var(--navy2)" onclick="planSyncHungVi(false)"><span class="ps-ic">🔄</span>'+(LANG==="vi"?"Đồng bộ ngay":"Sync now")+'</button>'
     +'</div></div></div>';
 
-  /* ── GANTT với TAB nhóm + search ── */
-  var tabs=["all","Existing","Duy trì","Mở mới"];
-  var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
-  /* tổng theo nhóm: SL dao dự kiến (theo loại) + doanh số $ — chỉ tính phần rơi vào kỳ (overlap) */
-  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0}, "Existing":{n:0,usd:0,msl:0,mst:0,mcu:0},
-            "Duy trì":{n:0,usd:0,msl:0,mst:0,mcu:0}, "Mở mới":{n:0,usd:0,msl:0,mst:0,mcu:0} };
-  incl.forEach(function(r){
-    if(r._c.total<=0) return;
-    counts.all++; counts[r.group]++;
-    /* SL dao quy theo phần hiệu lực trong kỳ: prorate theo overlap/dur để "SL bán trong kỳ" hợp lý */
-    var frac = (r.dur>0)? Math.min(1, (r._c.overlap||0)/r.dur) : 1;
-    var msl=Math.round((+r.msl||0)*frac), mst=Math.round((+r.mst||0)*frac), mcu=Math.round((+r.mcu||0)*frac);
-    [agg.all, agg[r.group]].forEach(function(a){ a.n++; a.usd+=r._c.usdFY68; a.msl+=msl; a.mst+=mst; a.mcu+=mcu; });
-  });
-  function aggKnives(a){ return a.msl+a.mst+a.mcu; }
-  var tabBtns=tabs.map(function(tk){
-    var a=agg[tk];
-    return '<button class="plan-gtab '+(S.plan.ganttTab===tk?"on":"")+'" onclick="planSetGTab(\''+tk+'\')">'
-      +'<span class="pgt-l">'+PLAN_TAB_LABEL[tk]()+' <span class="pgc">'+counts[tk]+'</span></span>'
-      +'<span class="pgt-n"><b>'+hvNum(aggKnives(a))+'</b> '+(LANG==="vi"?"dao":"knives")+' · '+hvUSD(a.usd)+'</span>'
-      +'<span class="pgt-x">MSL '+hvNum(a.msl)+' · MST '+hvNum(a.mst)+' · MCU '+hvNum(a.mcu)+'</span>'
-      +'</button>';
-  }).join("");
-
-  var q=norm(S.plan.q||"");
-  var ganttRows=incl.filter(function(r){
-    if(r._c.total<=0) return false;
-    if(S.plan.ganttTab!=="all" && r.group!==S.plan.ganttTab) return false;
-    return true;
-  });
-
   H+='<div class="card reveal" style="margin-bottom:14px"><div class="ch">'
     +'<div class="ct">📅 '+(LANG==="vi"?"Hiệu lực thầu & doanh số dự kiến theo tháng ("+FYK+")":"Tender validity & expected revenue by month ("+FYK+")")+'</div>'
-    +'<div class="cs">'+(LANG==="vi"?"mỗi tháng còn hiệu lực = doanh số dự kiến/tháng · phân màu theo nhóm · <b>bấm 1 bệnh viện</b> để mở bảng dữ liệu & lập kế hoạch địa bàn":"each valid month = expected revenue/month · coloured by group · <b>click a hospital</b> to open its data & territory plan")+'</div></div>'
-    +'<div class="cb">'
-      +'<div class="plan-gtabs">'+tabBtns+'</div>'
-      +planGanttHTML(ganttRows)
-    +'</div></div>';
+    +'<div class="cs">'+(LANG==="vi"?"mỗi tháng còn hiệu lực = doanh số dự kiến/tháng · <b>bấm 1 bệnh viện</b> để mở bảng dữ liệu & lập kế hoạch · Mở mới: ô xám = đối thủ giữ (không tính DS), ô màu = DS kỳ vọng Mani":"click a hospital to open its plan · New: grey = rival, coloured = Mani expected")+'</div></div>'
+    +'<div class="cb"><div id="plan-gantt-host">'+planGanttCardInner()+'</div></div></div>';
 
   /* ── Save bar (gộp cả kế hoạch Gantt + kế hoạch địa bàn) ── */
   var totDirty=dirtyN+acctDirtyN;
@@ -6701,10 +6746,13 @@ function renderPlan(){
 
   document.getElementById("plan-body").innerHTML=H;
 
-  /* detail drawer (nếu đang mở) */
-  if(S.plan.detail){
+  /* detail drawer: CHỈ giữ mở nếu đang thực sự mở (tránh tự bật khi bấm tab/đổi FY) */
+  var drillEl=document.getElementById("drill");
+  if(S.plan.detail && drillEl && drillEl.classList.contains("on")){
     var dr=rows.filter(function(r){return r.rowKey===S.plan.detail;})[0];
     if(dr) planOpenDetail(dr.rowKey); else S.plan.detail=null;
+  } else {
+    S.plan.detail=null;   // không auto-mở
   }
 
   if(S._terrFocus){ var tf=document.querySelector('[data-focus="'+S._terrFocus+'"]'); if(tf){ tf.focus(); try{tf.setSelectionRange(tf.value.length,tf.value.length);}catch(e){} } S._terrFocus=null; }
@@ -6712,8 +6760,113 @@ function renderPlan(){
   setTimeout(function(){var s=document.getElementById("sec-plan");if(s){s.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});try{runCountUp(s);animateBars(s);}catch(e){}}},40);
 }
 
-function planSetGTab(tk){ S.plan.ganttTab=tk; renderPlan(); }
-function planOnGSearch(v){ S.plan.q=v; renderPlan(); }
+function planSetGTab(tk){ S.plan.ganttTab=tk; renderPlanGanttOnly(); }
+function planOnGSearch(v){ S.plan.q=v; renderPlanGanttOnly("plan-gq2"); }
+function planOnProvSearch(v){ S.plan.qprov=v; renderPlanGanttOnly("plan-qprov"); }
+
+/* Re-render CHỈ phần Gantt + kết quả add (không đụng KPI/drawer) → hết nháy khi gõ/bấm tab */
+function renderPlanGanttOnly(focusId){
+  if(S.tab!=="plan"){ renderPlan(); return; }
+  var host=document.getElementById("plan-gantt-host");
+  if(!host){ renderPlan(); return; }
+  host.innerHTML=planGanttCardInner();
+  var fid=focusId||"plan-gq";
+  var el=document.getElementById(fid);
+  if(el){ el.focus(); try{el.setSelectionRange(el.value.length,el.value.length);}catch(e){} }
+}
+
+/* Kết quả THÊM chủ đầu tư mới từ Master Hospital list (chỉ hiện khi gõ ≥2 ký tự & có match chưa nằm trong plan) */
+function planAddResultsHTML(q){
+  if(!q || q.length<2) return "";
+  var master=S.plan.master||[];
+  var inPlan={};
+  planAllRows().forEach(function(r){ inPlan[norm(r.account)]=1; });
+  var hits=master.filter(function(m){
+    var nm=norm(m.name), pv=norm(m.prov||"");
+    return (nm.indexOf(q)>=0 || pv.indexOf(q)>=0) && !inPlan[nm];
+  }).slice(0,8);
+
+  var H='<div class="plan-add-box"><div class="plan-add-h">➕ '+(LANG==="vi"?"Thêm cơ hội bán hàng ở địa bàn mới:":"Add a new territory opportunity:")+'</div>';
+  if(!master.length){
+    H+='<div class="plan-add-hint">'+(LANG==="vi"?"(Danh sách chủ đầu tư chưa tải được — cần dán add-on masterList & deploy.)":"(Master list not loaded.)")+'</div>';
+  }
+  if(hits.length){
+    H+= hits.map(function(m){
+        var esN=esc(m.name).replace(/'/g,"\\'"), esP=esc(m.prov||"").replace(/'/g,"\\'");
+        return '<div class="plan-add-row" onclick="planAddAccount(\''+esN+'\',\''+esP+'\',false)">'
+          +'<span class="pa-nm">'+esc(m.name)+'</span><span class="pa-pv">'+esc(m.prov||"")+'</span>'
+          +(m.type?'<span class="pa-ty">'+esc(m.type)+'</span>':'')
+          +'<span class="pa-add">+ '+(LANG==="vi"?"Thêm":"Add")+'</span></div>';
+      }).join("");
+  } else if(master.length){
+    H+='<div class="plan-add-none">'+(LANG==="vi"?"Không có địa bàn nào khớp «"+esc(S.plan.q)+"» trong danh sách.":"No match in list.")+'</div>';
+  }
+  /* Luôn cho phép nhập tay 1 địa bàn mới (kể cả khi không có trong list Hùng Vĩ) */
+  H+='<div class="plan-manual-add">'
+    +'<div class="pma-h">✍️ '+(LANG==="vi"?"Địa bàn không có trong danh sách? Nhập tay — hệ thống ghi thẳng vào sheet Hùng Vĩ:":"Not in list? Add manually — writes to HungVi sheet:")+'</div>'
+    +'<div class="pma-row">'
+      +'<input id="pma-name" class="pma-name" placeholder="'+(LANG==="vi"?"Tên bệnh viện / chủ đầu tư":"Hospital / buyer name")+'" value="'+esc(S.plan.q||"")+'">'
+      +'<select id="pma-prov" class="pma-prov">'+planProvinceOptions("")+'</select>'
+      +'<button class="pma-btn" onclick="planManualAdd()">+ '+(LANG==="vi"?"Thêm & ghi Sheet":"Add & save")+'</button>'
+    +'</div></div>';
+  H+='</div>';
+  return H;
+}
+/* options tỉnh cho dropdown (từ provinceList backend, fallback: gom từ master) */
+function planProvinceOptions(sel){
+  var provs=S.plan.provinces||[];
+  if(!provs.length){
+    var s={}; (S.plan.master||[]).forEach(function(m){ if(m.prov) s[m.prov]=1; });
+    provs=Object.keys(s).sort();
+  }
+  var o='<option value="">'+(LANG==="vi"?"— Chọn tỉnh —":"— Province —")+'</option>';
+  o+=provs.map(function(p){ return '<option'+(p===sel?' selected':'')+'>'+esc(p)+'</option>'; }).join("");
+  return o;
+}
+
+/* Thêm 1 chủ đầu tư từ list (đã có sẵn trong Master) → tạo dòng Mở mới thủ công + mở drawer */
+function planAddAccount(name, prov, alreadyWritten){
+  var rowKey="NEW|MAN|"+norm(name);
+  if(!S.plan.manual[rowKey]){
+    S.plan.manual[rowKey]={ group:"Mở mới", account:name, city:prov||"", tbmt:"",
+      mst:0, msl:0, mcu:0, startMonth:planIdxToMo(PLAN_BASE()), dur:12, opp:"Trung bình", note:"" };
+    S.plan.dirty[rowKey]=true;
+  }
+  /* nếu chưa nằm trong master list → ghi vào sheet Hùng Vĩ để lần sau có sẵn */
+  if(!alreadyWritten){
+    var exists=(S.plan.master||[]).some(function(m){ return norm(m.name)===norm(name); });
+    if(!exists){
+      fcPostJSON(NPP_URL.HUNGVI,{action:"addMaster",name:name,prov:prov||"",type:"Tender"}).then(function(res){
+        if(res && res.ok!==false && res.added){
+          S.plan.master=S.plan.master||[]; S.plan.master.push({name:name,prov:prov||"",type:"Tender"});
+        }
+      });
+    }
+  }
+  S.plan.q="";
+  showToast((LANG==="vi"?"Đã thêm ":"Added ")+name,"success");
+  renderPlan();
+  setTimeout(function(){ planOpenDetail(rowKey); },60);
+}
+
+/* Nhập tay 1 địa bàn mới (không có trong list) → ghi vào sheet Hùng Vĩ + thêm vào web */
+function planManualAdd(){
+  var nmEl=document.getElementById("pma-name"), pvEl=document.getElementById("pma-prov");
+  var name=(nmEl&&nmEl.value||"").trim(), prov=(pvEl&&pvEl.value||"").trim();
+  if(!name){ showToast(LANG==="vi"?"Nhập tên bệnh viện đã":"Enter a name","warn"); if(nmEl)nmEl.focus(); return; }
+  if(!prov){ showToast(LANG==="vi"?"Chọn tỉnh/thành đã":"Pick a province","warn"); if(pvEl)pvEl.focus(); return; }
+  showToast(LANG==="vi"?"Đang ghi địa bàn vào sheet Hùng Vĩ…":"Writing to sheet…","load");
+  fcPostJSON(NPP_URL.HUNGVI,{action:"addMaster",name:name,prov:prov,type:"Tender"}).then(function(res){
+    if(res && res.ok!==false){
+      S.plan.master=S.plan.master||[];
+      if(!S.plan.master.some(function(m){return norm(m.name)===norm(name);})) S.plan.master.push({name:name,prov:prov,type:"Tender"});
+      showToast(res.dup?(LANG==="vi"?"Địa bàn đã có sẵn — đã thêm vào kế hoạch":"Existed — added to plan"):(LANG==="vi"?"✓ Đã ghi vào sheet Hùng Vĩ & thêm vào kế hoạch":"✓ Saved to sheet & added"),"success");
+      planAddAccount(name, prov, true);
+    } else {
+      showToast((LANG==="vi"?"Lỗi ghi sheet: ":"Save error: ")+((res&&res.error)||"?")+(LANG==="vi"?" (kiểm tra deploy add-on addMaster)":""),"warn");
+    }
+  }).catch(function(e){ showToast(LANG==="vi"?"Lỗi kết nối backend Hùng Vĩ":"Backend error","warn"); });
+}
 
 /* ════ Cardbox tương tác — click 1 KPI ở tab FY68 → drawer chi tiết (dùng lại #drill) ════ */
 function planGroupLabel(g){
@@ -6798,50 +6951,129 @@ function planSyncHungVi(dryRun){
 }
 
 /* ── Gantt HTML (mỗi dòng bấm được) — cell còn hiệu lực HIỆN SỐ doanh số/tháng ── */
+/* Nội dung thẻ Gantt (tabs + search + biểu đồ) — tách riêng để re-render nhẹ khi gõ/bấm tab */
+function planGanttCardInner(){
+  var incl=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude);
+  var tabs=["all","Existing","Duy trì","Mở mới"];
+  var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
+  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0}, "Existing":{n:0,usd:0,msl:0,mst:0,mcu:0},
+            "Duy trì":{n:0,usd:0,msl:0,mst:0,mcu:0}, "Mở mới":{n:0,usd:0,msl:0,mst:0,mcu:0} };
+  incl.forEach(function(r){
+    var hasQty=r._c.total>0;
+    counts.all++; counts[r.group]++;
+    var frac = (r.dur>0)? Math.min(1, (r._c.overlap||0)/r.dur) : 1;
+    var msl=Math.round((+r.msl||0)*frac), mst=Math.round((+r.mst||0)*frac), mcu=Math.round((+r.mcu||0)*frac);
+    [agg.all, agg[r.group]].forEach(function(a){ a.n++; a.usd+=r._c.usdFY68; a.msl+=msl; a.mst+=mst; a.mcu+=mcu; });
+  });
+  function aggKnives(a){ return a.msl+a.mst+a.mcu; }
+  var tabBtns=tabs.map(function(tk){
+    var a=agg[tk];
+    return '<button class="plan-gtab '+(S.plan.ganttTab===tk?"on":"")+'" onclick="planSetGTab(\''+tk+'\')">'
+      +'<span class="pgt-l">'+PLAN_TAB_LABEL[tk]()+' <span class="pgc">'+counts[tk]+'</span></span>'
+      +'<span class="pgt-n"><b>'+hvNum(aggKnives(a))+'</b> '+(LANG==="vi"?"dao":"knives")+' · '+hvUSD(a.usd)+'</span>'
+      +'<span class="pgt-x">MSL '+hvNum(a.msl)+' · MST '+hvNum(a.mst)+' · MCU '+hvNum(a.mcu)+'</span>'
+      +'</button>';
+  }).join("");
+  var q=norm(S.plan.q||""), qp=norm(S.plan.qprov||"");
+  var ganttRows=incl.filter(function(r){
+    if(S.plan.ganttTab!=="all" && r.group!==S.plan.ganttTab) return false;
+    if(q && norm(r.account||"").indexOf(q)<0) return false;
+    if(qp && norm(r.city||"").indexOf(qp)<0) return false;
+    return true;
+  });
+  var searchHtml='<div class="plan-search-wrap">'
+    +'<div class="ac-search"><span class="ac-search-ic">➕</span>'
+    +'<input id="plan-gq" class="ac-search-i" placeholder="'+(LANG==="vi"?"Gõ tên bệnh viện để THÊM cơ hội ở địa bàn mới (tra danh sách Hùng Vĩ hoặc nhập tay)…":"Type a hospital to ADD a new territory opportunity…")+'" value="'+esc(S.plan.q||"")+'" oninput="planOnGSearch(this.value)">'
+    +(S.plan.q?'<button class="ac-search-x" onclick="planOnGSearch(\'\')">✕</button>':'')+'</div>'
+    + planAddResultsHTML(q)
+    +'</div>';
+  return '<div class="plan-gtabs">'+tabBtns+'</div>'+searchHtml+planGanttHTML(ganttRows);
+}
+
+/* Volume TB/năm của 1 BV = SL gói trúng gần nhất / (số tháng hiệu lực /12) */
+function planVolumeYr(account){
+  var intel=planTerrIntel(account);
+  if(!intel || !intel.byPkg || !intel.byPkg.length) return 0;
+  var p=intel.byPkg[0];                    // gói mới nhất (đã sort theo issSer desc)
+  var months=(p.cdur>0)?p.cdur:12;
+  return Math.round(p.qty / (months/12));
+}
+
 function planGanttHTML(rows){
-  var BASE=PLAN_BASE(), FYK=PLAN_FYKEY();
+  var BASE=PLAN_BASE(), END=PLAN_END(), FYK=PLAN_FYKEY();
   var months=[]; for(var k=0;k<12;k++) months.push(planIdxToLabel(BASE+k));
   var colTot=new Array(12).fill(0);
   rows.forEach(function(r){ r._c.gantt.forEach(function(on,k){ if(on) colTot[k]+=r._c.usdPerMonth; }); });
   var grand=colTot.reduce(function(a,b){return a+b;},0);
 
-  var head='<div class="gantt-row gantt-head"><div class="gantt-lbl">'+(LANG==="vi"?"Bệnh viện · nhóm":"Hospital · group")+'</div>'
+  /* thanh search TỈNH ngay trên header Tỉnh/Bệnh viện */
+  var provBar='<div class="gantt-provbar">'
+    +'<div class="gantt-prov gpb"><span class="gpb-ic">🔍</span>'
+    +'<input id="plan-qprov" class="gpb-i" placeholder="'+(LANG==="vi"?"Lọc tỉnh…":"Filter province…")+'" value="'+esc(S.plan.qprov||"")+'" oninput="planOnProvSearch(this.value)">'
+    +(S.plan.qprov?'<button class="gpb-x" onclick="planOnProvSearch(\'\')">✕</button>':'')+'</div>'
+    +'<div class="gantt-namesearch gpb"><span class="gpb-ic">🔍</span>'
+    +'<input id="plan-gq2" class="gpb-i" placeholder="'+(LANG==="vi"?"Lọc bệnh viện…":"Filter hospital…")+'" value="'+esc(S.plan.q||"")+'" oninput="planOnGSearch(this.value)">'
+    +(S.plan.q?'<button class="gpb-x" onclick="planOnGSearch(\'\')">✕</button>':'')+'</div>'
+    +'</div>';
+
+  var head='<div class="gantt-row gantt-head">'
+    +'<div class="gantt-prov gh">'+(LANG==="vi"?"Tỉnh thành":"Province")+'</div>'
+    +'<div class="gantt-lbl">'+(LANG==="vi"?"Bệnh viện · nhóm":"Hospital · group")+'</div>'
+    +'<div class="gantt-vol gh">'+(LANG==="vi"?"Volume/năm":"Volume/yr")+'</div>'
     +months.map(function(m){return '<div class="gantt-cell gh">'+m+'</div>';}).join("")
     +'<div class="gantt-tot gh">'+FYK+' $</div></div>';
 
   var body=rows.slice().sort(function(a,b){
+    var pa=(a.city||"").localeCompare(b.city||"", 'vi'); if(pa!==0) return pa;
     var ord={"Existing":0,"Duy trì":1,"Mở mới":2};
     if(ord[a.group]!==ord[b.group]) return ord[a.group]-ord[b.group];
     return b._c.usdFY68-a._c.usdFY68;
   }).map(function(r){
     var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
     var perMo=r._c.usdPerMonth||0;
-    var cells=r._c.gantt.map(function(on){
-      return '<div class="gantt-cell'+(on?" on "+cls:"")+'">'+(on? '<span class="gmv">'+hvUSD(perMo)+'</span>':'')+'</div>';
+    var rivalOn=[];
+    if(r._new && r._rivalStartIdx && r._rivalEndIdx){
+      for(var k2=0;k2<12;k2++){ var m=BASE+k2; rivalOn.push(m>=r._rivalStartIdx && m<=r._rivalEndIdx); }
+    }
+    var cells=r._c.gantt.map(function(on,k){
+      if(on){
+        return '<div class="gantt-cell on '+cls+'">'+(perMo>0?'<span class="gmv">'+hvUSD(perMo)+'</span>':'')+'</div>';
+      }
+      if(rivalOn[k]){
+        return '<div class="gantt-cell rival" title="'+(LANG==="vi"?"Đối thủ đang giữ gói (không tính DS Mani)":"Rival holding (no Mani rev)")+'"><span class="grv">·</span></div>';
+      }
+      return '<div class="gantt-cell"></div>';
     }).join("");
     var sel=(S.plan.detail===r.rowKey)?" gsel":"";
-    var grpChip=r.group==="Existing"?"E":r.group==="Duy trì"?"R":"N";
-    return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết":"Click for detail")+'">'
+    var vol=planVolumeYr(r.account);
+    var tag=r._new?(r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"hết HL":"expired")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"")+'</i>'):(r._autoRenew?'<i class="grow-tag rnw">renew</i>':'');
+    return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết & lập kế hoạch":"Click for detail")+'">'
+      +'<div class="gantt-prov"><span class="gprov-txt">'+esc(r.city||"—")+'</span></div>'
       +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'" title="'+esc(r.group)+'"></span>'
-      +'<span class="gnm">'+esc(r.account||"—")+'</span><span class="gcity">'+esc(r.city||"")+(r._autoRenew?' · <i style="color:'+PLAN_GCOL["Duy trì"]+'">'+(LANG==="vi"?"renew":"renew")+'</i>':'')+'</span></div>'
+      +'<span class="gnm">'+esc(r.account||"—")+'</span>'+(tag?'<span class="gtagwrap">'+tag+'</span>':'')+'</div>'
+      +'<div class="gantt-vol">'+(vol>0?hvNum(vol):"—")+'</div>'
       +cells+'<div class="gantt-tot">'+hvUSD(r._c.usdFY68)+'</div></div>';
   }).join("") || '<div class="gantt-empty">'+(LANG==="vi"?"Không có dòng nào khớp trong kỳ "+FYK:"No rows match in "+FYK)+'</div>';
 
-  var foot=rows.length?'<div class="gantt-row gantt-foot"><div class="gantt-lbl">'+(LANG==="vi"?"Doanh số USD / tháng":"USD revenue / month")+'</div>'
+  var foot=rows.length?'<div class="gantt-row gantt-foot">'
+    +'<div class="gantt-prov gf"></div>'
+    +'<div class="gantt-lbl">'+(LANG==="vi"?"Doanh số USD / tháng":"USD revenue / month")+'</div>'
+    +'<div class="gantt-vol gf"></div>'
     +colTot.map(function(v){return '<div class="gantt-cell gf">'+(v>0?hvUSD(v):"")+'</div>';}).join("")
     +'<div class="gantt-tot gf">'+hvUSD(grand)+'</div></div>':'';
 
   var legend='<div class="gantt-legend">'
-    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>① Existing ('+(LANG==="vi"?"đang trúng":"won")+')</span>'
-    +'<span><i style="background:'+PLAN_GCOL["Duy trì"]+'"></i>② '+(LANG==="vi"?"Duy trì (renew)":"Remaining (renew)")+'</span>'
-    +'<span><i style="background:'+PLAN_GCOL["Mở mới"]+'"></i>③ '+(LANG==="vi"?"Mở mới / Convert":"New / Convert")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>① Existing Mani ('+(LANG==="vi"?"đang trúng":"won")+')</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Duy trì"]+'"></i>② '+(LANG==="vi"?"Duy trì Mani (renew)":"Remaining (renew)")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Mở mới"]+'"></i>③ '+(LANG==="vi"?"Mở mới — DS kỳ vọng Mani":"New — Mani expected")+'</span>'
+    +'<span><i style="background:#C7CED8"></i>'+(LANG==="vi"?"Đối thủ đang giữ (không tính DS)":"Rival holding (no rev)")+'</span>'
     +'<span style="opacity:.6">|</span>'
     +'<span><i style="background:'+PLAN_OPPCOL["Cao"]+'"></i>'+(LANG==="vi"?"CH cao":"High")+'</span>'
     +'<span><i style="background:'+PLAN_OPPCOL["Trung bình"]+'"></i>'+(LANG==="vi"?"CH TB":"Mid")+'</span>'
     +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"CH thấp":"Low")+'</span>'
     +'</div>';
 
-  return '<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
+  return provBar+'<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
 }
 
 /* ── Lịch sử trúng thầu địa bàn: "hãng trúng N gói" + từng gói (hiệu lực mm/yyyy→mm/yyyy + badge) ── */
@@ -6938,10 +7170,17 @@ function planOpenDetail(rowKey){
   var acctRev=acctRevenueUSD(rec);
   var esN=esc(r.account||"").replace(/'/g,"\\'"), esC=esc(r.city||"").replace(/'/g,"\\'");
 
+  var maniDetail="";
+  if(intel.maniWon && intel.maniLatest){
+    var mp=intel.maniLatest;
+    var vr=(mp.issIdx?planIdxToMo2(mp.issIdx):"?")+" → "+(mp.endIdx?planIdxToMo2(mp.endIdx):"?");
+    maniDetail='<div class="td-mani-detail">'+hvNum(mp.qty)+(mp.pcode?' '+esc(mp.pcode):'')
+      +(mp.kqtt?' · TBMT '+esc(mp.kqtt):'')+'<br>'+(LANG==="vi"?"Hiệu lực ":"Valid ")+vr+'</div>';
+  }
   var demandHtml='<div class="pd-card"><div class="terr-demand">'
     +'<div class="td-cell"><div class="td-l">'+(LANG==="vi"?"Demand tích luỹ":"Total demand")+'</div><div class="td-v">'+hvNum(intel.demandTotal)+' <span>'+(LANG==="vi"?"dao":"pcs")+'</span></div></div>'
     +'<div class="td-cell"><div class="td-l">'+(LANG==="vi"?"Demand TB/năm":"Demand/yr")+'</div><div class="td-v">'+hvNum(intel.demandYr)+' <span>'+(LANG==="vi"?"dao/năm":"pcs/yr")+'</span></div></div>'
-    +'<div class="td-cell"><div class="td-l">Mani</div><div class="td-v '+(intel.maniWon?"pos":"neg")+'" style="font-size:15px">'+(intel.maniWon?(LANG==="vi"?"✓ Đã từng trúng":"✓ Won before"):(LANG==="vi"?"✗ Chưa từng trúng":"✗ Never won"))+'</div></div>'
+    +'<div class="td-cell td-mani"><div class="td-l">Mani</div><div class="td-v '+(intel.maniWon?"pos":"neg")+'" style="font-size:15px">'+(intel.maniWon?(LANG==="vi"?"✓ Đã từng trúng":"✓ Won before"):(LANG==="vi"?"✗ Chưa từng trúng":"✗ Never won"))+'</div>'+maniDetail+'</div>'
     +'</div></div>';
 
   /* Editable ACCT_PLAN: đánh giá cơ hội + cập nhật tình hình + SL Mani (persist ACCT_PLAN) */
@@ -7096,10 +7335,11 @@ function planTerrIntel(account){
     if(+r.price>0){ ba.price+=(+r.price)*q; ba.priceN+=q; }
     if(norm(b)==="mani") maniWon=true;
     var pk=(r.kqtt||"")+"||"+b;
-    if(!pkgAgg[pk]) pkgAgg[pk]={kqtt:r.kqtt||"",brand:b,qty:0,issSer:0,price:0,priceN:0,cdur:+r.cdur||0,month:r.month||""};
+    if(!pkgAgg[pk]) pkgAgg[pk]={kqtt:r.kqtt||"",brand:b,qty:0,issSer:0,price:0,priceN:0,cdur:+r.cdur||0,month:r.month||"",pcode:""};
     var pa=pkgAgg[pk]; pa.qty+=q; if(+r.price>0){pa.price+=(+r.price)*q;pa.priceN+=q;}
     if((+r.issSer||0)>pa.issSer){pa.issSer=+r.issSer;pa.month=r.month||pa.month;}
     if((+r.cdur||0)>pa.cdur)pa.cdur=+r.cdur;
+    if(!pa.pcode && r.pcode) pa.pcode=r.pcode;
   });
   var nYears=Math.max(1,Object.keys(yrs).length);
   var byBrand=Object.keys(brandAgg).map(function(k){var a=brandAgg[k];a.priceAvg=a.priceN?Math.round(a.price/a.priceN):0;return a;})
@@ -7107,7 +7347,8 @@ function planTerrIntel(account){
   var byPkg=Object.keys(pkgAgg).map(function(k){var a=pkgAgg[k];a.priceAvg=a.priceN?Math.round(a.price/a.priceN):0;
     a.issIdx=a.issSer?planSerToIdx(a.issSer):0; a.endIdx=a.issIdx?a.issIdx+(a.cdur>0?a.cdur:12)-1:0; return a;})
     .sort(function(a,b){return b.issSer-a.issSer;});
-  return { demandTotal:totQ, demandYr:Math.round(totQ/nYears), byBrand:byBrand, byPkg:byPkg, maniWon:maniWon, years:nYears };
+  var maniLatest=byPkg.filter(function(p){return norm(p.brand)==="mani";})[0]||null;
+  return { demandTotal:totQ, demandYr:Math.round(totQ/nYears), byBrand:byBrand, byPkg:byPkg, maniWon:maniWon, years:nYears, maniLatest:maniLatest };
 }
 
 function FYKshort(){ return PLAN_FYKEY(); }

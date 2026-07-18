@@ -43,6 +43,25 @@ html[data-theme="dark"] body{background-image:radial-gradient(circle at 12% 0%,r
 
 /* ════ LOGIN GATE ════ */
 #GATE{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy),var(--navy2));z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;}
+#WELCOME{position:fixed;inset:0;background:linear-gradient(135deg,#0a2540,#0e2f5f);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto;}
+.wbox{background:#fff;border-radius:20px;max-width:720px;width:100%;padding:38px 40px;box-shadow:0 30px 80px rgba(0,0,0,.4);text-align:center;}
+.wlogo{display:inline-block;background:#FFD200;color:#0e2f5f;font-weight:900;font-size:20px;padding:8px 16px;border-radius:10px;letter-spacing:1px;margin-bottom:18px;}
+.wtitle{font-size:26px;font-weight:900;color:#0e2f5f;line-height:1.2;}
+.wsub{font-size:14px;color:#5a6b82;margin-top:8px;margin-bottom:24px;}
+.wcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
+.wcard{border:2px solid #e2e8f2;border-radius:16px;padding:24px 18px;background:#f8fafc;cursor:pointer;transition:all .16s;text-align:center;font-family:inherit;}
+.wcard:hover{border-color:#3A5CAA;background:#fff;transform:translateY(-3px);box-shadow:0 12px 30px rgba(58,92,170,.2);}
+.wc-ic{font-size:40px;margin-bottom:10px;}
+.wc-t{font-size:18px;font-weight:800;color:#0e2f5f;margin-bottom:6px;}
+.wc-d{font-size:12.5px;color:#5a6b82;line-height:1.5;}
+.wc-range{font-size:11.5px;color:#3A5CAA;font-weight:700;margin-top:10px;min-height:16px;}
+.wnote{text-align:left;background:#f1f5fb;border-radius:12px;padding:14px 16px;font-size:12px;color:#48566b;line-height:1.6;margin-bottom:16px;}
+.wnote div{margin:3px 0;}
+.wnote b{color:#0e2f5f;}
+.wcredit{font-size:11.5px;color:#8a97a8;line-height:1.5;}
+.wcredit b{color:#0e2f5f;}
+@media(max-width:560px){.wcards{grid-template-columns:1fr;}.wbox{padding:26px 22px;}}
+.ds-btn{background:var(--gold,#FFD200)!important;color:#0e2f5f!important;font-weight:800!important;border:none!important;}
 #GATE.hide{display:none;}
 .gbox{background:var(--sf);border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.4);padding:34px 36px;width:min(420px,100%);text-align:center;}
 .gbox .gl{background:var(--yellow);color:var(--navy);font-weight:900;font-size:20px;padding:8px 16px;border-radius:10px;letter-spacing:1.8px;display:inline-block;margin-bottom:14px;}
@@ -112,6 +131,8 @@ html[data-theme="dark"] .shimmer::after{background:linear-gradient(105deg,transp
 .ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;box-shadow:var(--sh);}
 .ctrl .cl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-right:2px;}
 .chip{padding:5px 13px;border-radius:20px;border:1.5px solid var(--br);background:var(--sf);color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--ff);transition:.14s;user-select:none;white-space:nowrap;}
+.iol-sel{padding:6px 12px;border-radius:8px;border:1.5px solid var(--br);background:var(--sf);color:var(--t1);font-size:13px;font-weight:700;font-family:var(--ff);cursor:pointer;margin-right:8px;min-width:150px;}
+.iol-sel:focus{outline:none;border-color:var(--blue);}
 .chip:hover{border-color:var(--blue);color:var(--blue);}
 .chip.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .sel{font-family:var(--ff);padding:7px 11px;border-radius:9px;border:1.5px solid var(--br);font-size:13px;font-weight:700;color:var(--t1);background:var(--sf);cursor:pointer;outline:none;min-width:150px;}
@@ -905,6 +926,11 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .grow-tag.riv{background:rgba(224,122,46,.14);color:#b85f1e;}
 .grow-tag.exp{background:rgba(198,40,40,.12);color:var(--neg);}
 .grow-tag.rnw{background:rgba(46,125,50,.12);color:var(--pos);}
+.gantt-note{font-size:12px;color:var(--t2);background:var(--sf2);border:1px solid var(--br);border-radius:8px;
+  padding:9px 12px;margin-top:12px;line-height:1.55;}
+.gantt-note b{color:var(--t1);}
+.lg-rival{display:inline-block;width:14px;height:14px;border-radius:3px;
+  background:repeating-linear-gradient(45deg,#EEF1F5,#EEF1F5 3px,#E3E8EF 3px,#E3E8EF 6px);vertical-align:middle;}
 /* v6 search + add-from-master */
 .plan-search-wrap{margin:0 0 12px;}
 /* Add button + modal (v8) */
@@ -1305,6 +1331,34 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
   </div>
 </div>
 
+<!-- WELCOME / DATASET CHOOSER -->
+<div id="WELCOME" style="display:none">
+  <div class="wbox">
+    <div class="wlogo">MMH</div>
+    <div class="wtitle">Hệ thống tra cứu thông tin thầu</div>
+    <div class="wsub">Chọn loại dữ liệu bạn muốn tra cứu</div>
+    <div class="wcards">
+      <button class="wcard" onclick="chooseDataset('knife')">
+        <div class="wc-ic">🔪</div>
+        <div class="wc-t">Dao phẫu thuật</div>
+        <div class="wc-d">KQTT dao mổ nhãn khoa · thị trường miền Bắc (NPP Hùng Vĩ)</div>
+        <div class="wc-range" id="wc-range-knife"></div>
+      </button>
+      <button class="wcard" onclick="chooseDataset('iol')">
+        <div class="wc-ic">👁</div>
+        <div class="wc-t">Thủy tinh thể (IOL)</div>
+        <div class="wc-d">KQTT thủy tinh thể nhân tạo · trên cả nước</div>
+        <div class="wc-range" id="wc-range-iol"></div>
+      </button>
+    </div>
+    <div class="wnote">
+      <div>📅 Dữ liệu cập nhật theo cột <b>Ngày ban hành quyết định</b> — từ mốc quá khứ xa nhất đến lần cập nhật gần nhất của mỗi nguồn.</div>
+      <div>🗂 Thông tin được tải từ <b>Mua sắm công</b>. Người dùng có thể dùng tính năng <b>cập nhật / tải lên dữ liệu mới</b> để làm mới.</div>
+    </div>
+    <div class="wcredit">Xây dựng và hoàn thiện bởi <b>Nguyễn Doãn Trường Giang</b> — Quản lý nhãn hàng Ngoại khoa — MANI Medical Hà Nội</div>
+  </div>
+</div>
+
 <!-- SKELETON LOADER -->
 <div id="LD" style="display:none">
   <div class="sk-hdr"><div class="sk-logo shimmer"></div></div>
@@ -1325,6 +1379,7 @@ html[data-theme="dark"] .fc-set-i{color:var(--sky);}
     </div>
     <div class="hdr-r">
       <span class="src"><span class="dot"></span><span id="src-tx">Live data</span></span>
+      <button class="hbtn ds-btn" id="ds-switch" onclick="openWelcome(true)" title="Đổi loại dữ liệu (Dao / Thủy tinh thể)"><span>🔪</span> Dao phẫu thuật</button>
       <div class="langseg" title="Language / Ngôn ngữ">
         <button id="lang-en" class="on" onclick="setLang('en')">EN</button>
         <button id="lang-vi" onclick="setLang('vi')">VN</button>
@@ -1648,10 +1703,31 @@ function setLang(l){
 
 
 /* ── Config ── */
-var GAS_URL = "https://script.google.com/macros/s/AKfycbx1sBIh2NirItxksWtKsDNRrw1reXKhugBndG_VEyLVD8Kb_BRH5K3iGZYhugUKGqEe/exec";
+/* ══ NGUỒN DỮ LIỆU — 2 loại: Dao phẫu thuật (North-only, NPP) & Thủy tinh thể (cả nước) ══ */
+var DATASETS = {
+  knife: {
+    key:"knife", label:"Dao phẫu thuật", labelEn:"Surgical Knife", icon:"🔪",
+    url:"https://script.google.com/macros/s/AKfycbx1sBIh2NirItxksWtKsDNRrw1reXKhugBndG_VEyLVD8Kb_BRH5K3iGZYhugUKGqEe/exec",
+    scope:"north",            // chỉ miền Bắc (NPP Hùng Vĩ)
+    defaultBrand:"Mani",
+    hasPlanTabs:true,         // có tab "Dự trù & Theo dõi" + "Kế hoạch FY68"
+    typeFilter:"knife"        // 1 bộ lọc: Knife Type
+  },
+  iol: {
+    key:"iol", label:"Thủy tinh thể", labelEn:"Intraocular Lens (IOL)", icon:"👁",
+    url:"https://script.google.com/macros/s/AKfycby5RdBxWNd9OasCC21d7gYymFKMW86CoAUD4oguIU4Oqpb-vHXH_RCC2cantSi004R06Q/exec",
+    scope:"national",         // cả nước
+    defaultBrand:"Humanoptics",
+    hasPlanTabs:false,        // ẨN 2 tab kế hoạch
+    typeFilter:"iol"          // 2 bộ lọc: Loại TTT + Lắp sẵn/Không
+  }
+};
+function currentDataset(){ return DATASETS[S.dataset] || DATASETS.knife; }
+var GAS_URL = DATASETS.knife.url;   // sẽ được set lại theo lựa chọn
 var ACCESS_PW = "Mani123@";
 var FX = { VND: 1, USD: 26400, JPY: 164.5 };   // VND per 1 unit of target currency
 var CUR_SYMBOL = { VND: "₫", USD: "$", JPY: "¥" };
+
 
 /* ── Data store ── */
 var ROWS = [];
@@ -1991,6 +2067,8 @@ function saveTiers(){
 
 /* ── State ── */
 var S = {
+  dataset:"knife",        // "knife" | "iol" — nguồn dữ liệu đang xem
+  iolType:"ALL", iolMount:"ALL",   // 2 bộ lọc chủng loại TTT
   tab:"market", metric:"val", currency:"VND",
   mkRegion:"ALL", mkType:"ALL",
   brand:"Mani", brTop3:false,
@@ -2136,28 +2214,30 @@ function fetchData(){
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(!d || d.ok===false) throw new Error(d && d.error || "Unknown error");
-      /* ══ NORTH-ONLY GATE ══════════════════════════════════════════════════
-         Chỉ giữ dòng có Region_by_Distributor (cột AC backend → row.region) = North.
-         Chặn tại đây ⇒ TOÀN BỘ tab/KPI/chart/drill phía sau tự động chỉ tính miền Bắc.
-         Backend KHÔNG cần sửa. */
+      /* ══ SCOPE GATE ══════════════════════════════════════════════════════
+         • Dao (knife): chỉ giữ dòng North (NPP Hùng Vĩ) — theo row.region.
+         • Thủy tinh thể (iol): CẢ NƯỚC — không lọc region. */
       var _rawN = (d.rows||[]).length;
-      var _north = (d.rows||[]).filter(function(r){ return isNorth(r.region); });
-      ROWS = _north.map(function(r){
+      var _scoped = (currentDataset().scope==="north")
+        ? (d.rows||[]).filter(function(r){ return isNorth(r.region); })
+        : (d.rows||[]);
+      ROWS = _scoped.map(function(r){
         var qty = +r.qty||0, price = +r.price||0;
         return {
           buyer:r.buyer||"", brand:r.brand||"Không rõ",
           prov:r.prov||"", ptype:r.ptype||"",
+          ttType:r.ttType||"", ttMount:r.ttMount||"",
           tier:r.tier||"N/A", region:r.region||"N/A",
           method:r.method||"", year:+r.year||0,
           month:r.month||"", kqtt:r.kqtt||"",
           pname:r.pname||"", pcode:r.pcode||"", tspec:r.tspec||"",
           qty:qty, price:price, val:qty*price,
-          /* ── v2 fields cho logic "Mở mới" (Tab 5 plan) ── */
           cdur:+r.cdur||0, issSer:+r.issSer||0, expSer:+r.expSer||0,
           issStr:r.issStr||"", expStr:r.expStr||""
         };
       });
       buildIndex();
+      window.LAST_META = d.meta || null;
       recomputeTierDefaults();
       classifyBrands();
       // sanity defaults
@@ -2411,6 +2491,7 @@ function reloadData(){
   fetchData().then(function(){
     document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});
     renderAll();
+    try{ updateDataRangeLabels(); }catch(e){}
   }).catch(function(err){
     console.error(err);
     showToast("Reload failed: "+err.message,"warn");
@@ -2572,10 +2653,17 @@ function marketBuckets(){
 
 function filterRows(f){
   f=f||{};
+  var isIOL = (S.dataset==="iol");
   return ROWS.filter(function(r){
     if(!f._allTime && !timeOK(r)) return false;
     if(f.year && f.year!=="ALL" && r.year!==+f.year) return false;
-    if(f.ptype && f.ptype!=="ALL" && r.ptype!==f.ptype) return false;
+    if(isIOL){
+      /* Thủy tinh thể: lọc đồng thời 2 chủng loại (Loại TTT + Lắp sẵn/Không) — thay cho Knife Type */
+      if(S.iolType  && S.iolType!=="ALL"  && (r.ttType||"")!==S.iolType) return false;
+      if(S.iolMount && S.iolMount!=="ALL" && (r.ttMount||"")!==S.iolMount) return false;
+    } else {
+      if(f.ptype && f.ptype!=="ALL" && r.ptype!==f.ptype) return false;
+    }
     if(f.region && f.region!=="ALL" && r.region!==f.region) return false;
     if(f.tier && f.tier!=="ALL" && r.tier!==f.tier) return false;
     if(f.brand && f.brand!=="ALL" && r.brand!==f.brand) return false;
@@ -2592,6 +2680,20 @@ function aggBy(rows,keyFn){
   return m;
 }
 function toArr(m){ return Object.keys(m).map(function(k){return m[k];}); }
+/* Kiểm tra 1 dòng có qua bộ lọc chủng loại đang chọn không (Dao: mkType · TTT: iolType+iolMount) */
+/* Danh sách giá trị chủng loại TTT (distinct, có sort) từ ROWS */
+function iolDistinct(field){
+  var s={}; (ROWS||[]).forEach(function(r){ var v=(r[field]||"").trim(); if(v) s[v]=1; });
+  return Object.keys(s).sort(function(a,b){return a.localeCompare(b,'vi');});
+}
+function mkTypeOK(r){
+  if(S.dataset==="iol"){
+    if(S.iolType  && S.iolType!=="ALL"  && (r.ttType||"")!==S.iolType) return false;
+    if(S.iolMount && S.iolMount!=="ALL" && (r.ttMount||"")!==S.iolMount) return false;
+    return true;
+  }
+  return !(S.mkType!=="ALL" && r.ptype!==S.mkType);
+}
 function sortDesc(arr,key){ return arr.slice().sort(function(a,b){return (b[key]||0)-(a[key]||0);}); }
 
 /* ── Animations ── */
@@ -2731,7 +2833,90 @@ function sbToggle(){
 }
 document.addEventListener("keydown",function(e){ if(e.key==="Escape") sbClose(); });
 
+/* Áp dụng UI theo dataset: ẩn/hiện 2 tab kế hoạch (TTT ẩn), cập nhật nhãn nút đổi nguồn */
+function applyDatasetUI(){
+  var show = currentDataset().hasPlanTabs;
+  ["nt-fc","nt-plan","bn-fc","bn-plan"].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display = show ? "" : "none";
+  });
+  if(!show && (S.tab==="fc"||S.tab==="plan")) goTab("market");
+  var db=document.getElementById("ds-switch");
+  if(db){
+    var d=currentDataset();
+    db.innerHTML='<span>'+d.icon+'</span> '+(LANG==="vi"?d.label:d.labelEn);
+  }
+}
+/* ══ DATASET CHOOSER / WELCOME ══ */
+/* Cập nhật nhãn "data từ … đến …" trên header + thẻ welcome */
+function updateDataRangeLabels(){
+  var m=window.LAST_META||{};
+  var rng="";
+  if(m.dataFrom && m.dataTo) rng=m.dataFrom+" → "+m.dataTo;
+  else if(m.exported) rng=(LANG==="vi"?"cập nhật ":"updated ")+m.exported;
+  var st=document.getElementById("src-tx");
+  if(st) st.textContent=(currentDataset().scope==="national"?"Cả nước":"North")+(rng?" · "+rng:"");
+  var wc=document.getElementById("wc-range-"+S.dataset);
+  if(wc && rng) wc.textContent="📅 "+rng;
+}
+function openWelcome(fromHeader){
+  // hiện lại màn chọn loại dữ liệu (nút header hoặc lần đầu)
+  document.getElementById("WELCOME").style.display="flex";
+}
+function closeWelcome(){ document.getElementById("WELCOME").style.display="none"; }
+
+function chooseDataset(ds){
+  if(!DATASETS[ds]) ds="knife";
+  var changed = (S.dataset!==ds) || !window._bootedOnce;
+  S.dataset=ds;
+  GAS_URL=DATASETS[ds].url;
+  S.brand=DATASETS[ds].defaultBrand;
+  S.acBrand=DATASETS[ds].defaultBrand;
+  S.mkType="ALL"; S.iolType="ALL"; S.iolMount="ALL";
+  try{ localStorage.setItem("mmh_dataset", ds); }catch(e){}
+  closeWelcome();
+  // cập nhật tiêu đề + tab hiển thị
+  applyDatasetTitles();
+  applyDatasetUI();
+  // (re)load dữ liệu của nguồn đã chọn
+  document.getElementById("LD").style.display="";
+  document.getElementById("LD").classList.remove("hide");
+  var ldm=document.getElementById("ldm"); if(ldm) ldm.textContent = (LANG==="vi"?"Đang tải dữ liệu "+ (DATASETS[ds].label) +"…":"Loading data…");
+  // reset NPP feed để nạp lại đúng nguồn (chỉ knife dùng plan)
+  window._bootedOnce=true;
+  if(typeof NPP_FEED!=="undefined"){ NPP_FEED.loaded=false; NPP_FEED.loading=false; NPP_FEED._p=null; }
+  if(S.plan){ S.plan.acctLoaded=false; }
+  fetchData().then(function(){
+    if(!currentDataset().hasPlanTabs && (S.tab==="fc"||S.tab==="plan")) S.tab="market";
+    renderAll();
+    updateDataRangeLabels();
+    document.querySelector(".useg").style.display = (S.tab==="market") ? "none" : "flex";
+    setTimeout(function(){
+      var l=document.getElementById("LD"); l.classList.add("hide");
+      setTimeout(function(){l.style.display="none";},480);
+      initReveal();
+    },300);
+  }).catch(function(err){
+    console.error(err);
+    document.getElementById("ldm").innerHTML='⚠ Failed to load data.<br><small style="opacity:.7">'+esc(err.message||String(err))+'</small>';
+  });
+}
+
+/* Cập nhật tiêu đề header + logo phụ theo dataset */
+function applyDatasetTitles(){
+  var d=currentDataset();
+  var lt=document.querySelector(".logo-t");
+  if(lt){
+    var isIOL=(S.dataset==="iol");
+    var title=isIOL?"Thị trường thầu Thủy tinh thể":"Ophthalmic Knife Tender Market";
+    var sub=isIOL?"Tender Intelligence · Cả nước · Live":"Tender Intelligence · North · Live";
+    lt.innerHTML=esc(title)+'<div class="logo-s">'+esc(sub)+'</div>';
+  }
+  applyDatasetUI();
+}
+
 function goTab(tb){
+  /* Thủy tinh thể: chặn 2 tab kế hoạch (đã ẩn) */
+  if(!currentDataset().hasPlanTabs && (tb==="fc"||tb==="plan")) tb="market";
   sbClose();
   S.tab=tb;document.querySelectorAll(".sec").forEach(function(s){s.classList.remove("on");});document.querySelectorAll(".nt").forEach(function(n){n.classList.remove("on");});
   var sec=document.getElementById("sec-"+tb);if(sec)sec.classList.add("on");var nt=document.getElementById("nt-"+tb);if(nt)nt.classList.add("on");
@@ -3049,9 +3234,26 @@ function renderMarket(){
   /* Controls: Region + Product Type (Value/Quantity toggle hidden on this tab) */
   /* ⛔ Bộ lọc REGION đã Bỏ: dashboard này 100% là miền Bắc (Hùng Vĩ) — lọc vùng vô nghĩa. */
   S.mkRegion="ALL";
-  var tChips='<span class="cl">'+t("sb.ptype")+'</span>'+["ALL"].concat(PTYPES).map(function(p){return '<button class="chip '+(S.mkType===p?"on":"")+'" onclick="S.mkType=\''+esc(p)+'\';renderMarket()">'+esc(tPtype(p))+'</button>';}).join("");
+  var tChips;
+  if(S.dataset==="iol"){
+    /* Thủy tinh thể — 2 bộ lọc cạnh nhau: Loại TTT + Lắp sẵn/Không lắp sẵn (áp dụng đồng thời) */
+    var types=iolDistinct("ttType"), mounts=iolDistinct("ttMount");
+    var selType='<select class="iol-sel" onchange="S.iolType=this.value;renderMarket()">'
+      +'<option value="ALL"'+(S.iolType==="ALL"?" selected":"")+'>'+(LANG==="vi"?"Tất cả loại TTT":"All IOL types")+'</option>'
+      +types.map(function(v){return '<option'+(S.iolType===v?" selected":"")+'>'+esc(v)+'</option>';}).join("")+'</select>';
+    var selMount='<select class="iol-sel" onchange="S.iolMount=this.value;renderMarket()">'
+      +'<option value="ALL"'+(S.iolMount==="ALL"?" selected":"")+'>'+(LANG==="vi"?"Lắp sẵn & không":"All mount")+'</option>'
+      +mounts.map(function(v){return '<option'+(S.iolMount===v?" selected":"")+'>'+esc(v)+'</option>';}).join("")+'</select>';
+    tChips='<span class="cl">'+(LANG==="vi"?"Chủng loại":"Type")+'</span>'+selType+selMount;
+  } else {
+    tChips='<span class="cl">'+t("sb.ptype")+'</span>'+["ALL"].concat(PTYPES).map(function(p){return '<button class="chip '+(S.mkType===p?"on":"")+'" onclick="S.mkType=\''+esc(p)+'\';renderMarket()">'+esc(tPtype(p))+'</button>';}).join("");
+  }
   document.getElementById("mk-ctrl").innerHTML=tChips;
-  document.getElementById("mk-period").textContent="North · Hùng Vĩ · "+timeLabel()+(S.mkType==="ALL"?"":" · "+S.mkType);
+  var scopeLbl = (currentDataset().scope==="national") ? (LANG==="vi"?"Cả nước":"Nationwide") : "North · Hùng Vĩ";
+  var typeLbl = (S.dataset==="iol")
+    ? ((S.iolType==="ALL"?"":" · "+S.iolType)+(S.iolMount==="ALL"?"":" · "+S.iolMount))
+    : (S.mkType==="ALL"?"":" · "+S.mkType);
+  document.getElementById("mk-period").textContent=scopeLbl+" · "+timeLabel()+typeLbl;
 
   var R=filterRows({ptype:S.mkType,region:S.mkRegion});
   var totQ=0,totV=0,pk={},by={};R.forEach(function(r){totQ+=r.qty;totV+=r.val;pk[r.kqtt]=1;by[r.buyer]=1;});
@@ -3150,7 +3352,7 @@ function renderMarket(){
   if(PW){
     var _pr = ROWS.filter(function(r){
       if(!PW.test(r)) return false;
-      if(S.mkType!=="ALL" && r.ptype!==S.mkType) return false;
+      if(!mkTypeOK(r)) return false;
       if(S.mkRegion!=="ALL" && r.region!==S.mkRegion) return false;
       return true;
     });
@@ -3305,7 +3507,7 @@ function renderMarket(){
   }
   function applyFilterCmp(arr){
     return arr.filter(function(r){
-      if(S.mkType!=="ALL" && r.ptype!==S.mkType) return false;
+      if(!mkTypeOK(r)) return false;
       if(S.mkRegion!=="ALL" && r.region!==S.mkRegion) return false;
       return true;
     });
@@ -3651,7 +3853,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
   if(PW){
     cmpSet=ROWS.filter(function(r){
       if(!PW.test(r)) return false;
-      if(S.mkType!=="ALL"&&r.ptype!==S.mkType) return false;
+      if(!mkTypeOK(r)) return false;
       if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false;
       return true;});
     cmpLbl=PW.label;
@@ -3760,7 +3962,7 @@ function mxInsightStrip(list){
 
 /* ── Mani share — Total market vs High segment (grouped bars, Qty/Value × Year/FY) ── */
 function mxMSScope(r){
-  if(S.mkType!=="ALL"&&r.ptype!==S.mkType) return false;
+  if(!mkTypeOK(r)) return false;
   if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false;
   return true;
 }
@@ -3871,7 +4073,7 @@ function mxManiShare(){
 /* ── Brand share evolution — 100% stacked (top 6 + Others) ── */
 function mxBrandEvo(id,buckets,R){
   killC(id); var el=document.getElementById(id); if(!el) return;
-  function mkFilter(r){ if(S.mkType!=="ALL"&&r.ptype!==S.mkType) return false; if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false; return true; }
+  function mkFilter(r){ if(!mkTypeOK(r)) return false; if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false; return true; }
   var groups=[];
   if(buckets.kind==="compare"){
     buckets.series.forEach(function(s){
@@ -4889,8 +5091,7 @@ window.addEventListener("resize",function(){clearTimeout(window._rsz);window._rs
 
 /* Bootstrap: gate first, then fetch + render */
 function bootDashboard(){
-  document.getElementById("LD").style.display="";
-  // restore stored prefs
+  // restore stored prefs (không hiện LD ngay — chờ chọn dataset)
   try{
     var th=localStorage.getItem("mmh_theme"); if(th==="dark") applyTheme("dark"); else applyTheme("light");
     var cur=localStorage.getItem("mmh_cur"); if(cur && FX[cur]) { S.currency=cur; document.getElementById("cur-sel").value=cur; }
@@ -4902,19 +5103,14 @@ function bootDashboard(){
     var lg=localStorage.getItem("mmh_lang"); if(lg==="vi"||lg==="en"){ LANG=lg; document.getElementById("lang-en").classList.toggle("on",lg==="en"); document.getElementById("lang-vi").classList.toggle("on",lg==="vi"); }
     applyI18nStatic();
   }catch(e){}
-  fetchData().then(function(){
-    renderAll();
-    // hide skeleton, hide val/qty toggle if on market tab
-    document.querySelector(".useg").style.display = (S.tab==="market") ? "none" : "flex";
-    setTimeout(function(){
-      var l=document.getElementById("LD"); l.classList.add("hide");
-      setTimeout(function(){l.style.display="none";},480);
-      initReveal();
-    },300);
-  }).catch(function(err){
-    console.error(err);
-    document.getElementById("ldm").innerHTML='⚠ Failed to load data.<br><small style="opacity:.7">'+esc(err.message||String(err))+'</small><br><button class="hbtn" style="margin-top:14px;background:var(--blue);color:#fff" onclick="bootDashboard()">Retry</button>';
-  });
+  // dataset đã nhớ? → vào thẳng. Chưa? → hiện màn hình chọn.
+  var savedDs=null;
+  try{ savedDs=localStorage.getItem("mmh_dataset"); }catch(e){}
+  if(savedDs && DATASETS[savedDs]){
+    chooseDataset(savedDs);
+  } else {
+    openWelcome(false);
+  }
 }
 
 window.onload=function(){
@@ -5652,6 +5848,11 @@ function fcLoadNPP(force){
     if(res[0] && res[0].log && typeof planMergeLog==="function"){ try{ planMergeLog(res[0].log); if(S.plan) S.plan.loaded=true; }catch(e){} }
     NPP_FEED.loaded=true; NPP_FEED.loading=false;
     if(res[0]===null) NPP_FEED.error="both";
+    /* ⭐ FIX: khi feed NPP tải xong, tự vẽ lại tab đang mở (trước đây phải bấm 1 chip mới hiện) */
+    try{
+      if(S.tab==="plan" && typeof renderPlan==="function") renderPlan();
+      else if(S.tab==="fc" && typeof renderFC==="function") renderFC();
+    }catch(e){ console.warn("post-NPP render",e); }
   });
   return NPP_FEED._p;
 }
@@ -7065,10 +7266,8 @@ function planGanttHTML(rows){
     +months.map(function(m){return '<div class="gantt-cell gh">'+m+'</div>';}).join("")
     +'<div class="gantt-tot gh">'+FYK+' $</div></div>';
 
-  var body=rows.slice().sort(function(a,b){
-    var pa=(a.city||"").localeCompare(b.city||"", 'vi'); if(pa!==0) return pa;
-    var ord={"Existing":0,"Duy trì":1,"Mở mới":2};
-    if(ord[a.group]!==ord[b.group]) return ord[a.group]-ord[b.group];
+  var body=rows.slice().map(function(r){ r._vol=planVolumeYr(r.account); return r; }).sort(function(a,b){
+    if((b._vol||0)!==(a._vol||0)) return (b._vol||0)-(a._vol||0);   // Volume cao → thấp
     return b._c.usdFY68-a._c.usdFY68;
   }).map(function(r){
     var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
@@ -7093,7 +7292,7 @@ function planGanttHTML(rows){
       return '<div class="gantt-cell"></div>';
     }).join("");
     var sel=(S.plan.detail===r.rowKey)?" gsel":"";
-    var vol=planVolumeYr(r.account);
+    var vol=r._vol||planVolumeYr(r.account);
     var tag=r._new?(r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"hết HL":"expired")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"")+'</i>'):(r._autoRenew?'<i class="grow-tag rnw">renew</i>':'');
     return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết & lập kế hoạch":"Click for detail")+'">'
       +'<div class="gantt-prov"><span class="gprov-txt">'+esc(r.city||"—")+'</span></div>'
@@ -7110,16 +7309,24 @@ function planGanttHTML(rows){
     +colTot.map(function(v){return '<div class="gantt-cell gf">'+(v>0?hvUSD(v):"")+'</div>';}).join("")
     +'<div class="gantt-tot gf">'+hvUSD(grand)+'</div></div>':'';
 
-  var legend='<div class="gantt-legend">'
-    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>① Existing Mani ('+(LANG==="vi"?"đang trúng":"won")+')</span>'
-    +'<span><i style="background:'+PLAN_GCOL["Duy trì"]+'"></i>② '+(LANG==="vi"?"Duy trì Mani (renew)":"Remaining (renew)")+'</span>'
-    +'<span><i style="background:'+PLAN_GCOL["Mở mới"]+'"></i>③ '+(LANG==="vi"?"Mở mới — DS kỳ vọng Mani":"New — Mani expected")+'</span>'
-    +'<span><i style="background:#C7CED8"></i>'+(LANG==="vi"?"Đối thủ đang giữ (không tính DS)":"Rival holding (no rev)")+'</span>'
+  var noteBar='<div class="gantt-note">'
+    +'<b>📖 '+(LANG==="vi"?"Cách đọc bảng":"How to read")+':</b> '
+    +(LANG==="vi"
+      ?'Mỗi ô = 1 tháng. Số <b>trên</b> = SL dao dự kiến/tháng (SL gói ÷ số tháng hiệu lực); số <b>dưới ($)</b> = doanh số dự kiến/tháng. Cột <b>Volume/năm</b> = tổng dao BV dùng/năm (theo gói gần nhất), đã sắp xếp từ cao → thấp.'
+      :'Each cell = 1 month. Top number = knives/month; bottom ($) = revenue/month. Volume/yr column sorted high→low.')
+    +'</div>'
+    +'<div class="gantt-legend">'
+    +'<span><i style="background:'+PLAN_GCOL["Existing"]+'"></i>① '+(LANG==="vi"?"Mani đang trúng — DS chắc chắn":"Existing Mani")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Duy trì"]+'"></i>② '+(LANG==="vi"?"Mani duy trì (gia hạn) — DS kỳ vọng":"Remaining (renew)")+'</span>'
+    +'<span><i style="background:'+PLAN_GCOL["Mở mới"]+'"></i>③ '+(LANG==="vi"?"Mở mới — DS kỳ vọng Mani (khi điền SL)":"New — Mani expected")+'</span>'
+    +'<span><i class="lg-rival"></i>'+(LANG==="vi"?"Ô xám sọc = đối thủ đang giữ gói (DS của đối thủ, KHÔNG tính cho Mani)":"Striped grey = rival holding (not Mani)")+'</span>'
     +'<span style="opacity:.6">|</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Cao"]+'"></i>'+(LANG==="vi"?"CH cao":"High")+'</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Trung bình"]+'"></i>'+(LANG==="vi"?"CH TB":"Mid")+'</span>'
-    +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"CH thấp":"Low")+'</span>'
+    +'<span>'+(LANG==="vi"?"Màu ô ③ theo mức cơ hội:":"Opp tier:")+'</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Cao"]+'"></i>'+(LANG==="vi"?"Cao":"High")+'</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Trung bình"]+'"></i>'+(LANG==="vi"?"TB":"Mid")+'</span>'
+    +'<span><i style="background:'+PLAN_OPPCOL["Thấp"]+'"></i>'+(LANG==="vi"?"Thấp":"Low")+'</span>'
     +'</div>';
+  var legend=noteBar;
 
   return provBar+'<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
 }

@@ -2230,6 +2230,14 @@ function isMani(b){ return b===centerBrand(); }
 /* Hãng "trung tâm" của dataset — Dao: Mani · TTT: Humanoptics. Mọi KPI/insight xoay quanh hãng này. */
 function centerBrand(){ return currentDataset().defaultBrand || "Mani"; }
 /* Hãng phân tích ở tab Tổng quan — người dùng chọn trong Settings; mặc định = hãng mặc định của dataset */
+/* Vùng của 1 dòng cho bộ lọc Overview — IOL dùng regionNew (Bắc/Trung/Nam mới), Dao dùng region */
+function rowRegion(r){
+  if(S.dataset==="iol") return r.regionNew || r.region || "";
+  return r.region || "";
+}
+function mkRegionOK(r){
+  return !(S.mkRegion && S.mkRegion!=="ALL" && rowRegion(r)!==S.mkRegion);
+}
 function mktCenter(){
   var c = S.mkCenter;
   if(c && c!=="__default__" && (typeof BRANDS==="undefined" || BRANDS.indexOf(c)>=0)) return c;
@@ -2250,6 +2258,24 @@ function mkCenterSelectorHTML(){
 function setMktCenter(v){
   S.mkCenter = v || "__default__";
   try{ localStorage.setItem("mmh_mkcenter_"+S.dataset, S.mkCenter); }catch(e){}
+  document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});
+  renderMarket();
+}
+/* Dropdown chọn Khu vực (chỉ hiện với dataset cả nước — IOL) */
+function mkRegionSelectorHTML(){
+  if(currentDataset().scope!=="national") return "";
+  var opts=[
+    {v:"ALL",  vi:"Cả nước",    en:"Nationwide"},
+    {v:"North",vi:"Miền Bắc",   en:"North"},
+    {v:"Central",vi:"Miền Trung",en:"Central"},
+    {v:"South",vi:"Miền Nam",   en:"South"}
+  ].map(function(o){ return '<option value="'+o.v+'"'+(S.mkRegion===o.v?" selected":"")+'>'+(LANG==="vi"?o.vi:o.en)+'</option>'; }).join("");
+  return '<div class="mk-center-sel"><span class="cl">'+(LANG==="vi"?"Khu vực":"Region")+'</span>'
+    +'<select class="iol-sel" title="'+(LANG==="vi"?"Lọc toàn bộ Tổng quan theo khu vực":"Filter Overview by region")+'" onchange="setMktRegion(this.value)">'+opts+'</select></div>';
+}
+function setMktRegion(v){
+  S.mkRegion = v || "ALL";
+  try{ localStorage.setItem("mmh_mkregion_"+S.dataset, S.mkRegion); }catch(e){}
   document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});
   renderMarket();
 }
@@ -2347,6 +2373,7 @@ function fetchData(){
           prov:r.prov||"", ptype:r.ptype||"",
           ttType:r.ttType||"", ttMount:r.ttMount||"",
           tier:r.tier||"N/A", region:r.region||"N/A",
+          regionNew:r.regionNew||"", 
           method:r.method||"", year:+r.year||0,
           month:r.month||"", kqtt:r.kqtt||"",
           pname:r.pname||"", pcode:r.pcode||"", tspec:r.tspec||"",
@@ -2783,7 +2810,7 @@ function filterRows(f){
     } else {
       if(f.ptype && f.ptype!=="ALL" && r.ptype!==f.ptype) return false;
     }
-    if(f.region && f.region!=="ALL" && r.region!==f.region) return false;
+    if(f.region && f.region!=="ALL" && rowRegion(r)!==f.region) return false;
     if(f.tier && f.tier!=="ALL" && r.tier!==f.tier) return false;
     if(f.brand && f.brand!=="ALL" && r.brand!==f.brand) return false;
     if(f.buyer && r.buyer!==f.buyer) return false;
@@ -2992,6 +3019,7 @@ function chooseDataset(ds){
   S.acBrand=DATASETS[ds].defaultBrand;
   S.mkType="ALL"; S.iolType="ALL"; S.iolMount="ALL";
   try{ S.mkCenter = localStorage.getItem("mmh_mkcenter_"+ds) || "__default__"; }catch(e){ S.mkCenter="__default__"; }
+  try{ S.mkRegion = localStorage.getItem("mmh_mkregion_"+ds) || "ALL"; }catch(e){ S.mkRegion="ALL"; }
   S.acFrom=null; S.acTo=null; S.acCut=null; S._acGroupPinned=false; S.acGroup="Convert";
   try{ localStorage.setItem("mmh_dataset", ds); }catch(e){}
   closeWelcome();
@@ -3352,9 +3380,8 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeDrill(
    TAB 1 — MARKET OVERVIEW  (completely rebuilt per spec)
    ════════════════════════════════════════════════════════════════════ */
 function renderMarket(){
-  /* Controls: Region + Product Type (Value/Quantity toggle hidden on this tab) */
-  /* ⛔ Bộ lọc REGION đã Bỏ: dashboard này 100% là miền Bắc (Hùng Vĩ) — lọc vùng vô nghĩa. */
-  S.mkRegion="ALL";
+  /* Dao (knife) chỉ có miền Bắc → khoá Cả nước. TTT (national) → cho chọn Khu vực. */
+  if(currentDataset().scope==="north") S.mkRegion="ALL";
   var tChips;
   if(S.dataset==="iol"){
     /* Thủy tinh thể — 2 bộ lọc cạnh nhau: Loại TTT + Lắp sẵn/Không lắp sẵn (áp dụng đồng thời) */
@@ -3369,8 +3396,11 @@ function renderMarket(){
   } else {
     tChips='<span class="cl">'+t("sb.ptype")+'</span>'+["ALL"].concat(PTYPES).map(function(p){return '<button class="chip '+(S.mkType===p?"on":"")+'" onclick="S.mkType=\''+esc(p)+'\';renderMarket()">'+esc(tPtype(p))+'</button>';}).join("");
   }
-  document.getElementById("mk-ctrl").innerHTML=mkCenterSelectorHTML()+tChips;
-  var scopeLbl = (currentDataset().scope==="national") ? (LANG==="vi"?"Cả nước":"Nationwide") : "North · Hùng Vĩ";
+  document.getElementById("mk-ctrl").innerHTML=mkCenterSelectorHTML()+mkRegionSelectorHTML()+tChips;
+  var regNames={North:(LANG==="vi"?"Miền Bắc":"North"),Central:(LANG==="vi"?"Miền Trung":"Central"),South:(LANG==="vi"?"Miền Nam":"South")};
+  var scopeLbl = (currentDataset().scope==="national")
+    ? (S.mkRegion!=="ALL" ? (regNames[S.mkRegion]||S.mkRegion) : (LANG==="vi"?"Cả nước":"Nationwide"))
+    : "North · Hùng Vĩ";
   var typeLbl = (S.dataset==="iol")
     ? ((S.iolType==="ALL"?"":" · "+S.iolType)+(S.iolMount==="ALL"?"":" · "+S.iolMount))
     : (S.mkType==="ALL"?"":" · "+S.mkType);
@@ -3474,7 +3504,7 @@ function renderMarket(){
     var _pr = ROWS.filter(function(r){
       if(!PW.test(r)) return false;
       if(!mkTypeOK(r)) return false;
-      if(S.mkRegion!=="ALL" && r.region!==S.mkRegion) return false;
+      if(!mkRegionOK(r)) return false;
       return true;
     });
     prevM = {totQ:0,totV:0,pk:{},by:{},brands:{},maniQ:0,maniV:0,maniPk:{},maniBy:{}};
@@ -3629,7 +3659,7 @@ function renderMarket(){
   function applyFilterCmp(arr){
     return arr.filter(function(r){
       if(!mkTypeOK(r)) return false;
-      if(S.mkRegion!=="ALL" && r.region!==S.mkRegion) return false;
+      if(!mkRegionOK(r)) return false;
       return true;
     });
   }
@@ -3975,7 +4005,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
     cmpSet=ROWS.filter(function(r){
       if(!PW.test(r)) return false;
       if(!mkTypeOK(r)) return false;
-      if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false;
+      if(!mkRegionOK(r)) return false;
       return true;});
     cmpLbl=PW.label;
   } else {
@@ -4084,7 +4114,7 @@ function mxInsightStrip(list){
 /* ── Mani share — Total market vs High segment (grouped bars, Qty/Value × Year/FY) ── */
 function mxMSScope(r){
   if(!mkTypeOK(r)) return false;
-  if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false;
+  if(!mkRegionOK(r)) return false;
   return true;
 }
 /* Build comparison periods: selected year/FY ± nearest neighbours (prev & next that exist).
@@ -4194,7 +4224,7 @@ function mxManiShare(){
 /* ── Brand share evolution — 100% stacked (top 6 + Others) ── */
 function mxBrandEvo(id,buckets,R){
   killC(id); var el=document.getElementById(id); if(!el) return;
-  function mkFilter(r){ if(!mkTypeOK(r)) return false; if(S.mkRegion!=="ALL"&&r.region!==S.mkRegion) return false; return true; }
+  function mkFilter(r){ if(!mkTypeOK(r)) return false; if(!mkRegionOK(r)) return false; return true; }
   var groups=[];
   if(buckets.kind==="compare"){
     buckets.series.forEach(function(s){

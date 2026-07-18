@@ -347,9 +347,15 @@ html[data-theme="dark"] .tdcard{background:var(--sf2);}
 .emptyside{padding:18px 10px;text-align:center;color:var(--t3);font-size:12px;font-style:italic;border:1px dashed var(--br);border-radius:6px;}
 .emptynote{padding:30px;text-align:center;color:var(--t3);background:var(--sf);border:1px dashed var(--br);border-radius:8px;margin-top:10px;}
 
+.rd-note{margin-top:10px;padding:9px 11px;border-left:3px solid var(--yellow);background:rgba(255,225,0,.09);border-radius:0 6px 6px 0;font-size:11.5px;line-height:1.6;color:var(--t2);}
+.rd-note b{color:var(--t1);}
+.topn-sw{display:inline-flex;gap:0;border:1px solid var(--bd);border-radius:7px;overflow:hidden;}
+.topn-sw button{background:transparent;border:0;padding:4px 11px;font:inherit;font-size:11.5px;font-weight:700;color:var(--t2);cursor:pointer;}
+.topn-sw button.on{background:var(--blue);color:#fff;}
 .tspec-tip{position:absolute;z-index:9999;max-width:460px;background:#003047;color:#fff;padding:12px 14px;border-radius:8px;font-size:12px;line-height:1.55;box-shadow:0 12px 32px rgba(0,0,0,.36);opacity:0;visibility:hidden;transition:opacity .15s ease, visibility .15s ease;pointer-events:none;}
 .tspec-tip.show{opacity:1;visibility:visible;}
 .tspec-tip .th{font-weight:800;font-size:10.5px;letter-spacing:.6px;opacity:.85;text-transform:uppercase;margin-bottom:6px;}
+.tspec-tip .pn{font-weight:800;font-size:12.5px;line-height:1.4;margin-bottom:6px;}
 .tspec-tip .pc{background:rgba(255,225,0,.16);color:var(--yellow);padding:3px 8px;border-radius:5px;font-weight:800;font-size:11.5px;display:inline-block;margin-bottom:7px;letter-spacing:.5px;}
 .tspec-tip .tb{white-space:pre-wrap;max-height:240px;overflow-y:auto;}
 
@@ -1602,12 +1608,12 @@ var I18N = {
     "kpi.maniqty":"Mani quantity won","kpi.manival":"Mani value won","kpi.pkgswon":"Packages won","kpi.buyers":"Buyers",
     "kpi.avgprice":"Average unit price",
     "card.qtyTime":"Quantity awarded over time","card.valTime":"Value awarded over time","card.bpTime":"Buyers & Packages over time",
-    "card.manishare":"Mani share — Total vs High segment","card.evo":"Brand share evolution — 100% stacked",
+    "card.manishare":"Mani share — whole market vs HIGH price segment only","card.evo":"Brand share trend by year (share of QUANTITY)",
     "card.tierQ":"Price-tier structure — by Quantity","card.tierV":"Price-tier structure — by Value",
     "card.ptmixQ":"Product-type mix — Quantity","card.ptmixV":"Product-type mix — Value",
-    "card.top10":"Top 10 buyers","card.conc":"Concentration — Pareto","card.brandtbl":"Full brand share table","card.heatmap":"Province × Brand heatmap",
+    "card.top10":"Top 10 buyers","card.conc":"Market concentration — Pareto (Top 10 buyers)","card.brandtbl":"Full brand share table","card.heatmap":"Brand share inside each province (heatmap)",
     "cs.pcs":"pcs","cs.bpcount":"buyer count vs package count","cs.evosub":"qty share · top 6 brands + others · click a block to drill",
-    "cs.concsub":"gold bar = buyer where Mani won · line = cumulative %",
+    "cs.concsub":"gold bar = buyer where Mani won · line = cumulative %","cs.concnote":"How to read: each bar = one of the 10 largest buyers by quantity, ranked #1 to #10 (taller bar = buys more). The gold line = cumulative share of the WHOLE market held by those buyers. Steep line = a few big accounts control the market; flat line = fragmented, you must cover many accounts.","cs.evonote":"Each column = 100% of that year market. Thickness of a block = that brand share of QUANTITY awarded in that year. Brands outside the selected Top N are merged into Others.","cs.evotop":"Show top",
     "hint.brandmix":"Click to see brand mix","hint.drill":"Click to drill",
     "ph.searchbuyer":"Search buyer…","ph.searchprov":"Search province…",
     "sw.qty":"Qty","sw.val":"Value","sw.auto":"Auto","sw.fy":"FY","sw.year":"Year","sw.month":"Month",
@@ -1650,12 +1656,12 @@ var I18N = {
     "kpi.maniqty":"Số lượng Mani trúng","kpi.manival":"Giá trị Mani trúng","kpi.pkgswon":"Gói thầu đã thắng","kpi.buyers":"Chủ đầu tư",
     "kpi.avgprice":"Đơn giá trung bình",
     "card.qtyTime":"Số lượng trúng thầu theo thời gian","card.valTime":"Giá trị trúng thầu theo thời gian","card.bpTime":"Chủ đầu tư & Gói thầu theo thời gian",
-    "card.manishare":"Thị phần Mani — Toàn bộ vs Phân khúc cao","card.evo":"Diễn biến thị phần hãng — 100% chồng",
+    "card.manishare":"Thị phần Mani — toàn thị trường so với riêng phân khúc giá CAO","card.evo":"Diễn biến thị phần các hãng qua các năm (theo SỐ LƯỢNG)",
     "card.tierQ":"Cơ cấu phân khúc giá — theo Số lượng","card.tierV":"Cơ cấu phân khúc giá — theo Giá trị",
     "card.ptmixQ":"Cơ cấu loại sản phẩm — Số lượng","card.ptmixV":"Cơ cấu loại sản phẩm — Giá trị",
-    "card.top10":"Top 10 chủ đầu tư","card.conc":"Mức tập trung — Pareto","card.brandtbl":"Bảng thị phần hãng đầy đủ","card.heatmap":"Bản đồ nhiệt Tỉnh × Hãng",
+    "card.top10":"Top 10 chủ đầu tư","card.conc":"Mức độ tập trung thị trường — Pareto (Top 10 chủ đầu tư)","card.brandtbl":"Bảng thị phần hãng đầy đủ","card.heatmap":"Thị phần từng hãng bên trong mỗi tỉnh (bản đồ nhiệt)",
     "cs.pcs":"chiếc","cs.bpcount":"số chủ đầu tư vs số gói thầu","cs.evosub":"thị phần SL · top 6 hãng + còn lại · bấm để xem chi tiết",
-    "cs.concsub":"cột vàng = chủ đầu tư Mani đã thắng · đường = % lũy kế",
+    "cs.concsub":"cột vàng = chủ đầu tư Mani đã thắng · đường = % lũy kế","cs.concnote":"Cách đọc: mỗi cột = 1 trong 10 chủ đầu tư MUA NHIỀU NHẤT, xếp hạng #1 đến #10 (cột càng cao = mua càng nhiều). Đường vàng = % LŨY KẾ mà nhóm CĐT này chiếm trong TOÀN thị trường. Đường dốc = thị trường nằm trong tay vài CĐT lớn (đánh trúng vài account là đủ); đường thoải = thị trường phân mảnh, phải phủ rộng nhiều CĐT.","cs.evonote":"Mỗi cột = 100% thị trường của năm đó. Độ dày mỗi mảng = thị phần SỐ LƯỢNG của hãng đó trong năm. Các hãng ngoài Top N đang chọn được gộp vào Others.","cs.evotop":"Hiển thị top",
     "hint.brandmix":"Bấm để xem cơ cấu hãng","hint.drill":"Bấm để xem chi tiết",
     "ph.searchbuyer":"Tìm chủ đầu tư…","ph.searchprov":"Tìm tỉnh…",
     "sw.qty":"SL","sw.val":"Giá trị","sw.auto":"Tự động","sw.fy":"NĐTC","sw.year":"Năm","sw.month":"Tháng",
@@ -1790,17 +1796,49 @@ var TIER_CUSTOM = {};   // ptype -> {low: VND, high: VND}  (used when TIER_MODE=
 /* ══ THỦY TINH THỂ — bảng khoảng giá đề xuất theo TỪNG Loại TTT (đơn giá trúng thầu, VND) ══
    low = ngưỡng Low→Mid · high = ngưỡng Mid→High. Người dùng chỉnh real-time trong modal. */
 var IOL_TIER_DEFAULTS = {
-  "Đơn tiêu":                { low:2400000,  high:3000000  },
-  "Đa tiêu":                 { low:9000000,  high:18000000 },
-  "Kéo dài tiêu cự (EDOF)":  { low:5000000,  high:8000000  },
-  "Đơn tiêu Toric":          { low:3500000,  high:7500000  },
-  "Kéo dài tiêu cự Toric":   { low:5000000,  high:10000000 },
-  "Đa tiêu Toric":           { low:15000000, high:25000000 }
+  "Đơn tiêu":              { low:2400000,  high:3000000  },
+  "Đơn tiêu Toric":        { low:3500000,  high:7500000  },
+  "Kéo dài tiêu cự":       { low:5000000,  high:10000000 },   /* EDOF — set sẵn theo yêu cầu */
+  "Kéo dài tiêu cự Toric": { low:5000000,  high:10000000 },
+  "Đa tiêu":               { low:9000000,  high:18000000 },
+  "Đa tiêu Toric":         { low:15000000, high:25000000 }
 };
-var IOL_TIER_CUSTOM = {};   // ttType -> {low, high}  (ghi đè default, chỉnh trong modal, lưu localStorage)
-/* Ngưỡng đang hiệu lực cho 1 Loại TTT (custom override → default) */
-function iolTierTh(ttType){
-  return IOL_TIER_CUSTOM[ttType] || IOL_TIER_DEFAULTS[ttType] || null;
+/* Ngưỡng CHUNG khi không suy ra được Loại TTT — tránh việc cả hãng bị rơi vào "N/A" */
+var IOL_TIER_FALLBACK = { low:2400000, high:9000000 };
+var IOL_TIER_CUSTOM = {};   // Loại TTT (đã chuẩn hoá) -> {low, high} · lưu localStorage
+
+/* Chuẩn hoá tên Loại TTT: bỏ dấu, bỏ ngoặc/gạch, gộp khoảng trắng */
+function _iolKeyNorm(x){
+  return norm(x).replace(/[()\[\]\-–—._,\/]+/g," ").replace(/\s+/g," ").trim();
+}
+var _IOL_TH_INDEX = null;
+function _iolThIndex(){
+  if(_IOL_TH_INDEX) return _IOL_TH_INDEX;
+  var ix={}; Object.keys(IOL_TIER_DEFAULTS).forEach(function(k){ ix[_iolKeyNorm(k)]=k; });
+  _IOL_TH_INDEX=ix; return ix;
+}
+/* Quy Loại TTT thô (viết khác nhau / tiếng Anh / thiếu) về 1 trong 6 loại chuẩn.
+   Trả "" nếu không nhận ra. */
+function iolTypeCanon(raw){
+  var f=_iolKeyNorm(raw); if(!f) return "";
+  var ix=_iolThIndex(); if(ix[f]) return ix[f];
+  var toric = /\btoric\b|loan thi/.test(f);
+  if(/da tieu|multifocal|multi focal|trifocal|tri focal|bifocal|bi focal|3 tieu|hai tieu/.test(f))
+    return toric ? "Đa tiêu Toric" : "Đa tiêu";
+  if(/edof|keo dai tieu cu|extended depth|extended range|do sau tieu diem/.test(f))
+    return toric ? "Kéo dài tiêu cự Toric" : "Kéo dài tiêu cự";
+  if(/don tieu|monofocal|mono focal|1 tieu|mot tieu/.test(f))
+    return toric ? "Đơn tiêu Toric" : "Đơn tiêu";
+  if(toric) return "Đơn tiêu Toric";
+  return "";
+}
+/* Ngưỡng đang hiệu lực cho 1 dòng (custom override → default → fallback chung).
+   row (tuỳ chọn): dùng để suy Loại TTT từ Tên SP / TSKT khi cột "Loại TTT" trống. */
+function iolTierTh(ttType, row){
+  var k = iolTypeCanon(ttType);
+  if(!k && row) k = iolTypeCanon(String(row.pname||"")+" "+String(row.tspec||""));
+  if(!k) return IOL_TIER_CUSTOM[_iolKeyNorm(ttType)] || IOL_TIER_FALLBACK;
+  return IOL_TIER_CUSTOM[k] || IOL_TIER_CUSTOM[ttType] || IOL_TIER_DEFAULTS[k] || IOL_TIER_FALLBACK;
 }
 
 function computeTierAnchors(){
@@ -1826,8 +1864,10 @@ function classifyBrands(){
   ROWS.forEach(function(r){
     if(isIOL){
       /* Thủy tinh thể: phân khúc theo NGƯỠNG GIÁ của từng Loại TTT (bảng đề xuất, chỉnh real-time) */
-      var th = iolTierTh(r.ttType);
-      if(th && r.price){
+      /* FIX: truyền cả row để suy Loại TTT từ Tên SP/TSKT khi cột "Loại TTT" trống,
+         + luôn có ngưỡng fallback → chỉ còn "N/A" khi dòng KHÔNG có đơn giá. */
+      var th = iolTierTh(r.ttType, r);
+      if(th && r.price > 0){
         if(r.price < th.low) r.tier = "Low";
         else if(r.price < th.high) r.tier = "Mid";
         else r.tier = "High";
@@ -2007,7 +2047,9 @@ function tierModalPaint(){
   var host = document.getElementById("tier-modal-rows"); if(!host) return;
   if(S.dataset==="iol"){
     /* Thủy tinh thể — bảng ngưỡng giá theo TỪNG Loại TTT (chỉnh tay, real-time) */
-    var types = iolDistinct("ttType");
+    /* Chuẩn hoá + gộp các cách ghi khác nhau về 6 loại chuẩn */
+    var types = [];
+    iolDistinct("ttType").forEach(function(x){ var k=iolTypeCanon(x)||x; if(k && types.indexOf(k)<0) types.push(k); });
     Object.keys(IOL_TIER_DEFAULTS).forEach(function(k){ if(types.indexOf(k)<0) types.push(k); });
     var HH = '<div class="modal-hint" style="margin-bottom:10px"><b>Khoảng giá đề xuất theo Loại TTT</b> (đơn giá trúng thầu, VND/thấu kính). '
       + 'Nhập ngưỡng <b>Low→Mid</b> và <b>Mid→High</b> cho từng loại. Bấm <b>Áp dụng</b> — toàn bộ dashboard (phân khúc, biểu đồ) tính lại <b>real-time</b>.</div>';
@@ -2018,7 +2060,7 @@ function tierModalPaint(){
        + '<th style="padding:8px 6px;text-align:center">Phân khúc</th>'
        + '<th style="padding:8px 6px;text-align:right">HIGH ≥ (VND)</th>'
        + '<th style="padding:8px 6px;text-align:right">SL dòng</th></tr></thead><tbody>';
-    var cntByType={}; (ROWS||[]).forEach(function(r){ if(r.ttType) cntByType[r.ttType]=(cntByType[r.ttType]||0)+1; });
+    var cntByType={}; (ROWS||[]).forEach(function(r){ var k=iolTypeCanon(r.ttType)||r.ttType; if(k) cntByType[k]=(cntByType[k]||0)+1; });
     types.forEach(function(tt, i){
       var th = iolTierTh(tt) || {low:0,high:0};
       HH += '<tr style="border-bottom:1px solid var(--br)">'
@@ -2113,7 +2155,12 @@ function saveTiers(){
     lows.forEach(function(el){ var tt=el.getAttribute("data-tt"); if(!map[tt])map[tt]={}; map[tt].low=+String(el.value).replace(/[^\d.]/g,"")||0; });
     highs.forEach(function(el){ var tt=el.getAttribute("data-tt"); if(!map[tt])map[tt]={}; map[tt].high=+String(el.value).replace(/[^\d.]/g,"")||0; });
     Object.keys(map).forEach(function(tt){
-      var m=map[tt]; if(m.high>0 && m.low>=0 && m.high>m.low) IOL_TIER_CUSTOM[tt]={low:m.low,high:m.high};
+      var m=map[tt];
+      if(m.high>0 && m.low>=0 && m.high>m.low){
+        var ck = iolTypeCanon(tt) || tt;
+        IOL_TIER_CUSTOM[ck] = {low:m.low, high:m.high};
+        IOL_TIER_CUSTOM[_iolKeyNorm(tt)] = {low:m.low, high:m.high};
+      }
     });
     try{ localStorage.setItem("mmh_iol_tier", JSON.stringify(IOL_TIER_CUSTOM)); }catch(e){}
     closeTierModal();
@@ -3046,6 +3093,7 @@ function chooseDataset(ds){
   S.acBrand=DATASETS[ds].defaultBrand;
   S.mkType="ALL"; S.iolType="ALL"; S.iolMount="ALL";
   try{ S.mkCenter = localStorage.getItem("mmh_mkcenter_"+ds) || "__default__"; }catch(e){ S.mkCenter="__default__"; }
+  try{ var _tn=+localStorage.getItem("mmh_evo_topn"); S.evoTopN=([5,10,20].indexOf(_tn)>=0?_tn:6); }catch(e){ S.evoTopN=6; }
   try{ S.mkRegion = localStorage.getItem("mmh_mkregion_"+ds) || "ALL"; }catch(e){ S.mkRegion="ALL"; }
   S.acFrom=null; S.acTo=null; S.acCut=null; S._acGroupPinned=false; S.acGroup="Convert";
   try{ localStorage.setItem("mmh_dataset", ds); }catch(e){}
@@ -3316,12 +3364,18 @@ function afterRender(secId){var s=document.getElementById(secId);if(!s)return;s.
 function showTspec(ev,el){
   var t = el.getAttribute("data-tspec") || "";
   var code = el.getAttribute("data-pcode") || "";
-  if(!t && !code) return;
+  var pn   = el.getAttribute("data-pname") || "";
+  if(!t && !code && !pn) return;
   var tip = document.getElementById("tspec-tip");
   if(!tip){tip=document.createElement("div");tip.id="tspec-tip";tip.className="tspec-tip";document.body.appendChild(tip);}
-  var html = '<div class="th">Product Detail</div>';
-  if(code) html += '<div class="pc">Code: '+esc(code)+'</div>';
-  html += '<div class="tb">'+(t?esc(t):'<em style="opacity:.6">No technical specification on record</em>')+'</div>';
+  var L=(LANG==="vi");
+  var html = '<div class="th">'+(L?"Thông tin sản phẩm":"Product detail")+'</div>';
+  if(pn)   html += '<div class="pn">'+esc(pn)+'</div>';
+  if(code) html += '<div class="pc">'+(L?"Mã: ":"Code: ")+esc(code)+'</div>';
+  /* Nội dung = cột M "Cấu hình, tính năng kỹ thuật cơ bản" (backend trả về ở trường tspec) */
+  html += '<div class="tb">'+(t?esc(t)
+    :'<em style="opacity:.6">'+(L?"Sheet nguồn chưa có nội dung ở cột M \u201cCấu hình, tính năng kỹ thuật cơ bản\u201d cho dòng này."
+                                :"Column M \u201cCấu hình, tính năng kỹ thuật cơ bản\u201d is empty for this line in the source sheet.")+'</em>')+'</div>';
   tip.innerHTML = html;
   var r = el.getBoundingClientRect();
   var x = r.left + window.scrollX, y = r.bottom + window.scrollY + 8;
@@ -3381,28 +3435,91 @@ function buyerSituationHTML(rows){
   pkgRows=sortDesc(pkgRows,"qty");
   var pkgHtml=pkgRows.slice(0,6).map(function(r){
     return '<tr><td class="tl"><span class="badge" style="background:'+brandColor(r.brand)+';color:'+(isMani(r.brand)?"#003047":"#fff")+'">'+esc(r.brand)+'</span></td>'
-      +'<td class="tl">'+esc(rowPtype(r)||"—")+'</td><td>'+nf(r.qty)+'</td><td>'+money(r.price)+'</td></tr>';
+      +'<td class="tl pt-hov" data-pname="'+esc(r.pname).replace(/"/g,"&quot;")+'" data-pcode="'+esc(r.pcode).replace(/"/g,"&quot;")+'" data-tspec="'+esc(r.tspec).replace(/"/g,"&quot;")+'" onmouseover="showTspec(event,this)" onmouseleave="hideTspec()">'+esc(rowPtype(r)||"—")+'</td><td>'+nf(r.qty)+'</td><td>'+money(r.price)+'</td></tr>';
   }).join("");
-  // Lịch sử theo năm: hãng trúng nhiều nhất + tổng SL + đơn giá TB
+  /* ── NHU CẦU THEO NĂM tại chủ đầu tư này ──────────────────────────────────────────
+     Bảng cũ ("hãng trúng chính + 11") gây hiểu nhầm: cột SL là TỔNG SL của TẤT CẢ các hãng
+     trong năm, nhưng badge lại chỉ hiện 1 hãng dẫn đầu → nhìn như SIFI trúng 10,400.
+     Thay bằng biểu đồ cột NHU CẦU theo năm; rê chuột để xem CHI TIẾT từng hãng
+     (kèm phân rã theo Loại SP: Đơn tiêu / Đa tiêu / …). */
   var byYear={}; rows.forEach(function(r){ if(!r.year) return; (byYear[r.year]=byYear[r.year]||[]).push(r); });
-  var years=Object.keys(byYear).map(Number).sort(function(a,b){return b-a;});
-  var histHtml=years.map(function(y){
-    var rr=byYear[y]; var ag=sortDesc(toArr(aggBy(rr,function(r){return r.brand;})),"qty");
-    var win=ag[0]; var q=0,v=0; rr.forEach(function(r){q+=r.qty;v+=r.val;});
-    var maniHere=rr.some(function(r){return r.brand===mktCenter();});
-    return '<tr'+(maniHere?' style="background:rgba(255,225,0,.10)"':'')+'><td>'+y+'</td>'
-      +'<td class="tl"><span class="badge" style="background:'+brandColor(win.key)+';color:'+(isMani(win.key)?"#003047":"#fff")+'">'+esc(win.key)+'</span>'+(ag.length>1?' <span style="color:var(--t3);font-size:11px">+'+(ag.length-1)+'</span>':'')+'</td>'
-      +'<td>'+nf(q)+'</td><td>'+money(q?v/q:0)+'</td></tr>';
-  }).join("");
+  var years=Object.keys(byYear).map(Number).sort(function(a,b){return a-b;});
+  var YD = years.map(function(y){
+    var rr=byYear[y], q=0, v=0, pk={}, per={};
+    rr.forEach(function(r){
+      q+=r.qty; v+=r.val; if(r.kqtt) pk[r.kqtt]=1;
+      var b=r.brand||"Không rõ";
+      if(!per[b]) per[b]={q:0,v:0,pt:{}};
+      per[b].q+=r.qty; per[b].v+=r.val;
+      var pt=rowPtype(r)||"—";
+      per[b].pt[pt]=(per[b].pt[pt]||0)+r.qty;
+    });
+    var brands=Object.keys(per).map(function(b){return {b:b,q:per[b].q,v:per[b].v,pt:per[b].pt};})
+                 .sort(function(a,b){return b.q-a.q;});
+    return {year:y, qty:q, val:v, npkg:Object.keys(pk).length, brands:brands, rows:rr,
+            hasCenter:rr.some(function(r){return r.brand===mktCenter();})};
+  });
+  window._BUYERYR = YD;
   var centerHere=rows.some(function(r){return r.brand===mktCenter();});
   return '<div class="card" style="margin-bottom:12px;border-left:3px solid var(--blue)"><div class="ch"><div class="ct">📍 '+(L?"Tình huống hiện tại":"Current situation")+'</div>'
     +'<div class="cs">'+(region?esc(region)+' · ':'')+esc(prov||"—")+' · '+(L?"gói gần nhất":"latest tender")+': <b>'+esc(when)+'</b></div></div>'
     +'<div class="cb" style="padding:12px 14px">'
     +'<div style="font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:700">'+(L?"Kết quả gói gần nhất":"Latest package result")+(centerHere?'':' · <span style="color:var(--neg);font-weight:800">'+brandify(L?"Mani chưa trúng ở CĐT này":"Mani never won here")+'</span>')+'</div>'
     +'<div class="tw"><table><thead><tr><th class="tl">'+t("dk.brand")+'</th><th class="tl">'+t("dk.producttype")+'</th><th>'+t("th.qty")+'</th><th>'+t("dk.unitprice")+'</th></tr></thead><tbody>'+pkgHtml+'</tbody></table></div>'
-    +'<div style="font-size:12px;color:var(--t2);margin:12px 0 6px;font-weight:700">'+(L?"Lịch sử trúng theo năm":"Win history by year")+' <span style="color:var(--t3);font-weight:600">('+(L?"hàng vàng = ":"gold row = ")+brandify("Mani")+' '+(L?"có trúng":"won")+')</span></div>'
-    +'<div class="tw"><table><thead><tr><th>'+t("dk.year")+'</th><th class="tl">'+(L?"Hãng trúng chính":"Main winner")+'</th><th>'+t("th.qty")+'</th><th>'+t("dk.unitprice")+'</th></tr></thead><tbody>'+histHtml+'</tbody></table></div>'
+    +'<div style="font-size:12px;color:var(--t2);margin:14px 0 6px;font-weight:700">'
+      +(L?"Nhu cầu theo năm tại chủ đầu tư này":"Demand by year at this buyer")
+      +' <span style="color:var(--t3);font-weight:600">('+(L?"cột = TỔNG số lượng trúng thầu của tất cả các hãng · cột vàng = ":"bar = TOTAL quantity awarded across all brands · gold bar = ")+esc(mktCenter())+(L?" có trúng":" won")+')</span></div>'
+    +'<div class="cw" style="height:215px"><canvas id="c-buyer-yr"></canvas></div>'
+    +'<div class="rd-note">'+(L
+        ?("<b>Cách đọc:</b> chiều cao cột = tổng nhu cầu (số lượng) mà CĐT này mua trong năm — cộng của MỌI hãng trúng thầu năm đó, không phải của riêng 1 hãng. "
+          +"<b>Rê chuột</b> vào cột để xem từng hãng trúng bao nhiêu và phân rã theo Loại SP (VD: SIFI 1.000 Đơn tiêu · 200 Đa tiêu). <b>Bấm</b> vào cột để mở toàn bộ dòng chi tiết của năm đó.")
+        :("<b>How to read:</b> bar height = total quantity this buyer awarded that year, summed across ALL winning brands — not a single brand. "
+          +"<b>Hover</b> a bar for the per-brand split with product-type detail. <b>Click</b> a bar to open every line item of that year."))+'</div>'
     +'</div></div>';
+}
+
+/* Biểu đồ NHU CẦU THEO NĂM của 1 chủ đầu tư (thay cho bảng "Lịch sử trúng theo năm" cũ) */
+function renderBuyerYearChart(){
+  var YD = window._BUYERYR;
+  var el = document.getElementById("c-buyer-yr");
+  if(!el || !YD || !YD.length) return;
+  killC("c-buyer-yr");
+  var L=(LANG==="vi");
+  S.charts["c-buyer-yr"] = new Chart(el,{ type:"bar",
+    data:{ labels:YD.map(function(d){return String(d.year);}),
+      datasets:[{ label:(L?"Số lượng":"Quantity"), data:YD.map(function(d){return d.qty;}),
+        backgroundColor:YD.map(function(d){return d.hasCenter?"#FFC400":"#3A5CAA";}),
+        borderRadius:5,
+        datalabels:{display:true,anchor:"end",align:"end",color:axisColor(),
+          font:{family:FF,size:10,weight:"800"},formatter:function(v){return qf(v);}} }]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:{duration:700},
+      onHover:function(e,els){ e.native.target.style.cursor = els.length?"pointer":"default"; },
+      onClick:function(e,els){ if(els&&els.length){ var d=YD[els[0].index];
+        if(d && d.rows.length) openDrill(d.rows,{title:S.drill.title+" · "+d.year, sub:(L?"Chi tiết năm ":"Line items of ")+d.year}); } },
+      plugins:{ legend:{display:false}, datalabels:{},
+        tooltip:{ titleFont:{family:FF,size:12.5,weight:"800"}, bodyFont:{family:FF,size:11.5},
+          padding:10, boxPadding:4, displayColors:false,
+          callbacks:{
+            title:function(it){ var d=YD[it[0].dataIndex];
+              return (L?"Năm ":"Year ")+d.year+" — "+nf(d.qty)+(L?" chiếc":" pcs")+" · "+d.npkg+(L?" gói thầu":" packages"); },
+            label:function(c){
+              var d=YD[c.dataIndex], out=[], shown=d.brands.slice(0,8);
+              shown.forEach(function(x){
+                var pts=Object.keys(x.pt).sort(function(a,b){return x.pt[b]-x.pt[a];})
+                          .map(function(k){ return nf(x.pt[k])+" "+k; }).join(" · ");
+                out.push("• "+x.b+": "+nf(x.q)+(L?" chiếc":" pcs")+(pts?("  ("+pts+")"):""));
+              });
+              if(d.brands.length>shown.length){
+                var rest=0; d.brands.slice(8).forEach(function(x){rest+=x.q;});
+                out.push("• +"+(d.brands.length-shown.length)+(L?" hãng khác: ":" other brands: ")+nf(rest)+(L?" chiếc":" pcs"));
+              }
+              out.push((L?"Đơn giá TB: ":"Avg unit price: ")+money(d.qty?d.val/d.qty:0));
+              return out;
+            }
+          }}},
+      scales:{ x:{grid:{display:false},ticks:{font:{family:FF,size:11.5,weight:"700"},color:axisColor()}},
+               y:{beginAtZero:true,grid:{color:gridColor()},ticks:{font:{family:FF,size:10},color:axisColor(),callback:function(v){return qf(v);}}}},
+      layout:{padding:{top:18,right:6}} }});
 }
 
 function openDrill(rows,o){
@@ -3426,7 +3543,7 @@ function openDrill(rows,o){
   var body=srt.map(function(r){
     return "<tr><td class='tl' title='"+esc(r.buyer)+"' style='max-width:200px;overflow:hidden;text-overflow:ellipsis'>"+esc(r.buyer)+"</td>"
       +"<td class='tl'><span class='badge' style='background:"+brandColor(r.brand)+";color:"+(isMani(r.brand)?"#003047":"#fff")+"'>"+esc(r.brand)+"</span></td>"
-      +"<td class='tl pt-hov' data-pcode=\""+esc(r.pcode).replace(/"/g,'&quot;')+"\" data-tspec=\""+esc(r.tspec).replace(/"/g,'&quot;')+"\" onmouseover='showTspec(event,this)' onmouseleave='hideTspec()'>"+esc(rowPtype(r))+"</td>"
+      +"<td class='tl pt-hov' data-pname=\""+esc(r.pname).replace(/"/g,'&quot;')+"\" data-pcode=\""+esc(r.pcode).replace(/"/g,'&quot;')+"\" data-tspec=\""+esc(r.tspec).replace(/"/g,'&quot;')+"\" onmouseover='showTspec(event,this)' onmouseleave='hideTspec()'>"+esc(rowPtype(r))+"</td>"
       +"<td class='tl'>"+esc(r.tier)+"</td><td class='tl'>"+esc(r.prov)+"</td>"
       +"<td class='tl mono' style='font-size:11.5px;color:var(--t2)' title='"+esc(r.kqtt)+"'>"+esc(r.kqtt||"—")+"</td><td>"+esc(r.year)+"</td>"
       +"<td>"+nf(r.qty)+"</td><td>"+money(r.price)+"</td><td>"+money(r.val)+"</td></tr>";
@@ -3436,6 +3553,7 @@ function openDrill(rows,o){
   document.getElementById("drill-body").innerHTML=html;
   document.getElementById("drill").classList.add("on");
   setTimeout(function(){
+    if(S.drill.kind==="buyer") renderBuyerYearChart();
     var dm=S.drill.bd;
     if(!dm) dm = exclude.indexOf("brand")<0 ? "brand" : (exclude.indexOf("ptype")<0 ? "ptype" : "tier");
     drillBreakdown(dm);
@@ -3669,7 +3787,20 @@ function renderMarket(){
             + '<div class="msw" id="msw-per">'+b("per","year","Year")+b("per","fy","FY")+'</div>'
           + '</div></div><div class="cb"><div class="cw t"><canvas id="c-mk-mshare"></canvas></div></div></div>';
       })()
-    + '<div class="card reveal"><div class="ch"><div class="ct">'+t("card.evo")+'</div><div class="cs">'+t("cs.evosub")+'</div>'+cvswHtml("evo")+'</div><div class="cb"><div class="cw t"><canvas id="c-mk-evo"></canvas></div><div class="fy-note" id="note-evo"></div></div></div>'
+    + (function(){
+        S.evoTopN = S.evoTopN || 6;
+        var tn = [5,10,20].map(function(k){ return '<button'+(S.evoTopN===k?' class="on"':'')+' onclick="evoTopNSet('+k+')">Top '+k+'</button>'; }).join('');
+        var sub = (LANG==="vi"?("thị phần SỐ LƯỢNG · top "+S.evoTopN+" hãng + Others · bấm 1 mảng để xem chi tiết"):("share of QUANTITY · top "+S.evoTopN+" brands + Others · click a block to drill"));
+        return '<div class="card reveal"><div class="ch"><div class="ct">'+t("card.evo")+'</div>'
+          + '<div class="cs">'+sub+'</div>'
+          + '<div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+            + '<span style="font-size:11px;color:var(--t3);font-weight:700">'+t("cs.evotop")+'</span>'
+            + '<div class="topn-sw">'+tn+'</div>'+cvswHtml("evo")
+          + '</div></div>'
+          + '<div class="cb"><div class="cw t"><canvas id="c-mk-evo"></canvas></div>'
+          + '<div class="fy-note" id="note-evo"></div>'
+          + '<div class="rd-note">'+t("cs.evonote")+'</div></div></div>';
+      })()
     + '</div>';
 
   /* Two pairs of segment charts: Quantity-based & Value-based.
@@ -3714,10 +3845,11 @@ function renderMarket(){
       + metricSwHtml("mkBuyerMetric","mkBuyerMetricSet")
       + ssHtml("ss-buyer",t("ph.searchbuyer"),"mkBuyerSuggest")
       + '</div></div><div class="cb" id="mk-topbuyer"></div></div>'
-    + '<div class="card reveal"><div class="ch"><div class="ct">'+t("card.conc")+'</div><div class="cs">'+t("cs.concsub")+'</div></div><div class="cb">'
+    + '<div class="card reveal"><div class="ch"><div class="ct">'+t("card.conc")+'</div><div class="cs">'+brandify(t("cs.concsub"))+'</div></div><div class="cb">'
       + '<div class="mstat" style="margin-bottom:10px"><div class="ml">'+t("note.top10hold")+'</div><div class="mv" style="color:var(--blue)">'+pct(top10share)+'</div><div class="ms">'+qf(top10Q)+' / '+qf(totQ)+' pcs total</div></div>'
       + '<div class="cw" style="height:200px"><canvas id="c-mk-conc"></canvas></div>'
       + '<div style="font-size:11.5px;color:var(--t2);margin-top:8px">'+(LANG==="vi"?("Thị trường <b>"+(top10share>40?t("note.concentrated"):t("note.fragmented"))+"</b> — "+top10.length+" chủ đầu tư lớn nhất nắm "+pct(top10share)+" dung lượng."):("Market is <b>"+(top10share>40?"highly concentrated":"fragmented")+"</b> — "+top10.length+" largest buyers hold "+pct(top10share)+" of capacity."))+'</div>'
+      + '<div class="rd-note">'+brandify(t("cs.concnote"))+'</div>'
     + '</div></div></div>';
 
   /* ── Province × Brand heatmap (UX v10) ── */
@@ -4322,7 +4454,8 @@ function mxBrandEvo(id,buckets,R){
   } else {
     buckets.buckets.forEach(function(b){ groups.push({label:b.label,rows:R.filter(b.match)}); });
   }
-  var tops=sortDesc(toArr(aggBy(R,function(r){return r.brand;})),"qty").slice(0,6).map(function(a){return a.key;});
+  var _topN = (S.evoTopN||6);
+  var tops=sortDesc(toArr(aggBy(R,function(r){return r.brand;})),"qty").slice(0,_topN).map(function(a){return a.key;});
   var names=tops.concat(["Others"]);
   var ds=names.map(function(b){
     var data=groups.map(function(g){
@@ -4341,7 +4474,7 @@ function mxBrandEvo(id,buckets,R){
         var rows=g.rows.filter(function(r){return b==="Others"?tops.indexOf(r.brand)<0:r.brand===b;});
         if(rows.length) openDrill(rows,{title:b+" · "+g.label,sub:"Brand share evolution"});}},
       onHover:function(e,els){e.native.target.style.cursor=els.length?"pointer":"default";},
-      plugins:{legend:{position:"bottom",labels:{font:{family:FF,size:11},boxWidth:11,padding:8,color:axisColor()}},
+      plugins:{legend:{position:"bottom",labels:{font:{family:FF,size:(_topN>10?9.5:11)},boxWidth:(_topN>10?9:11),padding:(_topN>10?5:8),color:axisColor()}},
         datalabels:{},
         tooltip:{titleFont:{family:FF,size:13,weight:"800"},bodyFont:{family:FF,size:12},
           callbacks:{label:function(c){return " "+c.dataset.label+": "+c.parsed.y+"%";}}}},
@@ -4418,7 +4551,7 @@ function mxHeatmapCard(R){
       h+='<div class="hc" style="'+(bg?("background:"+bg+";"):"")+'color:'+fg+'" onclick="hmDrill('+pi+','+bi+')" title="'+esc(b)+' @ '+esc(p)+' · '+tt+' ('+sh.toFixed(1)+'%)">'+(q?sh.toFixed(0)+"%":"·")+'</div>';
     });
   });
-  h+='</div><div class="hm-lg"><span class="sw"></span> '+(LANG==="vi"?"thị phần hãng theo tỉnh":"brand share of province")+' '+(hv?t("hm.value"):t("hm.quantity"))+'<span class="sw swy" style="margin-left:10px"></span> Mani column · click a cell to drill line items</div>';
+  h+='</div><div class="hm-lg"><span class="sw"></span> '+(LANG==="vi"?"thị phần hãng theo tỉnh":"brand share of province")+' '+(hv?t("hm.value"):t("hm.quantity"))+'<span class="sw swy" style="margin-left:10px"></span> '+(LANG==="vi"?("ô vàng = cột của hãng "+esc(mktCenter())+" (hãng đang phân tích — đổi ở Settings) · bấm 1 ô để xem chi tiết dòng"):("gold cells = column of "+esc(mktCenter())+" (analysis brand — change in Settings) · click a cell to drill"))+'</div>';
   return '<div class="card reveal"><div class="ch"><div class="ct">'+t("card.heatmap")+'</div>'
     + '<div class="cs">'+t("dk.top")+' '+pAg.length+' '+t("hm.provinces")+(pinned.length?(" +"+pinned.length+" pinned"):"")+' · top '+brands.length+' '+t("hm.brands")+' · % = '+t("hm.shareofprov")+' '+(hv?t("hm.value"):t("hm.quantity"))+'</div>'
     + '<div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
@@ -4434,6 +4567,11 @@ function hmDrill(pi,bi){
   openDrill(rows,{title:b+" · "+p,sub:"Province × Brand"});
 }
 function hmMetricSet(v){ if(S.hmMetric===v) return; S.hmMetric=v; renderMarket(); }
+/* Top N hãng hiển thị ở biểu đồ "Diễn biến thị phần các hãng" (5/10/20 · còn lại gộp Others) */
+function evoTopNSet(k){ if(S.evoTopN===k) return; S.evoTopN=k;
+  try{ localStorage.setItem("mmh_evo_topn", String(k)); }catch(e){}
+  document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});
+  renderMarket(); }
 function hmSuggest(inp){
   var q = norm(inp.value.trim());
   var drop = document.getElementById("ss-prov-drop"); if(!drop) return;
@@ -4849,7 +4987,7 @@ function hospCard(b,idx,brand,cut){
         var avgP=pt.qty?(pt.val/pt.qty):0;
         var tspec=(pt.rows[0]&&pt.rows[0].tspec)?pt.rows[0].tspec:"";
         var pcode=(pt.rows[0]&&pt.rows[0].pcode)?pt.rows[0].pcode:"";
-        return '<span class="pchip" data-tspec="'+esc(tspec).replace(/"/g,"&quot;")+'" data-pcode="'+esc(pcode).replace(/"/g,"&quot;")+'" onmouseover="showTspec(event,this)" onmouseleave="hideTspec()">'+esc(pt.key)+' · '+money(Math.round(avgP))+'</span>';
+        return '<span class="pchip" data-pname="'+esc((pt.rows[0]&&pt.rows[0].pname)||"").replace(/"/g,"&quot;")+'" data-tspec="'+esc(tspec).replace(/"/g,"&quot;")+'" data-pcode="'+esc(pcode).replace(/"/g,"&quot;")+'" onmouseover="showTspec(event,this)" onmouseleave="hideTspec()">'+esc(pt.key)+' · '+money(Math.round(avgP))+'</span>';
       }).join(" ");
       return '<div class="brandrow'+(isCurr?" curr":"")+'">'
         +'<div class="brnm" style="color:'+col+'"><span class="bdot" style="background:'+col+'"></span>'+esc(ba.key)+'</div>'

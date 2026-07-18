@@ -133,6 +133,8 @@ html[data-theme="dark"] .shimmer::after{background:linear-gradient(105deg,transp
 .chip{padding:5px 13px;border-radius:20px;border:1.5px solid var(--br);background:var(--sf);color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--ff);transition:.14s;user-select:none;white-space:nowrap;}
 .iol-sel{padding:6px 12px;border-radius:8px;border:1.5px solid var(--br);background:var(--sf);color:var(--t1);font-size:13px;font-weight:700;font-family:var(--ff);cursor:pointer;margin-right:8px;min-width:150px;}
 .iol-sel:focus{outline:none;border-color:var(--blue);}
+.mk-center-sel{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--br);flex-wrap:wrap;}
+.mk-center-sel .cl{font-weight:800;}
 .chip:hover{border-color:var(--blue);color:var(--blue);}
 .chip.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .sel{font-family:var(--ff);padding:7px 11px;border-radius:9px;border:1.5px solid var(--br);font-size:13px;font-weight:700;color:var(--t1);background:var(--sf);cursor:pointer;outline:none;min-width:150px;}
@@ -2154,6 +2156,7 @@ var S = {
   iolType:"ALL", iolMount:"ALL",   // 2 bộ lọc chủng loại TTT
   tab:"market", metric:"val", currency:"VND",
   mkRegion:"ALL", mkType:"ALL",
+  mkCenter:"__default__",   // hãng phân tích ở tab Tổng quan (Settings) — "__default__" = hãng mặc định dataset
   brand:"Mani", brTop3:false,
   acBrand:"Mani", acFrom:null, acTo:null, acCut:null, acSub:"overview", acGroup:"all", acRiskGroup:"Loss",
   vsA:"Mani", vsB:"Surgistar", vsCut:null,
@@ -2226,11 +2229,35 @@ function brandColor(b){
 function isMani(b){ return b===centerBrand(); }
 /* Hãng "trung tâm" của dataset — Dao: Mani · TTT: Humanoptics. Mọi KPI/insight xoay quanh hãng này. */
 function centerBrand(){ return currentDataset().defaultBrand || "Mani"; }
+/* Hãng phân tích ở tab Tổng quan — người dùng chọn trong Settings; mặc định = hãng mặc định của dataset */
+function mktCenter(){
+  var c = S.mkCenter;
+  if(c && c!=="__default__" && (typeof BRANDS==="undefined" || BRANDS.indexOf(c)>=0)) return c;
+  return centerBrand();
+}
+/* Dropdown chọn hãng phân tích cho tab Tổng quan (Settings) */
+function mkCenterSelectorHTML(){
+  var cur=mktCenter();
+  var opts='<option value="__default__"'+(S.mkCenter==="__default__"?" selected":"")+'>'
+    +(LANG==="vi"?"Mặc định ("+centerBrand()+")":"Default ("+centerBrand()+")")+'</option>';
+  (typeof BRANDS!=="undefined"?BRANDS:[]).forEach(function(b){
+    if(b==="Không rõ") return;
+    opts+='<option value="'+esc(b).replace(/"/g,"&quot;")+'"'+((S.mkCenter!=="__default__"&&cur===b)?" selected":"")+'>'+esc(b)+'</option>';
+  });
+  return '<div class="mk-center-sel"><span class="cl">'+(LANG==="vi"?"Hãng phân tích":"Analysis brand")+'</span>'
+    +'<select class="iol-sel" title="'+(LANG==="vi"?"Mọi note/cardbox/highlight ở Tổng quan sẽ chạy theo hãng này":"All notes/cards run on this brand")+'" onchange="setMktCenter(this.value)">'+opts+'</select></div>';
+}
+function setMktCenter(v){
+  S.mkCenter = v || "__default__";
+  try{ localStorage.setItem("mmh_mkcenter_"+S.dataset, S.mkCenter); }catch(e){}
+  document.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});
+  renderMarket();
+}
 function isCenterBrand(b){ return b===centerBrand(); }
 function centerBrandLabel(){ var c=centerBrand(); return c==="Mani"?"MANI":(c||"").toUpperCase(); }
-/* Thay chữ "Mani"/"MANI" trong nhãn bằng hãng trung tâm của dataset (Humanoptics cho TTT) */
+/* Thay chữ "Mani"/"MANI" trong nhãn bằng hãng đang phân tích ở Tổng quan */
 function brandify(str){
-  var c=centerBrand(); if(c==="Mani") return str;
+  var c=mktCenter(); if(c==="Mani") return str;
   return String(str).replace(/MANI/g, c.toUpperCase()).replace(/Mani/g, c);
 }
 var TIER_COLOR = {High:"#5B7DB1", Mid:"#C9A961", Low:"#7BAE7E", "N/A":"#B8C2D0"};
@@ -2964,6 +2991,8 @@ function chooseDataset(ds){
   S.brand=DATASETS[ds].defaultBrand;
   S.acBrand=DATASETS[ds].defaultBrand;
   S.mkType="ALL"; S.iolType="ALL"; S.iolMount="ALL";
+  try{ S.mkCenter = localStorage.getItem("mmh_mkcenter_"+ds) || "__default__"; }catch(e){ S.mkCenter="__default__"; }
+  S.acFrom=null; S.acTo=null; S.acCut=null; S._acGroupPinned=false; S.acGroup="Convert";
   try{ localStorage.setItem("mmh_dataset", ds); }catch(e){}
   closeWelcome();
   // cập nhật tiêu đề + tab hiển thị
@@ -3340,7 +3369,7 @@ function renderMarket(){
   } else {
     tChips='<span class="cl">'+t("sb.ptype")+'</span>'+["ALL"].concat(PTYPES).map(function(p){return '<button class="chip '+(S.mkType===p?"on":"")+'" onclick="S.mkType=\''+esc(p)+'\';renderMarket()">'+esc(tPtype(p))+'</button>';}).join("");
   }
-  document.getElementById("mk-ctrl").innerHTML=tChips;
+  document.getElementById("mk-ctrl").innerHTML=mkCenterSelectorHTML()+tChips;
   var scopeLbl = (currentDataset().scope==="national") ? (LANG==="vi"?"Cả nước":"Nationwide") : "North · Hùng Vĩ";
   var typeLbl = (S.dataset==="iol")
     ? ((S.iolType==="ALL"?"":" · "+S.iolType)+(S.iolMount==="ALL"?"":" · "+S.iolMount))
@@ -3355,7 +3384,7 @@ function renderMarket(){
   var nBrands = bAgg.length;
 
   /* ── MANI numbers ── */
-  var maniAll = bAgg.find(function(a){return a.key===centerBrand();}) || {qty:0,val:0,rows:[],pkgs:{},buyers:{},npkg:0,nbuyer:0};
+  var maniAll = bAgg.find(function(a){return a.key===mktCenter();}) || {qty:0,val:0,rows:[],pkgs:{},buyers:{},npkg:0,nbuyer:0};
   var maniPkgIds = Object.keys(maniAll.pkgs||{});
   var maniBuyerIds = Object.keys(maniAll.buyers||{});
   var maniQ = maniAll.qty, maniV = maniAll.val;
@@ -3377,7 +3406,7 @@ function renderMarket(){
 
   var maniHistByBuyer = {};
   ROWS.forEach(function(r){
-    if(r.brand!==centerBrand()) return;
+    if(r.brand!==mktCenter()) return;
     var mk = moKey(r.month);
     if(!maniHistByBuyer[r.buyer]) maniHistByBuyer[r.buyer]={before:false, inWindow:false};
     if(mk < winStart) maniHistByBuyer[r.buyer].before = true;
@@ -3389,7 +3418,7 @@ function renderMarket(){
     if(h.before && h.inWindow) nRetain++;
     else if(!h.before && h.inWindow) {
       /* "Convert" requires that some non-Mani brand won at this buyer earlier */
-      var hadOther = ROWS.some(function(r){return r.buyer===b && r.brand!==centerBrand() && moKey(r.month) < winStart;});
+      var hadOther = ROWS.some(function(r){return r.buyer===b && r.brand!==mktCenter() && moKey(r.month) < winStart;});
       if(hadOther) nConvert++;
       else nNew++;
     }
@@ -3419,14 +3448,14 @@ function renderMarket(){
   maniBuyerIds.forEach(function(b){
     var beforeCut=false, atOrAfterCut=false;
     ROWS.forEach(function(r){
-      if(r.buyer!==b || r.brand!==centerBrand()) return;
+      if(r.buyer!==b || r.brand!==mktCenter()) return;
       var mk = moKey(r.month);
       if(mk < winStart || mk > winEnd) return;
       if(mk < cutKey) beforeCut=true; else atOrAfterCut=true;
     });
     if(beforeCut && atOrAfterCut) nRetain2++;
     else if(!beforeCut && atOrAfterCut){
-      var hadOther = ROWS.some(function(r){return r.buyer===b && r.brand!==centerBrand() && moKey(r.month) < cutKey && moKey(r.month) >= winStart;});
+      var hadOther = ROWS.some(function(r){return r.buyer===b && r.brand!==mktCenter() && moKey(r.month) < cutKey && moKey(r.month) >= winStart;});
       if(hadOther) nConvert2++; else nNew2++;
     }
     /* Mani-only-before-cut buyers don't count for any of these (they're potential "loss") */
@@ -3451,7 +3480,7 @@ function renderMarket(){
     prevM = {totQ:0,totV:0,pk:{},by:{},brands:{},maniQ:0,maniV:0,maniPk:{},maniBy:{}};
     _pr.forEach(function(r){
       prevM.totQ+=r.qty; prevM.totV+=r.val; prevM.pk[r.kqtt]=1; prevM.by[r.buyer]=1; prevM.brands[r.brand]=1;
-      if(r.brand===centerBrand()){prevM.maniQ+=r.qty; prevM.maniV+=r.val; prevM.maniPk[r.kqtt]=1; prevM.maniBy[r.buyer]=1;}
+      if(r.brand===mktCenter()){prevM.maniQ+=r.qty; prevM.maniV+=r.val; prevM.maniPk[r.kqtt]=1; prevM.maniBy[r.buyer]=1;}
     });
   }
   var _bk0 = marketBuckets(), sparkQ=null, sparkV=null, sparkMS=null;
@@ -3459,7 +3488,7 @@ function renderMarket(){
     sparkQ=[]; sparkV=[]; sparkMS=[];
     _bk0.buckets.forEach(function(b){
       var sub=R.filter(b.match), q=0,v=0,mq=0;
-      sub.forEach(function(r){q+=r.qty;v+=r.val;if(r.brand===centerBrand())mq+=r.qty;});
+      sub.forEach(function(r){q+=r.qty;v+=r.val;if(r.brand===mktCenter())mq+=r.qty;});
       sparkQ.push(q); sparkV.push(v); sparkMS.push(q?mq/q*100:0);
     });
   }
@@ -3516,7 +3545,7 @@ function renderMarket(){
         S.mxMS = S.mxMS || {metric:"qty", per:(S.time&&S.time.mode==="fy")?"fy":"year"};
         function b(g,v,t){return '<button'+(S.mxMS[g]===v?' class="on"':'')+' onclick="mxMSSet(\''+g+'\',\''+v+'\')">'+t+'</button>';}
         return '<div class="card reveal"><div class="ch" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px">'
-          + '<div><div class="ct">'+t("card.manishare")+'</div><div class="cs" id="ms-sub"></div></div>'
+          + '<div><div class="ct">'+brandify(t("card.manishare"))+'</div><div class="cs" id="ms-sub"></div></div>'
           + '<div style="display:flex;gap:6px;flex-wrap:wrap">'
             + '<div class="msw" id="msw-metric">'+b("metric","qty","Qty")+b("metric","val","Value")+'</div>'
             + '<div class="msw" id="msw-per">'+b("per","year","Year")+b("per","fy","FY")+'</div>'
@@ -3754,9 +3783,9 @@ function renderMarket(){
   document.getElementById("mk-topbuyer").innerHTML = rankList("mkbuyer", top10M, {
     title:"Buyer", kind:"buyer",
     valFn:function(a){return _bm==="val" ? a.val : a.qty;},
-    colorFn:function(a){return a.rows.some(function(r){return r.brand===centerBrand();}) ? "#FFC400" : "#3A5CAA";},
+    colorFn:function(a){return a.rows.some(function(r){return r.brand===mktCenter();}) ? "#FFC400" : "#3A5CAA";},
     labelFn:function(a){return a.key.length>42?a.key.slice(0,41)+"…":a.key;},
-    subFn:function(a){var m=a.rows.filter(function(r){return r.brand===centerBrand();}).reduce(function(s,r){return s+(_bm==="val"?r.val:r.qty);},0); return m>0?("Mani "+(_bm==="val"?money(m):qf(m))):"";},
+    subFn:function(a){var m=a.rows.filter(function(r){return r.brand===mktCenter();}).reduce(function(s,r){return s+(_bm==="val"?r.val:r.qty);},0); return m>0?(mktCenter()+" "+(_bm==="val"?money(m):qf(m))):"";},
     fmtFn:function(v){return _bm==="val" ? money(v) : qf(v);}
   }) + mkPinnedHtml(top10M, byAggM);
   mxPareto("c-mk-conc", byAgg, totQ);
@@ -3857,7 +3886,7 @@ function kpiCard(o){
 function brandTable(bAgg,totQ,totV){
   var rows=bAgg.map(function(a,i){
     var sq=a.qty/(totQ||1)*100,sv=a.val/(totV||1)*100;
-    var cls=a.key===centerBrand()?' class="mani clk"':' class="clk"';
+    var cls=a.key===mktCenter()?' class="mani clk"':' class="clk"';
     var bq=esc(a.key).replace(/'/g,"\\'");
     return "<tr"+cls+" onclick=\"openDrill(filterRows({brand:'"+bq+"',ptype:'"+esc(S.mkType)+"',region:'"+S.mkRegion+"'}),{title:'"+bq+"',sub:'Brand'})\">"
       +"<td>"+(i+1)+"</td><td class='tl'><span class='badge' style='background:"+brandColor(a.key)+";color:"+(isMani(a.key)?"#003047":"#fff")+"'>"+esc(a.key)+"</span></td>"
@@ -3963,8 +3992,8 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
 
   /* 1 · Mani momentum (total + High-segment share) */
   function hiShareOf(rows,brand){var q=0,m=0;rows.forEach(function(r){if(r.tier!=="High")return;q+=r.qty;if(r.brand===brand)m+=r.qty;});return q?m/q*100:null;}
-  var msNow=shareOf(curSet,centerBrand()), msPrev=cmpSet?shareOf(cmpSet,centerBrand()):null;
-  var hsNow=hiShareOf(curSet,centerBrand()), hsPrev=cmpSet?hiShareOf(cmpSet,centerBrand()):null;
+  var msNow=shareOf(curSet,mktCenter()), msPrev=cmpSet?shareOf(cmpSet,mktCenter()):null;
+  var hsNow=hiShareOf(curSet,mktCenter()), hsPrev=cmpSet?hiShareOf(cmpSet,mktCenter()):null;
   if(msNow!=null){
     var perTag = (msPrev!=null && cmpLbl) ? '<div style="font-size:10.5px;color:var(--t3);font-weight:700;margin-bottom:3px">'+esc(cmpLbl)+'</div>' : '';
     var lblQty = t("ins.qtyshare");
@@ -3976,7 +4005,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
       if(hsPrev!=null) h1+=' '+mxDelta(hsNow,hsPrev,"pp");
     }
     out.push({ic:"📈",t:t("ins.momentum"),x:h1,tone:tone1,
-      click:"openDrill(filterRows({brand:'"+qesc(centerBrand())+"',ptype:'"+esc(S.mkType)+"',region:'"+S.mkRegion+"'}),{title:'"+qesc(centerBrand())+"',sub:'Brand'})"});
+      click:"openDrill(filterRows({brand:'"+qesc(mktCenter())+"',ptype:'"+esc(S.mkType)+"',region:'"+S.mkRegion+"'}),{title:'"+qesc(mktCenter())+"',sub:'Brand'})"});
   }
 
   /* 2 · Rising rival / top rival */
@@ -3986,7 +4015,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
     var pAg=aggBy(cmpSet,function(r){return r.brand;}), pq=0; cmpSet.forEach(function(r){pq+=r.qty;});
     var best=null;
     Object.keys(curAg).forEach(function(b){
-      if(b===centerBrand()||b==="Không rõ") return;
+      if(b===mktCenter()||b==="Không rõ") return;
       var s1=cq?curAg[b].qty/cq*100:0; if(s1<2) return;
       var s0=(pq&&pAg[b])?pAg[b].qty/pq*100:0;
       var d=s1-s0; if(!best||d>best.d) best={b:b,d:d,s1:s1};
@@ -4000,7 +4029,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
     }
   }
   if(!pushedRival){
-    var rival=bAggQty.filter(function(a){return a.key!==centerBrand()&&a.key!=="Không rõ";})[0];
+    var rival=bAggQty.filter(function(a){return a.key!==mktCenter()&&a.key!=="Không rõ";})[0];
     if(rival) out.push({ic:"🥈",t:t("ins.toprival"),
       x:'<b>'+esc(rival.key)+'</b> '+t("ins.holds")+' <b>'+pct(totQ?rival.qty/totQ*100:0)+'</b> '+t("ins.qtysharelc")+' ('+qf(rival.qty)+' '+t("cs.pcs")+')',tone:"warn",
       click:"openDrill(filterRows({brand:'"+qesc(rival.key)+"',ptype:'"+esc(S.mkType)+"',region:'"+S.mkRegion+"'}),{title:'"+qesc(rival.key)+"',sub:'Brand'})"});
@@ -4011,7 +4040,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
   var tArr=["High","Mid","Low"].filter(function(t){return tAg[t];}).map(function(t){return {t:t,v:tAg[t].val,q:tAg[t].qty,rows:tAg[t].rows};});
   if(tArr.length){
     var topT=tArr.slice().sort(function(a,b){return b.v-a.v;})[0];
-    var maniInT=topT.rows.filter(function(r){return r.brand===centerBrand();}).reduce(function(s,r){return s+r.qty;},0);
+    var maniInT=topT.rows.filter(function(r){return r.brand===mktCenter();}).reduce(function(s,r){return s+r.qty;},0);
     var mSh=topT.q?maniInT/topT.q*100:0;
     out.push({ic:"💎",t:t("ins.engine"),
       x:'<b>'+t("tier."+topT.t.toLowerCase())+'</b> '+t("ins.tier")+' = <b>'+pct(totV?topT.v/totV*100:0)+'</b> '+t("ins.ofmktval")+' · '+t("ins.maniholds")+' <b>'+mSh.toFixed(1)+'%</b> '+t("ins.qtyinside")+'',
@@ -4022,7 +4051,7 @@ function mxInsights(R,bAgg,bAggQty,totQ,totV){
   /* 4 · Key account */
   var byTop=sortDesc(toArr(aggBy(R,function(r){return r.buyer;})),"qty")[0];
   if(byTop){
-    var mQ=byTop.rows.filter(function(r){return r.brand===centerBrand();}).reduce(function(s,r){return s+r.qty;},0);
+    var mQ=byTop.rows.filter(function(r){return r.brand===mktCenter();}).reduce(function(s,r){return s+r.qty;},0);
     var bn=byTop.key.length>36?byTop.key.slice(0,35)+"…":byTop.key;
     out.push({ic:"🏥",t:t("ins.keyacct"),
       x:'<b>'+esc(bn)+'</b> — '+qf(byTop.qty)+' '+t("cs.pcs")+' ('+pct(totQ?byTop.qty/totQ*100:0)+' '+t("ins.ofmarket")+')'
@@ -4094,8 +4123,8 @@ function mxMSCompute(periods){
       if(!mxMSScope(r)||!p.test(r)) return;
       var v=useVal?r.val:r.qty;
       tot+=v;
-      if(r.brand===centerBrand()){mani+=v;maniRows.push(r);}
-      if(r.tier==="High"){hTot+=v;if(r.brand===centerBrand()){hMani+=v;hManiRows.push(r);}}
+      if(r.brand===mktCenter()){mani+=v;maniRows.push(r);}
+      if(r.tier==="High"){hTot+=v;if(r.brand===mktCenter()){hMani+=v;hManiRows.push(r);}}
     });
     return {label:p.label,note:p.note,
       total:tot?+(mani/tot*100).toFixed(1):null,
@@ -4142,7 +4171,7 @@ function mxManiShare(){
       onClick:function(e,els){ if(els&&els.length){
         var di=els[0].datasetIndex, gi=els[0].index, d=D[gi];
         var rows=di===0?d.maniRows:d.hManiRows;
-        if(rows.length) openDrill(rows,{title:"Mani · "+d.label,
+        if(rows.length) openDrill(rows,{title:mktCenter()+" · "+d.label,
           sub:di===0?"Share in total market":"Share in High segment"});}},
       onHover:function(e,els){e.native.target.style.cursor=els.length?"pointer":"default";},
       plugins:{legend:{position:"bottom",labels:{font:{family:FF,size:11.5},boxWidth:12,padding:10,color:axisColor()}},
@@ -4184,7 +4213,7 @@ function mxBrandEvo(id,buckets,R){
       return tot? +(v/tot*100).toFixed(1) : 0;
     });
     return {label:b,data:data,backgroundColor:b==="Others"?"#C2CBD9":brandColor(b),stack:"s",
-      datalabels:{display:b===centerBrand(),color:"#003047",font:{family:FF,size:10,weight:"900"},
+      datalabels:{display:b===mktCenter(),color:"#003047",font:{family:FF,size:10,weight:"900"},
         formatter:function(v){return v>=6?v.toFixed(0)+"%":"";}}};
   });
   S.charts[id]=new Chart(el,{type:"bar",data:{labels:groups.map(function(g){return g.label;}),datasets:ds},
@@ -4212,7 +4241,7 @@ function mxPareto(id,byAgg,totQ){
     data:{labels:top.map(function(a,i){return "#"+(i+1);}),datasets:[
       {type:"line",label:"Cumulative %",data:cumD,yAxisID:"y1",borderColor:"#E0A800",backgroundColor:"#E0A800",tension:.3,pointRadius:3,borderWidth:2.5,datalabels:{display:false}},
       {label:"Qty",data:top.map(function(a){return a.qty;}),
-        backgroundColor:top.map(function(a){return a.rows.some(function(r){return r.brand===centerBrand();})?"#FFC400":"#3A5CAA";}),
+        backgroundColor:top.map(function(a){return a.rows.some(function(r){return r.brand===mktCenter();})?"#FFC400":"#3A5CAA";}),
         borderRadius:4,datalabels:{display:false}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:850},
@@ -4262,7 +4291,7 @@ function mxHeatmapCard(R){
     h+='<div class="hr'+(isPin?" pinned":"")+'" title="'+esc(p)+'">'+(isPin?"📌 ":"")+esc(p)
       +(isPin?'<button class="pin-x" title="Unpin" onclick="hmUnpin('+pinIdx+')">✕</button>':'')+'</div>';
     brands.forEach(function(b,bi){
-      var q=cell[p+"||"+b]||0, sh=q/rowTot*100, isM=(b===centerBrand());
+      var q=cell[p+"||"+b]||0, sh=q/rowTot*100, isM=(b===mktCenter());
       var al=q?Math.min(.92,.14+sh/100*.82):0;
       var bg=q?(isM?hexA("#E8C800",al):hexA("#3A5CAA",al)):"";
       var fg=(!isM&&sh>48)?"#fff":(isM?"#003047":"var(--t1)");
@@ -4390,7 +4419,7 @@ function mkPinnedHtml(top10M, agg){
     }
     var v = hv?found.val:found.qty;
     var w = Math.min(100, v/max*100);
-    var col = found.rows.some(function(r){return r.brand===centerBrand();}) ? "#FFC400" : "#3A5CAA";
+    var col = found.rows.some(function(r){return r.brand===mktCenter();}) ? "#FFC400" : "#3A5CAA";
     var inTop = topKeys.indexOf(name)>=0;
     var bq = esc(name).replace(/'/g,"\\'");
     h += '<div class="rkr pinned" onclick="buyerDrill(\''+bq+'\')">'
@@ -4559,6 +4588,7 @@ function computeSegV2(){
   var byBuyer={};
   ROWS.forEach(function(r){
     var mk=moKey(r.month);
+    if(!mk) return;                 // bỏ dòng không có Ngày ban hành QĐ (month rỗng)
     if(mk<fk||mk>tk)return;
     var b=r.buyer;
     if(!byBuyer[b])byBuyer[b]={buyer:b,region:r.region,prov:r.prov,before:[],after:[],beforeM:{},afterM:{}};
@@ -4880,8 +4910,14 @@ function acSummary(){
 function acDetail(){
   var seg=window._ACSEG;
   if(!S.acGroup||!ACG.some(function(g){return g.k===S.acGroup;}))S.acGroup="Convert";
+  /* Nếu nhóm đang chọn RỖNG → tự nhảy sang nhóm có nhiều buyer nhất (tránh panel trắng) */
+  if(!seg.counts[S.acGroup] && !S._acGroupPinned){
+    var best=null;
+    ACG.forEach(function(g){ var c=seg.counts[g.k]||0; if(c>0 && (!best || c>seg.counts[best])) best=g.k; });
+    if(best) S.acGroup=best;
+  }
   var sidebar=ACG.map(function(g){
-    return '<div class="grpli '+(S.acGroup===g.k?"on":"")+'" style="border-left-color:'+g.col+'" onclick="S.acGroup=\''+g.k+'\';renderAcct()"><div class="ic">'+g.ic+'</div><div class="meta"><div class="nm" style="color:'+g.col+'">'+g.nm+'</div><div class="cnt">'+seg.counts[g.k]+' buyers</div></div></div>';
+    return '<div class="grpli '+(S.acGroup===g.k?"on":"")+'" style="border-left-color:'+g.col+'" onclick="S.acGroup=\''+g.k+'\';S._acGroupPinned=true;renderAcct()"><div class="ic">'+g.ic+'</div><div class="meta"><div class="nm" style="color:'+g.col+'">'+g.nm+'</div><div class="cnt">'+seg.counts[g.k]+' buyers</div></div></div>';
   }).join("");
   var meta=acgMeta(S.acGroup);
   var listAll=seg.buyers.filter(function(b){return b.group===S.acGroup;}).sort(function(a,b){return b.totQ-a.totQ;});

@@ -1021,6 +1021,39 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .gantt-legend span{display:flex;align-items:center;gap:7px;}
 .gantt-legend i{width:13px;height:13px;border-radius:4px;display:inline-block;}
 
+/* ── Volume sort indicator ── */
+.gvol-sortic{color:var(--yellow);font-size:10px;margin-left:2px;vertical-align:middle;}
+
+/* ── KEY (chú giải) đặt trên bảng Gantt ── */
+.gantt-key{display:grid;grid-template-columns:1fr 1.35fr;gap:14px;margin:2px 0 12px;
+  background:var(--sf2);border:1px solid var(--br);border-radius:12px;padding:12px 14px;}
+@media(max-width:820px){.gantt-key{grid-template-columns:1fr;}}
+.gk-block{display:flex;flex-direction:column;gap:8px;}
+.gk-block+.gk-block{border-left:1px solid var(--br);padding-left:16px;}
+@media(max-width:820px){.gk-block+.gk-block{border-left:none;padding-left:0;border-top:1px solid var(--br);padding-top:10px;}}
+.gk-h{font-size:12.5px;font-weight:800;color:var(--navy2);}
+.gk-cellsample{display:flex;align-items:center;gap:12px;}
+.gk-cellbox{flex:0 0 auto;width:56px;min-height:40px;border:1px solid rgba(14,47,95,.35);
+  background:rgba(14,47,95,.10);border-radius:7px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;}
+.gk-cq{font-size:13px;font-weight:800;color:#0E2F5F;line-height:1;}
+.gk-cv{font-size:10px;font-weight:700;color:#1B6B27;line-height:1;}
+.gk-cellexp{font-size:12px;color:var(--t2);display:flex;flex-direction:column;gap:4px;}
+.gk-cellexp b{color:var(--t1);}
+.gk-num{display:inline-block;min-width:30px;text-align:center;font-weight:800;
+  border-radius:5px;padding:1px 5px;margin-right:4px;font-size:11px;}
+.gk-num-q{background:rgba(14,47,95,.14);color:#0E2F5F;}
+.gk-num-v{background:rgba(27,107,39,.14);color:#1B6B27;}
+.gk-colors{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--t2);}
+.gk-ci{display:flex;align-items:flex-start;gap:8px;line-height:1.35;}
+.gk-ci b{color:var(--t1);}
+.gk-ci i{flex:0 0 auto;width:15px;height:15px;border-radius:4px;display:inline-block;margin-top:1px;}
+.gk-rival{width:15px;height:15px;border-radius:4px;display:inline-block;
+  background:repeating-linear-gradient(45deg,#EEF1F5,#EEF1F5 3px,#D5DBE4 3px,#D5DBE4 6px);
+  border:1px solid #C6CDD8;}
+.gk-note{font-size:11.5px;color:var(--t2);opacity:.9;line-height:1.4;margin-top:2px;}
+.gk-note b{color:var(--t1);}
+
 /* ── FY selector (v5) ── */
 .plan-fy-wrap{display:inline-flex;gap:6px;flex-wrap:wrap;}
 .plan-fy{border:1px solid var(--br);background:var(--sf2);color:var(--t2);border-radius:8px;padding:6px 13px;
@@ -3149,6 +3182,11 @@ function goTab(tb){
   document.querySelectorAll(".btmnav .bn").forEach(function(b){b.classList.toggle("on",b.id==="bn-"+tb);});
   // Value/Quantity toggle hidden on Market tab (per spec)
   document.querySelector(".useg").style.display = (tb==="market"||tb==="plan") ? "none" : "flex";
+  /* ⭐ FIX loading kẹt: khi CHUYỂN sang tab Dự trù/Kế hoạch thì VẼ LẠI ngay bằng trạng
+     thái dữ liệu hiện tại (feed NPP có thể đã tải xong ở nền). Trước đây goTab chỉ bật
+     lớp .on nên tab giữ nguyên nội dung "Đang tải…" cũ cho tới khi bấm 1 chip thời gian. */
+  if(tb==="fc"   && typeof renderFC==="function"){   try{ renderFC();   }catch(e){ console.warn("goTab renderFC",e); } }
+  if(tb==="plan" && typeof renderPlan==="function"){ try{ renderPlan(); }catch(e){ console.warn("goTab renderPlan",e); } }
   if(sec){sec.querySelectorAll("[data-counted]").forEach(function(el){el.dataset.counted="0";});sec.querySelectorAll(".rkb[data-w]").forEach(function(el){el.dataset.an="0";});sec.querySelectorAll(".reveal").forEach(function(el){el.classList.remove("in");});
     setTimeout(function(){sec.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});runCountUp(sec);animateBars(sec);},50);}
   setTimeout(function(){Object.keys(S.charts).forEach(function(k){try{S.charts[k].resize();}catch(e){}});},90);
@@ -7662,10 +7700,37 @@ function planGanttHTML(rows){
     +(S.plan.q?'<button class="gpb-x" onclick="planOnGSearch(\'\')">✕</button>':'')+'</div>'
     +'</div>';
 
+  /* ── KEY (chú giải) đặt NGAY TRÊN bảng — giải thích 2 con số trong ô + màu ô ── */
+  var vi=(LANG==="vi");
+  var keyBox=''
+    +'<div class="gantt-key">'
+      +'<div class="gk-block">'
+        +'<div class="gk-h">'+(vi?"📖 Mỗi ô = 1 tháng · trong ô có 2 con số:":"📖 Each cell = 1 month · two numbers:")+'</div>'
+        +'<div class="gk-cellsample">'
+          +'<div class="gk-cellbox"><span class="gk-cq">96</span><span class="gk-cv">$438</span></div>'
+          +'<div class="gk-cellexp">'
+            +'<div><span class="gk-num gk-num-q">96</span> = '+(vi?"<b>Số lượng dao dự kiến / tháng</b> (SL gói ÷ số tháng hiệu lực)":"<b>knives / month</b> (pkg qty ÷ months valid)")+'</div>'
+            +'<div><span class="gk-num gk-num-v">$438</span> = '+(vi?"<b>Doanh số dự kiến / tháng</b> (SL/tháng × giá bán Mani→NPP)":"<b>revenue / month</b> (qty/mo × Mani→NPP price)")+'</div>'
+          +'</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="gk-block">'
+        +'<div class="gk-h">'+(vi?"🎨 Màu nền của ô = nguồn doanh số:":"🎨 Cell colour = revenue source:")+'</div>'
+        +'<div class="gk-colors">'
+          +'<span class="gk-ci"><i style="background:rgba(14,47,95,.16);border:1px solid rgba(14,47,95,.35)"></i>'+(vi?"<b>Xanh navy</b> — ① Existing: Mani ĐANG trúng thầu · doanh số <b>chắc chắn</b>":"Navy — Existing (certain)")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(46,125,50,.18);border:1px solid rgba(46,125,50,.4)"></i>'+(vi?"<b>Xanh lá</b> — cơ hội mức <b>CAO</b> (Duy trì / Mở mới)":"Green — HIGH opportunity")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(240,168,0,.20);border:1px solid rgba(240,168,0,.5)"></i>'+(vi?"<b>Vàng</b> — cơ hội mức <b>TRUNG BÌNH</b>":"Amber — MID opportunity")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(224,122,46,.18);border:1px solid rgba(224,122,46,.45)"></i>'+(vi?"<b>Cam</b> — cơ hội mức <b>THẤP</b>":"Orange — LOW opportunity")+'</span>'
+          +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc</b> — <b>đối thủ đang giữ gói</b> · doanh số của đối thủ, <b>KHÔNG</b> tính cho Mani":"Striped grey — rival holding (NOT Mani)")+'</span>'
+        +'</div>'
+        +'<div class="gk-note">'+(vi?"Ô cơ hội (xanh lá / vàng / cam) chỉ hiện doanh số khi bạn <b>điền SL Mani dự kiến</b> ở bảng chi tiết từng bệnh viện (bấm vào 1 dòng). Ô để trống = tháng đó gói không còn hiệu lực.":"Coloured opportunity cells show revenue only after you fill Mani expected qty in the hospital detail (click a row).")+'</div>'
+      +'</div>'
+    +'</div>';
+
   var head='<div class="gantt-row gantt-head">'
     +'<div class="gantt-prov gh">'+(LANG==="vi"?"Tỉnh thành":"Province")+'</div>'
     +'<div class="gantt-lbl">'+(LANG==="vi"?"Bệnh viện · nhóm":"Hospital · group")+'</div>'
-    +'<div class="gantt-vol gh">'+(LANG==="vi"?"Volume/năm":"Volume/yr")+'</div>'
+    +'<div class="gantt-vol gh" title="'+(LANG==="vi"?"Đang sắp xếp theo Volume/năm: cao → thấp (địa bàn tiềm năng nhất ở trên cùng)":"Sorted by Volume/yr: high → low")+'">'+(LANG==="vi"?"Volume/năm":"Volume/yr")+' <span class="gvol-sortic">▼</span></div>'
     +months.map(function(m){return '<div class="gantt-cell gh">'+m+'</div>';}).join("")
     +'<div class="gantt-tot gh">'+FYK+' $</div></div>';
 
@@ -7731,7 +7796,7 @@ function planGanttHTML(rows){
     +'</div>';
   var legend=noteBar;
 
-  return provBar+'<div class="gantt-wrap">'+head+body+foot+'</div>'+legend;
+  return provBar+keyBox+'<div class="gantt-wrap">'+head+body+foot+'</div>';
 }
 
 /* ── Lịch sử trúng thầu địa bàn: "hãng trúng N gói" + từng gói (hiệu lực mm/yyyy→mm/yyyy + badge) ── */

@@ -934,6 +934,7 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
 .grow-tag.riv{background:rgba(224,122,46,.14);color:#b85f1e;}
 .grow-tag.exp{background:rgba(198,40,40,.12);color:var(--neg);}
 .grow-tag.rnw{background:rgba(46,125,50,.12);color:var(--pos);}
+.grow-tag.exi{background:rgba(14,47,95,.10);color:#0E2F5F;}
 .gantt-note{font-size:12px;color:var(--t2);background:var(--sf2);border:1px solid var(--br);border-radius:8px;
   padding:9px 12px;margin-top:12px;line-height:1.55;}
 .gantt-note b{color:var(--t1);}
@@ -6885,21 +6886,15 @@ function planCompute(row){
            usdFY68:usdFY, usdFY:usdFY, overlap:overlap };
 }
 
-/* ── INCLUDE(row) theo bộ lọc (oppFilter · hiện HV/đối thủ) ── */
+/* ── INCLUDE(row) theo bộ lọc ── */
 function planInclude(row){
-  if(row.group==="Duy trì" && !S.plan.inclExisting) return false;   // ① HV: đang trúng + duy trì
-  if(row.group==="Mở mới" && !S.plan.inclRemaining) return false;   // ② Mở mới / Convert
-  return S.plan.oppFilter==="ALL" || row.opp===S.plan.oppFilter;
+  if(row.group==="Existing") return S.plan.inclExisting;              // ① đang trúng (navy)
+  if(row.group==="Duy trì" && !S.plan.inclRemaining) return false;    // ② duy trì (renew)
+  return S.plan.oppFilter==="ALL" || row.opp===S.plan.oppFilter;      // ②③ theo mức cơ hội
 }
 
-/* ── Nhóm ① HV (gộp: Đang trúng + Duy trì) — 1 GÓI = 1 DÒNG, timeline liền mạch ──
-   Mỗi gói HV status=Win còn hiệu lực CHẠM vào kỳ đang xem sinh ĐÚNG 1 dòng:
-     • đoạn "existing" (xanh navy) = các tháng gói HIỆN còn hiệu lực (DS chắc chắn)
-     • đoạn "renew"    (màu cơ hội) = các tháng SAU khi gói hết hạn → duy trì (DS kỳ vọng)
-   Gói đã hết hiệu lực TRƯỚC kỳ (existEnd < đầu kỳ) → BỎ (không tô từ T09 gây khó hiểu).
-   → hết lặp dòng, hết tô đè lên tháng đang trúng. */
-function planHVRows(){
-  var BASE=PLAN_BASE(), END=PLAN_END();
+/* Gom gói HV (status=Win, demandOK) theo pkgKey → {account,city,tbmt,mst,msl,mcu,startIdx,dur} */
+function planHVPkgs(){
   var pkgs={};
   (NPP_FEED.HUNGVI||[]).forEach(function(r){
     if(r.result!=="Win" || !r.demandOK) return;
@@ -6914,25 +6909,62 @@ function planHVRows(){
     if(si>p.startIdx) p.startIdx=si;
     if(dur) p.dur=dur;
   });
+  return pkgs;
+}
+
+/* ── Nhóm ① EXISTING (xanh navy) — Mani/HV ĐANG trúng & CÒN hiệu lực trong kỳ ──
+   Tô navy đúng các tháng gói còn hiệu lực (existStart..existEnd ∩ kỳ). Nếu gói kéo dài
+   hết kỳ → navy cả kỳ (đúng bản chất "đang trúng"). Gói đã hết trước kỳ → bỏ.
+   → KHÔNG có đoạn cơ hội (oppKind=null) nên không bao giờ tô vàng. */
+function planExistingRows(){
+  var BASE=PLAN_BASE(), END=PLAN_END();
+  var pkgs=planHVPkgs();
   var out=[];
   Object.keys(pkgs).forEach(function(k){
     var p=pkgs[k];
     var existStart=p.startIdx, existEnd=p.startIdx+p.dur-1;
-    if(existEnd < BASE) return;      // gói đã hết trước kỳ → KHÔNG hiện (tránh tô xanh từ T09)
-    if(existStart > END) return;     // gói bắt đầu sau kỳ → chưa liên quan
-    var oppStart = existEnd+1;       // renew nối NGAY SAU khi hết hiệu lực
-    var hasRenew = oppStart<=END;
-    var rowKey="HV|"+k;
-    var man = S.plan.manual[rowKey] || S.plan.manual["MTA|"+k];   // tương thích key cũ
+    if(existEnd < BASE) return;      // đã hết hiệu lực trước kỳ → không phải Existing
+    if(existStart > END) return;     // bắt đầu sau kỳ → chưa liên quan
+    out.push({
+      rowKey:"EX|"+k, group:"Existing", account:p.account, city:p.city, tbmt:p.tbmt||"",
+      mst:p.mst, msl:p.msl, mcu:p.mcu, dur:p.dur, _baseDur:p.dur, startIdx:existStart,
+      holderKind:"existing", holderStart:Math.max(existStart,BASE), holderEnd:Math.min(existEnd,END),
+      oppKind:null, oppStart:0, oppEnd:0,
+      opp:"", note:"", _auto:true, _pkgKey:k, _existStart:existStart, _existEnd:existEnd
+    });
+  });
+  return out;
+}
+
+/* ── Nhóm ② DUY TRÌ / RENEW (màu cơ hội) — CHỈ gói HV HẾT HẠN LƯNG CHỪNG trong kỳ ──
+   Điều kiện: BASE ≤ existEnd ≤ END-1 (gói còn hiệu lực đầu kỳ nhưng HẾT trong kỳ → có tháng
+   cần renew nằm trong kỳ). Tô màu TỪ existEnd+1 → END, các tháng TRƯỚC đó ĐỂ TRỐNG (đúng như
+   hình 2: gói hết T03 → chỉ hiện từ T04). SL điền sẵn = SL gói HV (sửa được).
+   • Gói còn hiệu lực HẾT kỳ (existEnd ≥ END) → thuộc Existing, KHÔNG sinh Duy trì.
+   • Gói đã hết trước kỳ (existEnd < BASE) → không hiện (không tô từ T09). */
+function planRenewRows(){
+  var BASE=PLAN_BASE(), END=PLAN_END();
+  var pkgs=planHVPkgs();
+  var out=[];
+  Object.keys(pkgs).forEach(function(k){
+    var p=pkgs[k];
+    var existEnd=p.startIdx+p.dur-1;
+    if(existEnd < BASE) return;      // đã hết trước kỳ
+    if(existEnd >= END) return;      // còn hiệu lực hết kỳ → là Existing, chưa cần renew
+    var renewStart=existEnd+1;       // ∈ [BASE+1 .. END]
+    var rowKey="MTA|"+k;
+    var man=S.plan.manual[rowKey];
     out.push({
       rowKey:rowKey, group:"Duy trì", account:p.account, city:p.city, tbmt:p.tbmt||"",
       mst:(man&&man.mst!=null?+man.mst:p.mst), msl:(man&&man.msl!=null?+man.msl:p.msl), mcu:(man&&man.mcu!=null?+man.mcu:p.mcu),
-      dur:p.dur, _baseDur:p.dur, startIdx:existStart,
-      /* 2 đoạn timeline */
-      holderKind:"existing", holderStart:Math.max(existStart,BASE), holderEnd:Math.min(existEnd,END),
-      oppKind:(hasRenew?"renew":null), oppStart:oppStart, oppEnd:END,
+      dur:p.dur, _baseDur:p.dur, startIdx:renewStart,
+      startMonth:(man&&man.startMonth? man.startMonth : planIdxToMo(renewStart)),
+      holderKind:null, holderStart:0, holderEnd:0,       // KHÔNG có đoạn navy → trống trước renew
+      oppKind:"renew",
+      oppStart:(man&&man.startMonth? planMoToIdx(man.startMonth) : renewStart),
+      oppEnd:END,
       opp:(man&&man.opp?man.opp:"Trung bình"), note:(man&&man.note?man.note:""),
-      _auto:true, _autoRenew:true, _pkgKey:k, _existStart:existStart, _existEnd:existEnd
+      _auto:false, _autoRenew:true, _pkgKey:k, _existEnd:existEnd
     });
   });
   return out;
@@ -7055,7 +7087,7 @@ function planNewRows(){
 }
 
 function planAllRows(){
-  return planHVRows().concat(planNewRows()).concat(planManualRows());
+  return planExistingRows().concat(planRenewRows()).concat(planNewRows()).concat(planManualRows());
 }
 
 /* ── Nạp dòng plan đã lưu từ FC_LOG (group = Duy trì / Mở mới) ── */
@@ -7236,8 +7268,8 @@ function planRenderCtrl(){
     + '<div class="sb-divx"></div>'
     + '<span class="cl">'+(LANG==="vi"?"Cơ hội (Duy trì/Mở mới)":"Opportunity (Renew/New)")+'</span><div class="sb-side">'+oppChips+'</div>'
     + '<div class="sb-divx"></div>'
-    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ① Đang trúng + Duy trì (HV)":"Include ① Existing + Renew")+'</label>'
-    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclRemaining?"checked":"")+' onchange="S.plan.inclRemaining=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ② Mở mới / Convert (đối thủ đang giữ)":"Include ② New / Convert")+'</label>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ① Đang trúng (Existing)":"Include ① Existing")+'</label>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclRemaining?"checked":"")+' onchange="S.plan.inclRemaining=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ② Duy trì (renew sau khi hết hạn)":"Include ② Renew")+'</label>'
     + '<div class="sb-divx"></div>'
     + '<div class="fc-setup"><div class="fc-set-h">'+(LANG==="vi"?"Giá kế hoạch FY68 (VND/dao)":"FY68 plan price (VND/knife)")+'</div>'
     + pRow("MST","MST (Stab)","₫")+pRow("MSL","MSL (Slit)","₫")+pRow("MCU","MCU (Cresc.)","₫")
@@ -7263,11 +7295,11 @@ function planSetFx(v){ var n=+String(v).replace(/[^\d]/g,"");S.plan.fx=isFinite(
 /* Nhóm hiển thị: gán "Remaining" cho Duy trì, "New/Convert" cho Mở mới (giữ group gốc trong data). */
 var PLAN_TAB_LABEL = {
   "all":     function(){ return LANG==="vi"?"Tất cả":"All"; },
-  "Existing":function(){ return "① Existing"; },
-  "Duy trì": function(){ return LANG==="vi"?"① Đang trúng + Duy trì":"① Existing + Renew"; },
-  "Mở mới":  function(){ return LANG==="vi"?"② Mở mới / Convert":"② New / Convert"; }
+  "Existing":function(){ return LANG==="vi"?"① Đang trúng":"① Existing"; },
+  "Duy trì": function(){ return LANG==="vi"?"② Duy trì":"② Renew"; },
+  "Mở mới":  function(){ return LANG==="vi"?"③ Mở mới / Convert":"③ New / Convert"; }
 };
-if(!S.plan.ganttTab || S.plan.ganttTab==="Existing") S.plan.ganttTab="all";
+if(!S.plan.ganttTab) S.plan.ganttTab="all";
 if(S.plan.detail===undefined) S.plan.detail=null;   // rowKey đang mở detail
 
 /* ── Kết quả trúng thầu GẦN NHẤT của 1 bệnh viện (từ feed HV + KQTT tổng) ── */
@@ -7616,9 +7648,9 @@ function planSyncHungVi(dryRun){
 /* Nội dung thẻ Gantt (tabs + search + biểu đồ) — tách riêng để re-render nhẹ khi gõ/bấm tab */
 function planGanttCardInner(){
   var incl=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude);
-  var tabs=["all","Duy trì","Mở mới"];
-  var counts={all:0,"Duy trì":0,"Mở mới":0};
-  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0},
+  var tabs=["all","Existing","Duy trì","Mở mới"];
+  var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
+  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0}, "Existing":{n:0,usd:0,msl:0,mst:0,mcu:0},
             "Duy trì":{n:0,usd:0,msl:0,mst:0,mcu:0}, "Mở mới":{n:0,usd:0,msl:0,mst:0,mcu:0} };
   incl.forEach(function(r){
     var hasQty=r._c.total>0;
@@ -7725,14 +7757,14 @@ function planGanttHTML(rows){
         +'</div>'
       +'</div>'
       +'<div class="gk-block">'
-        +'<div class="gk-h">'+(vi?"🎨 Màu ô = trạng thái theo tháng (1 dòng có thể đổi màu giữa kỳ):":"🎨 Cell colour = month status (a row may change colour mid-period):")+'</div>'
+        +'<div class="gk-h">'+(vi?"🎨 Mỗi DÒNG là 1 nhóm — màu ô nói rõ trạng thái từng tháng:":"🎨 Cell colour by month status:")+'</div>'
         +'<div class="gk-colors">'
-          +'<span class="gk-ci"><i style="background:rgba(14,47,95,.16);border:1px solid rgba(14,47,95,.35)"></i>'+(vi?"<b>Xanh navy = ĐANG TRÚNG</b> — hợp đồng HV còn hiệu lực · doanh số <b>chắc chắn</b>":"Navy = currently winning (certain)")+'</span>'
-          +'<span class="gk-ci"><i style="background:rgba(46,125,50,.18);border:1px solid rgba(46,125,50,.4)"></i><i style="background:rgba(240,168,0,.20);border:1px solid rgba(240,168,0,.5);margin-left:-4px"></i><i style="background:rgba(224,122,46,.18);border:1px solid rgba(224,122,46,.45);margin-left:-4px"></i>'+(vi?"<b>Xanh lá / Vàng / Cam = CƠ HỘI</b> — Duy trì (sau khi hết hạn) hoặc Mở mới · doanh số <b>kỳ vọng</b> · màu theo mức Cao / TB / Thấp":"Green/Amber/Orange = opportunity (renew or new), by tier")+'</span>'
-          +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc = ĐỐI THỦ đang giữ gói</b> (nhóm Mở mới) · doanh số của đối thủ, <b>KHÔNG</b> tính cho Mani":"Striped grey = rival holding (not Mani)")+'</span>'
-          +'<span class="gk-ci"><i class="gk-plus-i">+</i>'+(vi?"<b>Ô có dấu +</b> = cơ hội Mở mới <b>chưa điền SL Mani</b> → bấm dòng để nhập SL dự kiến":"Cell with + = New opportunity, fill Mani qty")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(14,47,95,.16);border:1px solid rgba(14,47,95,.35)"></i>'+(vi?"<b>Xanh navy = ① ĐANG TRÚNG</b> (Existing) — HV còn hiệu lực · DS <b>chắc chắn</b>. Gói còn hiệu lực hết kỳ → navy cả kỳ.":"Navy = Existing (certain)")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(46,125,50,.18);border:1px solid rgba(46,125,50,.4)"></i><i style="background:rgba(240,168,0,.20);border:1px solid rgba(240,168,0,.5);margin-left:-4px"></i><i style="background:rgba(224,122,46,.18);border:1px solid rgba(224,122,46,.45);margin-left:-4px"></i>'+(vi?"<b>Xanh lá / Vàng / Cam = ② DUY TRÌ</b> — gói hết hạn lưng chừng, tô <b>từ tháng SAU khi hết hạn</b> (trước đó để trống) · DS <b>kỳ vọng</b> · màu theo mức Cao/TB/Thấp":"Green/Amber/Orange = Renew (after expiry), by tier")+'</span>'
+          +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc = ③ ĐỐI THỦ đang giữ</b> (Mở mới) — hãng đối thủ ghi ở <b>tag cạnh tên BV</b> · KHÔNG tính DS Mani":"Striped grey = rival holding (brand on tag)")+'</span>'
+          +'<span class="gk-ci"><i class="gk-plus-i">+</i>'+(vi?"<b>Ô có dấu + = ③ CONVERT</b> — Mani giành sau khi đối thủ hết hạn · <b>chưa điền SL</b> → bấm dòng để nhập":"+ = Convert opportunity, fill Mani qty")+'</span>'
         +'</div>'
-        +'<div class="gk-note">'+(vi?"Ví dụ: một BV đang trúng tới T02/2027 → các ô T09/2026–T02/2027 màu <b>xanh navy</b> (chắc chắn), từ T03/2027 chuyển sang <b>xanh/vàng/cam</b> (duy trì – kỳ vọng). Không còn dòng lặp, không tô đè lên tháng đang trúng.":"e.g. winning until Feb 2027 → navy Sep–Feb, then opportunity colour from Mar.")+'</div>'
+        +'<div class="gk-note">'+(vi?"Khác nhau ② vs ③: <b>Duy trì</b> = giữ gói Mani đang có (điền SL sẵn); <b>Convert</b> = giành gói của đối thủ (KHÔNG điền sẵn, tự nhập SL). Ví dụ: gói hết T03/2027 → dòng Duy trì chỉ hiện từ T04/2027.":"② Renew keeps a Mani package (pre-filled); ③ Convert takes a rival's (not pre-filled).")+'</div>'
       +'</div>'
     +'</div>';
 
@@ -7779,8 +7811,10 @@ function planGanttHTML(rows){
     var sel=(S.plan.detail===r.rowKey)?" gsel":"";
     var vol=r._vol||planVolumeYr(r.account);
     var tag = (r.group==="Mở mới")
-      ? (r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"tái chiếm":"re-win")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"")+'</i>')
-      : '<i class="grow-tag rnw">'+(LANG==="vi"?"đang trúng + duy trì":"existing+renew")+'</i>';
+      ? (r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"tái chiếm":"re-win")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"?")+'</i>')
+      : (r.group==="Duy trì")
+        ? '<i class="grow-tag rnw">renew</i>'
+        : '<i class="grow-tag exi">'+(LANG==="vi"?"đang trúng":"winning")+'</i>';
     return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết & lập kế hoạch":"Click for detail")+'">'
       +'<div class="gantt-prov"><span class="gprov-txt">'+esc(r.city||"—")+'</span></div>'
       +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'" title="'+esc(r.group)+'"></span>'
@@ -7984,8 +8018,8 @@ function planDetailEdit(rowKey, field, val){
      Duy trì auto-renew (rowKey "MTA|…") = editable → tạo bản override trong S.plan.manual nếu chưa có,
      seed bằng giá trị auto-tính hiện tại để chỉnh 1 field không mất field khác. */
   var m=S.plan.manual[rowKey];
-  if(!m && (rowKey.indexOf("HV|")===0 || rowKey.indexOf("MTA|")===0 || rowKey.indexOf("NEW|")===0)){
-    var src = (rowKey.indexOf("NEW|")===0) ? planNewRows() : planHVRows();
+  if(!m && (rowKey.indexOf("MTA|")===0 || rowKey.indexOf("NEW|")===0)){
+    var src = (rowKey.indexOf("NEW|")===0) ? planNewRows() : planRenewRows();
     var cur=src.filter(function(x){return x.rowKey===rowKey;})[0];
     if(cur){ m=S.plan.manual[rowKey]={ group:cur.group, account:cur.account, city:cur.city, tbmt:cur.tbmt||"",
       mst:cur.mst, msl:cur.msl, mcu:cur.mcu, startMonth:cur.startMonth||planIdxToMo(cur.startIdx), dur:cur.dur,

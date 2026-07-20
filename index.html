@@ -1053,6 +1053,13 @@ html[data-theme="dark"] .fc-hero-val{color:#4ADE80;}
   border:1px solid #C6CDD8;}
 .gk-note{font-size:11.5px;color:var(--t2);opacity:.9;line-height:1.4;margin-top:2px;}
 .gk-note b{color:var(--t1);}
+.gk-plus-i{flex:0 0 auto;width:15px;height:15px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px dashed #8E44AD;color:#8E44AD;font-weight:800;font-size:12px;line-height:1;background:rgba(142,68,173,.06);}
+.gantt-cell.opp-empty{position:relative;min-height:34px;display:flex;align-items:center;justify-content:center;}
+.gantt-cell.opp-empty.gh1{background:repeating-linear-gradient(45deg,rgba(46,125,50,.05),rgba(46,125,50,.05) 4px,rgba(46,125,50,.13) 4px,rgba(46,125,50,.13) 8px);}
+.gantt-cell.opp-empty.gh2{background:repeating-linear-gradient(45deg,rgba(240,168,0,.06),rgba(240,168,0,.06) 4px,rgba(240,168,0,.15) 4px,rgba(240,168,0,.15) 8px);}
+.gantt-cell.opp-empty.gh3{background:repeating-linear-gradient(45deg,rgba(224,122,46,.05),rgba(224,122,46,.05) 4px,rgba(224,122,46,.13) 4px,rgba(224,122,46,.13) 8px);}
+.gopp-plus{font-weight:800;font-size:15px;opacity:.5;color:var(--navy2);}
 
 /* ── FY selector (v5) ── */
 .plan-fy-wrap{display:inline-flex;gap:6px;flex-wrap:wrap;}
@@ -6822,11 +6829,12 @@ function planTotals(){
   var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude);
   var totUSD=0, exUSD=0, oppUSD=0, exN=0, oppN=0;
   rows.forEach(function(r){
-    if(r._c.total<=0) return;
-    totUSD+=r._c.usdFY68;
-    if(r.group==="Existing"){ exUSD+=r._c.usdFY68; exN++; }
-    else { oppUSD+=r._c.usdFY68; oppN++; }
+    exUSD  += r._c.certainUSD;
+    oppUSD += r._c.expectedUSD;
+    if(r._c.certainUSD>0)  exN++;
+    if(r._c.expectedUSD>0) oppN++;
   });
+  totUSD = exUSD + oppUSD;
   // + doanh số từ kế hoạch địa bàn (SL Mani điền ở panel), theo kỳ đang xem
   var acctUSD=0, acctN=0;
   Object.keys(S.plan.acct).forEach(function(k){
@@ -6848,63 +6856,51 @@ function planCompute(row){
   var MST=+row.mst||0, MSL=+row.msl||0, MCU=+row.mcu||0;
   var total=MST+MSL+MCU;
   var packageVND = MST*planPrice("MST") + MSL*planPrice("MSL") + MCU*planPrice("MCU");
-  var dur=+row.dur||0, gs=row.startIdx||0;
-  /* priceDur = dur GỐC của gói (chỉ khác dur ở dòng ② Duy trì đã kéo dài thanh).
-     $/tháng & SL/tháng luôn theo dur GỐC → không bị loãng khi thanh renew dài hơn 1 kỳ gói. */
-  var priceDur = (+row._baseDur>0)? +row._baseDur : dur;
-  var hasTime = gs>0 && dur>0;
-  var usdPerMonth = (hasTime && priceDur>0) ? (packageVND/planFx())/priceDur : 0;
-  var ge = hasTime ? gs+dur-1 : 0;
-  var overlap = hasTime ? Math.max(0, Math.min(ge, END) - Math.max(gs, BASE) + 1) : 0;
-  var usdFY = usdPerMonth * overlap;
-  var gantt = [];
-  for(var k=0;k<12;k++){ var m=BASE+k; gantt.push(hasTime && m>=gs && m<=ge); }
-  return { total:total, packageVND:packageVND, usdPerMonth:usdPerMonth,
-           usdFY68:usdFY, usdFY:usdFY,          /* usdFY68 giữ tên cũ để tương thích */
-           priceDur:priceDur,
-           gs:gs, ge:ge, overlap:overlap, gantt:gantt };
+  /* $/tháng & SL/tháng theo dur GỐC của gói (không loãng khi thanh cơ hội kéo dài) */
+  var priceDur = (+row._baseDur>0)? +row._baseDur : (+row.dur||0);
+  var usdPerMonth = priceDur>0 ? (packageVND/planFx())/priceDur : 0;
+  /* 2 đoạn timeline: holder (existing/rival) + opp (renew/new) */
+  var hk=row.holderKind, hs=+row.holderStart||0, he=+row.holderEnd||0;
+  var ok=row.oppKind,    os=+row.oppStart||0,    oe=+row.oppEnd||0;
+  var status=[], gantt=[], existingMo=0, oppMo=0, rivalMo=0;
+  for(var k=0;k<12;k++){
+    var m=BASE+k, st="";
+    if(hk && hs && m>=hs && m<=he) st=hk;               // "existing" | "rival"
+    else if(ok && os && m>=os && m<=oe) st=ok;          // "renew"    | "new"
+    status.push(st);
+    var mani=(st==="existing"||st==="renew"||st==="new");
+    gantt.push(mani);                                    // ô có doanh số Mani
+    if(st==="existing") existingMo++;
+    else if(st==="renew"||st==="new") oppMo++;
+    else if(st==="rival") rivalMo++;
+  }
+  var certainUSD  = usdPerMonth*existingMo;              // đang trúng = chắc chắn
+  var expectedUSD = (total>0)? usdPerMonth*oppMo : 0;    // cơ hội = kỳ vọng (chỉ khi có SL)
+  var overlap = existingMo + oppMo;
+  var usdFY = certainUSD + expectedUSD;
+  return { total:total, packageVND:packageVND, usdPerMonth:usdPerMonth, priceDur:priceDur,
+           status:status, gantt:gantt,
+           existingMo:existingMo, oppMo:oppMo, rivalMo:rivalMo,
+           certainUSD:certainUSD, expectedUSD:expectedUSD,
+           usdFY68:usdFY, usdFY:usdFY, overlap:overlap };
 }
 
-/* ── INCLUDE(row) theo bộ lọc (oppFilter · inclExisting · inclRemaining) ── */
+/* ── INCLUDE(row) theo bộ lọc (oppFilter · hiện HV/đối thủ) ── */
 function planInclude(row){
-  if(row.group==="Existing") return S.plan.inclExisting;
-  if(row.group==="Duy trì" && !S.plan.inclRemaining) return false;
+  if(row.group==="Duy trì" && !S.plan.inclExisting) return false;   // ① HV: đang trúng + duy trì
+  if(row.group==="Mở mới" && !S.plan.inclRemaining) return false;   // ② Mở mới / Convert
   return S.plan.oppFilter==="ALL" || row.opp===S.plan.oppFilter;
 }
 
-/* ── Nhóm ① Existing: gói HV status=Win còn hiệu lực RƠI VÀO kỳ đang chọn ──
-   Không lệ thuộc r.m.FY68 (chỉ có FY66/67/68/69 tiền-tính). Tự tính overlap theo
-   start(approve/eff) + duration vs cửa sổ FY đang xem → giữ được mọi kỳ (FY67 tail, FY69…). */
-function planExistingRows(){
+/* ── Nhóm ① HV (gộp: Đang trúng + Duy trì) — 1 GÓI = 1 DÒNG, timeline liền mạch ──
+   Mỗi gói HV status=Win còn hiệu lực CHẠM vào kỳ đang xem sinh ĐÚNG 1 dòng:
+     • đoạn "existing" (xanh navy) = các tháng gói HIỆN còn hiệu lực (DS chắc chắn)
+     • đoạn "renew"    (màu cơ hội) = các tháng SAU khi gói hết hạn → duy trì (DS kỳ vọng)
+   Gói đã hết hiệu lực TRƯỚC kỳ (existEnd < đầu kỳ) → BỎ (không tô từ T09 gây khó hiểu).
+   → hết lặp dòng, hết tô đè lên tháng đang trúng. */
+function planHVRows(){
   var BASE=PLAN_BASE(), END=PLAN_END();
-  var byPkg={};
-  (NPP_FEED.HUNGVI||[]).forEach(function(r){
-    if(r.result!=="Win" || !r.demandOK) return;
-    var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
-    if(!si) return;
-    var dur = (+r.durationMonths>0)? +r.durationMonths : 12;
-    var ge = si + dur - 1;
-    var overlap = Math.max(0, Math.min(ge,END) - Math.max(si,BASE) + 1);
-    if(overlap<=0) return;                      // gói không phủ tháng nào của kỳ đang xem
-    var k=r.pkgKey;
-    if(!byPkg[k]) byPkg[k]={ rowKey:"EX|"+k, group:"Existing", account:r.hospitalStd||r.hospital,
-      city:r.city, tbmt:r.tbmt||"", mst:0, msl:0, mcu:0, startIdx:0, dur:dur,
-      opp:"", note:"", _auto:true, _pkgKey:k, _startIdxRaw:si, _durRaw:dur };
-    var p=byPkg[k];
-    p.mst += r.qtyMST||0; p.msl += r.qtyMSL||0; p.mcu += r.qtyMCU||0;
-    if(si && (!p.startIdx || si>p.startIdx)){ p.startIdx=si; p._startIdxRaw=si; }
-    if(dur){ p.dur=dur; p._durRaw=dur; }
-  });
-  return Object.keys(byPkg).map(function(k){ return byPkg[k]; });
-}
-
-/* ── Nhóm ② Duy trì (auto-renew): với MỖI gói Existing, sinh kỳ kế tiếp nối sau khi hết hạn,
-      nếu kỳ kế đó phủ vào cửa sổ FY đang xem. SL = gói gốc (editable), start = ngay sau khi hết,
-      dur = gói gốc (editable). Nếu user đã chỉnh tay (S.plan.manual có key "MTA|<pkg>") thì lấy
-      giá trị chỉnh tay đó. */
-function planAutoRenewRows(){
-  var BASE=PLAN_BASE(), END=PLAN_END();
-  var pkgs={};   // pkgKey → {account,city,tbmt,mst,msl,mcu,startIdx,dur}
+  var pkgs={};
   (NPP_FEED.HUNGVI||[]).forEach(function(r){
     if(r.result!=="Win" || !r.demandOK) return;
     var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
@@ -6921,29 +6917,22 @@ function planAutoRenewRows(){
   var out=[];
   Object.keys(pkgs).forEach(function(k){
     var p=pkgs[k];
-    /* ⭐ 1 GÓI = 1 DÒNG DUY TRÌ (không sinh chuỗi cycle → hết lặp).
-       Renew bắt đầu NGAY SAU khi gói Existing hết hiệu lực (existEnd+1),
-       KHÔNG đè lên các tháng gói Existing đang còn (phần đó đã có dòng ① Existing lo).
-       Ví dụ Existing hiệu lực hết T02/2027 → dòng Duy trì chỉ hiện từ T03/2027. */
-    var existEnd   = p.startIdx + p.dur - 1;      // tháng cuối Existing còn hiệu lực
-    var renewStart = existEnd + 1;                // renew nối tiếp ngay sau
-    var barStart   = Math.max(renewStart, BASE);  // nếu Existing đã hết trước kỳ → phủ từ đầu kỳ
-    if(barStart>END) return;                      // renew nằm ngoài kỳ đang xem → bỏ
-    var span = END - barStart + 1;                // 1 thanh liên tục tới hết kỳ đang xem
-    var rowKey="MTA|"+k;                          // 1 khoá / gói (bỏ đuôi cycle cũ)
-    var man=S.plan.manual[rowKey];
+    var existStart=p.startIdx, existEnd=p.startIdx+p.dur-1;
+    if(existEnd < BASE) return;      // gói đã hết trước kỳ → KHÔNG hiện (tránh tô xanh từ T09)
+    if(existStart > END) return;     // gói bắt đầu sau kỳ → chưa liên quan
+    var oppStart = existEnd+1;       // renew nối NGAY SAU khi hết hiệu lực
+    var hasRenew = oppStart<=END;
+    var rowKey="HV|"+k;
+    var man = S.plan.manual[rowKey] || S.plan.manual["MTA|"+k];   // tương thích key cũ
     out.push({
       rowKey:rowKey, group:"Duy trì", account:p.account, city:p.city, tbmt:p.tbmt||"",
-      mst: man&&man.mst!=null? +man.mst : p.mst,
-      msl: man&&man.msl!=null? +man.msl : p.msl,
-      mcu: man&&man.mcu!=null? +man.mcu : p.mcu,
-      startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : barStart,
-      startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(barStart),
-      dur: man&&man.dur!=null? +man.dur : span,   // độ dài THANH (kéo tới hết kỳ)
-      _baseDur: p.dur,                             // dur GỐC — dùng để tính $/tháng & SL/tháng
-      opp: man&&man.opp? man.opp : "Trung bình",
-      note: man&&man.note? man.note : "",
-      _auto:false, _autoRenew:true, _pkgKey:k, _existEndIdx:existEnd
+      mst:(man&&man.mst!=null?+man.mst:p.mst), msl:(man&&man.msl!=null?+man.msl:p.msl), mcu:(man&&man.mcu!=null?+man.mcu:p.mcu),
+      dur:p.dur, _baseDur:p.dur, startIdx:existStart,
+      /* 2 đoạn timeline */
+      holderKind:"existing", holderStart:Math.max(existStart,BASE), holderEnd:Math.min(existEnd,END),
+      oppKind:(hasRenew?"renew":null), oppStart:oppStart, oppEnd:END,
+      opp:(man&&man.opp?man.opp:"Trung bình"), note:(man&&man.note?man.note:""),
+      _auto:true, _autoRenew:true, _pkgKey:k, _existStart:existStart, _existEnd:existEnd
     });
   });
   return out;
@@ -6952,19 +6941,26 @@ function planAutoRenewRows(){
 /* ── Nhóm ③ Mở mới (+ Duy trì điền tay không gắn pkg): dòng thuần thủ công.
       Bỏ qua key "MTA|…" (đó là override cho auto-renew, đã xử lý ở planAutoRenewRows). ── */
 function planManualRows(){
-  /* Loại override cho auto-renew (MTA|) và auto Mở mới (NEW|<buyer>|<kqtt>),
+  /* Loại override cho HV (HV|), auto-renew cũ (MTA|) và auto Mở mới (NEW|<buyer>|<kqtt>),
      NHƯNG GIỮ chủ đầu tư thêm tay từ Master list (NEW|MAN|<name>). */
   return Object.keys(S.plan.manual).filter(function(k){
+      if(k.indexOf("HV|")===0)  return false;
       if(k.indexOf("MTA|")===0) return false;
       if(k.indexOf("NEW|")===0 && k.indexOf("NEW|MAN|")!==0) return false;
       return true;
     })
     .map(function(k){
     var m=S.plan.manual[k];
-    return { rowKey:k, group:m.group||"Mở mới", account:m.account||"", city:m.city||"",
+    var gp=m.group||"Mở mới";
+    var si=m.startMonth? planMoToIdx(m.startMonth):0;
+    var du=+m.dur||12;
+    return { rowKey:k, group:gp, account:m.account||"", city:m.city||"",
       tbmt:m.tbmt||"", mst:+m.mst||0, msl:+m.msl||0, mcu:+m.mcu||0,
-      startIdx:m.startMonth? planMoToIdx(m.startMonth):0, startMonth:m.startMonth||"",
-      dur:+m.dur||12, opp:m.opp||"Trung bình", note:m.note||"", _auto:false, _new:true, _manualAdd:true };
+      startIdx:si, startMonth:m.startMonth||"",
+      dur:du, _baseDur:du,
+      holderKind:null, holderStart:0, holderEnd:0,
+      oppKind:(gp==="Duy trì"?"renew":"new"), oppStart:si, oppEnd:(si?si+du-1:0),
+      opp:m.opp||"Trung bình", note:m.note||"", _auto:false, _new:(gp==="Mở mới"), _manualAdd:true };
   });
 }
 
@@ -7038,6 +7034,14 @@ function planNewRows(){
       startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : nextStart,
       startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(nextStart),
       dur: man&&man.dur!=null? +man.dur : p.dur,
+      _baseDur: p.dur,
+      /* 2 đoạn timeline: đối thủ giữ (xám) → Mani mở mới (màu) */
+      holderKind:"rival",
+      holderStart:(p.issIdx? Math.max(p.issIdx,BASE):0),
+      holderEnd:(p.endIdx? Math.min(p.endIdx,END):0),
+      oppKind:"new",
+      oppStart:(man&&man.startMonth? planMoToIdx(man.startMonth) : nextStart),
+      oppEnd:END,
       opp: man&&man.opp? man.opp : (expired?"Cao":"Trung bình"),
       note: man&&man.note? man.note : "",
       _auto:false, _new:true, _expired:expired,
@@ -7051,7 +7055,7 @@ function planNewRows(){
 }
 
 function planAllRows(){
-  return planExistingRows().concat(planAutoRenewRows()).concat(planNewRows()).concat(planManualRows());
+  return planHVRows().concat(planNewRows()).concat(planManualRows());
 }
 
 /* ── Nạp dòng plan đã lưu từ FC_LOG (group = Duy trì / Mở mới) ── */
@@ -7232,8 +7236,8 @@ function planRenderCtrl(){
     + '<div class="sb-divx"></div>'
     + '<span class="cl">'+(LANG==="vi"?"Cơ hội (Duy trì/Mở mới)":"Opportunity (Renew/New)")+'</span><div class="sb-side">'+oppChips+'</div>'
     + '<div class="sb-divx"></div>'
-    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ① Existing (đang trúng)":"Include ① Existing")+'</label>'
-    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclRemaining?"checked":"")+' onchange="S.plan.inclRemaining=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ② Duy trì (renew tự sinh)":"Include ② Remaining (auto-renew)")+'</label>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclExisting?"checked":"")+' onchange="S.plan.inclExisting=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ① Đang trúng + Duy trì (HV)":"Include ① Existing + Renew")+'</label>'
+    + '<label class="sb-postgl"><input type="checkbox" '+(S.plan.inclRemaining?"checked":"")+' onchange="S.plan.inclRemaining=this.checked;renderPlan()"> '+(LANG==="vi"?"Gồm ② Mở mới / Convert (đối thủ đang giữ)":"Include ② New / Convert")+'</label>'
     + '<div class="sb-divx"></div>'
     + '<div class="fc-setup"><div class="fc-set-h">'+(LANG==="vi"?"Giá kế hoạch FY68 (VND/dao)":"FY68 plan price (VND/knife)")+'</div>'
     + pRow("MST","MST (Stab)","₫")+pRow("MSL","MSL (Slit)","₫")+pRow("MCU","MCU (Cresc.)","₫")
@@ -7260,10 +7264,10 @@ function planSetFx(v){ var n=+String(v).replace(/[^\d]/g,"");S.plan.fx=isFinite(
 var PLAN_TAB_LABEL = {
   "all":     function(){ return LANG==="vi"?"Tất cả":"All"; },
   "Existing":function(){ return "① Existing"; },
-  "Duy trì": function(){ return LANG==="vi"?"② Duy trì":"② Remaining"; },
-  "Mở mới":  function(){ return LANG==="vi"?"③ Mở mới":"③ New / Convert"; }
+  "Duy trì": function(){ return LANG==="vi"?"① Đang trúng + Duy trì":"① Existing + Renew"; },
+  "Mở mới":  function(){ return LANG==="vi"?"② Mở mới / Convert":"② New / Convert"; }
 };
-if(!S.plan.ganttTab) S.plan.ganttTab="all";
+if(!S.plan.ganttTab || S.plan.ganttTab==="Existing") S.plan.ganttTab="all";
 if(S.plan.detail===undefined) S.plan.detail=null;   // rowKey đang mở detail
 
 /* ── Kết quả trúng thầu GẦN NHẤT của 1 bệnh viện (từ feed HV + KQTT tổng) ── */
@@ -7538,9 +7542,10 @@ function planKdRowHTML(r){
     +'<div class="kd-v">'+hvUSD(r._c.usdFY68)+'</div></div>';
 }
 function planKpiDrill(which){
-  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude).filter(function(r){return r._c.total>0;});
+  var rows=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude).filter(function(r){return r._c.total>0 || r._c.rivalMo>0;});
   var title,sub,body,exUSD=0,oppUSD=0,totUSD=0;
-  rows.forEach(function(r){ totUSD+=r._c.usdFY68; if(r.group==="Existing")exUSD+=r._c.usdFY68; else oppUSD+=r._c.usdFY68; });
+  rows.forEach(function(r){ exUSD+=r._c.certainUSD; oppUSD+=r._c.expectedUSD; });
+  totUSD=exUSD+oppUSD;
 
   if(which==="knife"){
     /* Cơ cấu theo loại dao + tiến độ target */
@@ -7563,9 +7568,9 @@ function planKpiDrill(which){
       }).join("")+'</div>';
   } else {
     var pick, hn;
-    if(which==="existing"){ pick=rows.filter(function(r){return r.group==="Existing";}); title="① Existing"; sub=(LANG==="vi"?"Gói đang còn hiệu lực "+PLAN_FYKEY()+" (tự động)":"Packages valid in "+PLAN_FYKEY()+" (auto)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(exUSD)+'</b> · '+pick.length+(LANG==="vi"?" bệnh viện":" hospitals"); }
-    else if(which==="opp"){ pick=rows.filter(function(r){return r.group!=="Existing";}); title=(LANG==="vi"?"②③ Cơ hội":"②③ Opportunity"); sub=(LANG==="vi"?"Duy trì + Mở mới (đã điền SL Mani)":"Remaining + New (Mani qty filled)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(oppUSD)+'</b> · '+pick.length+(LANG==="vi"?" dòng":" rows"); }
-    else { pick=rows; title=(LANG==="vi"?"TỔNG kế hoạch "+PLAN_FYKEY():"TOTAL "+PLAN_FYKEY()+" plan"); sub=(LANG==="vi"?"Tất cả bệnh viện trong kế hoạch":"All hospitals in plan"); hn=(LANG==="vi"?"Existing":"Existing")+' <b>'+hvUSD(exUSD)+'</b> + '+(LANG==="vi"?"Cơ hội":"Opportunity")+' <b>'+hvUSD(oppUSD)+'</b> = <b>'+hvUSD(totUSD)+'</b>'; }
+    if(which==="existing"){ pick=rows.filter(function(r){return r._c.certainUSD>0;}); title=(LANG==="vi"?"① Đang trúng (chắc chắn)":"① Existing (certain)"); sub=(LANG==="vi"?"Gói HV đang còn hiệu lực "+PLAN_FYKEY():"Packages valid in "+PLAN_FYKEY()); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(exUSD)+'</b> · '+pick.length+(LANG==="vi"?" bệnh viện":" hospitals"); }
+    else if(which==="opp"){ pick=rows.filter(function(r){return r._c.expectedUSD>0;}); title=(LANG==="vi"?"②③ Cơ hội":"②③ Opportunity"); sub=(LANG==="vi"?"Duy trì + Mở mới (đã điền SL Mani)":"Remaining + New (Mani qty filled)"); hn=(LANG==="vi"?"Tổng":"Total")+' <b>'+hvUSD(oppUSD)+'</b> · '+pick.length+(LANG==="vi"?" dòng":" rows"); }
+    else { pick=rows; title=(LANG==="vi"?"TỔNG kế hoạch "+PLAN_FYKEY():"TOTAL "+PLAN_FYKEY()+" plan"); sub=(LANG==="vi"?"Tất cả bệnh viện trong kế hoạch":"All hospitals in plan"); hn=(LANG==="vi"?"Đang trúng":"Existing")+' <b>'+hvUSD(exUSD)+'</b> + '+(LANG==="vi"?"Cơ hội":"Opportunity")+' <b>'+hvUSD(oppUSD)+'</b> = <b>'+hvUSD(totUSD)+'</b>'; }
     pick.sort(function(a,b){ return b._c.usdFY68-a._c.usdFY68; });
     body='<div class="kd-head">'+hn+'<br><span style="color:var(--t3)">'+(LANG==="vi"?"Bấm 1 dòng để mở chi tiết & sửa SL Mani":"Click a row to open detail & edit Mani qty")+'</span></div>'
       +(pick.length?'<div class="kd-list">'+pick.map(planKdRowHTML).join("")+'</div>':'<div class="kd-empty">'+(LANG==="vi"?"Chưa có dòng nào.":"No rows yet.")+'</div>');
@@ -7611,9 +7616,9 @@ function planSyncHungVi(dryRun){
 /* Nội dung thẻ Gantt (tabs + search + biểu đồ) — tách riêng để re-render nhẹ khi gõ/bấm tab */
 function planGanttCardInner(){
   var incl=planAllRows().map(function(r){ r._c=planCompute(r); return r; }).filter(planInclude);
-  var tabs=["all","Existing","Duy trì","Mở mới"];
-  var counts={all:0,"Existing":0,"Duy trì":0,"Mở mới":0};
-  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0}, "Existing":{n:0,usd:0,msl:0,mst:0,mcu:0},
+  var tabs=["all","Duy trì","Mở mới"];
+  var counts={all:0,"Duy trì":0,"Mở mới":0};
+  var agg={ all:{n:0,usd:0,msl:0,mst:0,mcu:0},
             "Duy trì":{n:0,usd:0,msl:0,mst:0,mcu:0}, "Mở mới":{n:0,usd:0,msl:0,mst:0,mcu:0} };
   incl.forEach(function(r){
     var hasQty=r._c.total>0;
@@ -7705,30 +7710,29 @@ function planGanttHTML(rows){
     +(S.plan.q?'<button class="gpb-x" onclick="planOnGSearch(\'\')">✕</button>':'')+'</div>'
     +'</div>';
 
-  /* ── KEY (chú giải) đặt NGAY TRÊN bảng — giải thích 2 con số trong ô + màu ô ── */
+  /* ── KEY (chú giải) đặt NGAY TRÊN bảng — timeline liền mạch + 2 con số ── */
   var vi=(LANG==="vi");
   var keyBox=''
     +'<div class="gantt-key">'
       +'<div class="gk-block">'
-        +'<div class="gk-h">'+(vi?"📖 Mỗi ô = 1 tháng · trong ô có 2 con số:":"📖 Each cell = 1 month · two numbers:")+'</div>'
+        +'<div class="gk-h">'+(vi?"📖 Mỗi DÒNG = 1 bệnh viện, đọc từ trái→phải theo thời gian. Mỗi ô = 1 tháng, có 2 số:":"📖 Each row = 1 hospital timeline. Each cell = 1 month, two numbers:")+'</div>'
         +'<div class="gk-cellsample">'
           +'<div class="gk-cellbox"><span class="gk-cq">96</span><span class="gk-cv">$438</span></div>'
           +'<div class="gk-cellexp">'
-            +'<div><span class="gk-num gk-num-q">96</span> = '+(vi?"<b>Số lượng dao dự kiến / tháng</b> (SL gói ÷ số tháng hiệu lực)":"<b>knives / month</b> (pkg qty ÷ months valid)")+'</div>'
-            +'<div><span class="gk-num gk-num-v">$438</span> = '+(vi?"<b>Doanh số dự kiến / tháng</b> (SL/tháng × giá bán Mani→NPP)":"<b>revenue / month</b> (qty/mo × Mani→NPP price)")+'</div>'
+            +'<div><span class="gk-num gk-num-q">96</span> = '+(vi?"<b>SL dao dự kiến / tháng</b>":"<b>knives / month</b>")+'</div>'
+            +'<div><span class="gk-num gk-num-v">$438</span> = '+(vi?"<b>Doanh số dự kiến / tháng</b> (× giá Mani→NPP)":"<b>revenue / month</b>")+'</div>'
           +'</div>'
         +'</div>'
       +'</div>'
       +'<div class="gk-block">'
-        +'<div class="gk-h">'+(vi?"🎨 Màu nền của ô = nguồn doanh số:":"🎨 Cell colour = revenue source:")+'</div>'
+        +'<div class="gk-h">'+(vi?"🎨 Màu ô = trạng thái theo tháng (1 dòng có thể đổi màu giữa kỳ):":"🎨 Cell colour = month status (a row may change colour mid-period):")+'</div>'
         +'<div class="gk-colors">'
-          +'<span class="gk-ci"><i style="background:rgba(14,47,95,.16);border:1px solid rgba(14,47,95,.35)"></i>'+(vi?"<b>Xanh navy</b> — ① Existing: Mani ĐANG trúng thầu · doanh số <b>chắc chắn</b>":"Navy — Existing (certain)")+'</span>'
-          +'<span class="gk-ci"><i style="background:rgba(46,125,50,.18);border:1px solid rgba(46,125,50,.4)"></i>'+(vi?"<b>Xanh lá</b> — cơ hội mức <b>CAO</b> (Duy trì / Mở mới)":"Green — HIGH opportunity")+'</span>'
-          +'<span class="gk-ci"><i style="background:rgba(240,168,0,.20);border:1px solid rgba(240,168,0,.5)"></i>'+(vi?"<b>Vàng</b> — cơ hội mức <b>TRUNG BÌNH</b>":"Amber — MID opportunity")+'</span>'
-          +'<span class="gk-ci"><i style="background:rgba(224,122,46,.18);border:1px solid rgba(224,122,46,.45)"></i>'+(vi?"<b>Cam</b> — cơ hội mức <b>THẤP</b>":"Orange — LOW opportunity")+'</span>'
-          +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc</b> — <b>đối thủ đang giữ gói</b> · doanh số của đối thủ, <b>KHÔNG</b> tính cho Mani":"Striped grey — rival holding (NOT Mani)")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(14,47,95,.16);border:1px solid rgba(14,47,95,.35)"></i>'+(vi?"<b>Xanh navy = ĐANG TRÚNG</b> — hợp đồng HV còn hiệu lực · doanh số <b>chắc chắn</b>":"Navy = currently winning (certain)")+'</span>'
+          +'<span class="gk-ci"><i style="background:rgba(46,125,50,.18);border:1px solid rgba(46,125,50,.4)"></i><i style="background:rgba(240,168,0,.20);border:1px solid rgba(240,168,0,.5);margin-left:-4px"></i><i style="background:rgba(224,122,46,.18);border:1px solid rgba(224,122,46,.45);margin-left:-4px"></i>'+(vi?"<b>Xanh lá / Vàng / Cam = CƠ HỘI</b> — Duy trì (sau khi hết hạn) hoặc Mở mới · doanh số <b>kỳ vọng</b> · màu theo mức Cao / TB / Thấp":"Green/Amber/Orange = opportunity (renew or new), by tier")+'</span>'
+          +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc = ĐỐI THỦ đang giữ gói</b> (nhóm Mở mới) · doanh số của đối thủ, <b>KHÔNG</b> tính cho Mani":"Striped grey = rival holding (not Mani)")+'</span>'
+          +'<span class="gk-ci"><i class="gk-plus-i">+</i>'+(vi?"<b>Ô có dấu +</b> = cơ hội Mở mới <b>chưa điền SL Mani</b> → bấm dòng để nhập SL dự kiến":"Cell with + = New opportunity, fill Mani qty")+'</span>'
         +'</div>'
-        +'<div class="gk-note">'+(vi?"Ô cơ hội (xanh lá / vàng / cam) chỉ hiện doanh số khi bạn <b>điền SL Mani dự kiến</b> ở bảng chi tiết từng bệnh viện (bấm vào 1 dòng). Ô để trống = tháng đó gói không còn hiệu lực.":"Coloured opportunity cells show revenue only after you fill Mani expected qty in the hospital detail (click a row).")+'</div>'
+        +'<div class="gk-note">'+(vi?"Ví dụ: một BV đang trúng tới T02/2027 → các ô T09/2026–T02/2027 màu <b>xanh navy</b> (chắc chắn), từ T03/2027 chuyển sang <b>xanh/vàng/cam</b> (duy trì – kỳ vọng). Không còn dòng lặp, không tô đè lên tháng đang trúng.":"e.g. winning until Feb 2027 → navy Sep–Feb, then opportunity colour from Mar.")+'</div>'
       +'</div>'
     +'</div>';
 
@@ -7743,30 +7747,40 @@ function planGanttHTML(rows){
     if((b._vol||0)!==(a._vol||0)) return (b._vol||0)-(a._vol||0);   // Volume cao → thấp
     return b._c.usdFY68-a._c.usdFY68;
   }).map(function(r){
-    var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
+    var oc = (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");   // màu đoạn cơ hội theo mức
     var perMo=r._c.usdPerMonth||0;
-    var qtyPerMo = (r._c.priceDur>0)? Math.round((r._c.total||0)/r._c.priceDur) : 0;   // số dao ước tính / tháng (theo dur GỐC)
-    var rivalOn=[];
-    if(r._new && r._rivalStartIdx && r._rivalEndIdx){
-      for(var k2=0;k2<12;k2++){ var m=BASE+k2; rivalOn.push(m>=r._rivalStartIdx && m<=r._rivalEndIdx); }
-    }
-    var rivalQtyMo = (r._new && r._rivalQty && r.dur>0)? Math.round(r._rivalQty/(r.dur||12)) : 0;
-    var cells=r._c.gantt.map(function(on,k){
-      if(on){
-        return '<div class="gantt-cell on '+cls+'">'
+    var qtyPerMo = (r._c.priceDur>0)? Math.round((r._c.total||0)/r._c.priceDur) : 0;   // SL dao / tháng (theo dur GỐC)
+    var rivalQtyMo = (r._rivalQty && r._baseDur>0)? Math.round(r._rivalQty/(r._baseDur||12)) : (r._rivalQty?Math.round(r._rivalQty/12):0);
+    var TT={ existing:(LANG==="vi"?"Đang trúng — doanh số CHẮC CHẮN":"Currently winning — certain"),
+             renew:(LANG==="vi"?"Duy trì (gia hạn) — doanh số KỲ VỌNG":"Renew — expected"),
+             new:(LANG==="vi"?"Mở mới — Mani kỳ vọng giành (điền SL)":"New — Mani expected"),
+             rival:(LANG==="vi"?"Đối thủ "+(r._rivalBrand||"")+" đang giữ gói · KHÔNG tính DS Mani":"Rival holding — not Mani") };
+    var cells=r._c.status.map(function(st,k){
+      if(st==="existing"){
+        return '<div class="gantt-cell on gx" title="'+esc(TT.existing)+'">'
           +(qtyPerMo>0?'<span class="gqty">'+hvNum(qtyPerMo)+'</span>':'')
-          +(perMo>0?'<span class="gmv">'+hvUSD(perMo)+'</span>':'')
-          +'</div>';
+          +(perMo>0?'<span class="gmv">'+hvUSD(perMo)+'</span>':'')+'</div>';
       }
-      if(rivalOn[k]){
-        return '<div class="gantt-cell rival" title="'+(LANG==="vi"?"Đối thủ đang giữ gói (không tính DS Mani)":"Rival holding (no Mani rev)")+'">'
+      if(st==="renew" || st==="new"){
+        if(st==="new" && r._c.total<=0){
+          /* Mở mới chưa điền SL → ô "mời điền" (không có $) */
+          return '<div class="gantt-cell opp-empty '+oc+'" title="'+esc(TT.new)+'"><span class="gopp-plus">+</span></div>';
+        }
+        return '<div class="gantt-cell on '+oc+'" title="'+esc(st==="renew"?TT.renew:TT.new)+'">'
+          +(qtyPerMo>0?'<span class="gqty">'+hvNum(qtyPerMo)+'</span>':'')
+          +(perMo>0?'<span class="gmv">'+hvUSD(perMo)+'</span>':'')+'</div>';
+      }
+      if(st==="rival"){
+        return '<div class="gantt-cell rival" title="'+esc(TT.rival)+'">'
           +(rivalQtyMo>0?'<span class="grvq">'+hvNum(rivalQtyMo)+'</span>':'<span class="grv">·</span>')+'</div>';
       }
       return '<div class="gantt-cell"></div>';
     }).join("");
     var sel=(S.plan.detail===r.rowKey)?" gsel":"";
     var vol=r._vol||planVolumeYr(r.account);
-    var tag=r._new?(r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"hết HL":"expired")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"")+'</i>'):(r._autoRenew?'<i class="grow-tag rnw">renew</i>':'');
+    var tag = (r.group==="Mở mới")
+      ? (r._expired?'<i class="grow-tag exp">'+(LANG==="vi"?"tái chiếm":"re-win")+'</i>':'<i class="grow-tag riv">'+esc(r._rivalBrand||"")+'</i>')
+      : '<i class="grow-tag rnw">'+(LANG==="vi"?"đang trúng + duy trì":"existing+renew")+'</i>';
     return '<div class="gantt-row grow'+sel+'" onclick="planOpenDetail(\''+r.rowKey+'\')" title="'+(LANG==="vi"?"Bấm xem chi tiết & lập kế hoạch":"Click for detail")+'">'
       +'<div class="gantt-prov"><span class="gprov-txt">'+esc(r.city||"—")+'</span></div>'
       +'<div class="gantt-lbl"><span class="gdotc" style="background:'+PLAN_GCOL[r.group]+'" title="'+esc(r.group)+'"></span>'
@@ -7970,8 +7984,8 @@ function planDetailEdit(rowKey, field, val){
      Duy trì auto-renew (rowKey "MTA|…") = editable → tạo bản override trong S.plan.manual nếu chưa có,
      seed bằng giá trị auto-tính hiện tại để chỉnh 1 field không mất field khác. */
   var m=S.plan.manual[rowKey];
-  if(!m && (rowKey.indexOf("MTA|")===0 || rowKey.indexOf("NEW|")===0)){
-    var src = rowKey.indexOf("MTA|")===0 ? planAutoRenewRows() : planNewRows();
+  if(!m && (rowKey.indexOf("HV|")===0 || rowKey.indexOf("MTA|")===0 || rowKey.indexOf("NEW|")===0)){
+    var src = (rowKey.indexOf("NEW|")===0) ? planNewRows() : planHVRows();
     var cur=src.filter(function(x){return x.rowKey===rowKey;})[0];
     if(cur){ m=S.plan.manual[rowKey]={ group:cur.group, account:cur.account, city:cur.city, tbmt:cur.tbmt||"",
       mst:cur.mst, msl:cur.msl, mcu:cur.mcu, startMonth:cur.startMonth||planIdxToMo(cur.startIdx), dur:cur.dur,

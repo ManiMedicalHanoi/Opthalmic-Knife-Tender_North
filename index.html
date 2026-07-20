@@ -6849,8 +6849,11 @@ function planCompute(row){
   var total=MST+MSL+MCU;
   var packageVND = MST*planPrice("MST") + MSL*planPrice("MSL") + MCU*planPrice("MCU");
   var dur=+row.dur||0, gs=row.startIdx||0;
+  /* priceDur = dur GỐC của gói (chỉ khác dur ở dòng ② Duy trì đã kéo dài thanh).
+     $/tháng & SL/tháng luôn theo dur GỐC → không bị loãng khi thanh renew dài hơn 1 kỳ gói. */
+  var priceDur = (+row._baseDur>0)? +row._baseDur : dur;
   var hasTime = gs>0 && dur>0;
-  var usdPerMonth = hasTime ? (packageVND/planFx())/dur : 0;
+  var usdPerMonth = (hasTime && priceDur>0) ? (packageVND/planFx())/priceDur : 0;
   var ge = hasTime ? gs+dur-1 : 0;
   var overlap = hasTime ? Math.max(0, Math.min(ge, END) - Math.max(gs, BASE) + 1) : 0;
   var usdFY = usdPerMonth * overlap;
@@ -6858,6 +6861,7 @@ function planCompute(row){
   for(var k=0;k<12;k++){ var m=BASE+k; gantt.push(hasTime && m>=gs && m<=ge); }
   return { total:total, packageVND:packageVND, usdPerMonth:usdPerMonth,
            usdFY68:usdFY, usdFY:usdFY,          /* usdFY68 giữ tên cũ để tương thích */
+           priceDur:priceDur,
            gs:gs, ge:ge, overlap:overlap, gantt:gantt };
 }
 
@@ -6917,29 +6921,30 @@ function planAutoRenewRows(){
   var out=[];
   Object.keys(pkgs).forEach(function(k){
     var p=pkgs[k];
-    // kỳ renew đầu tiên bắt đầu ngay sau khi gói gốc hết hạn; nhảy tiếp cho tới khi qua END
-    var rs = p.startIdx + p.dur;                 // start kỳ renew #1
-    var guard=0;
-    while(rs<=END && guard++<10){
-      var re=rs+p.dur-1;
-      if(re>=BASE){                              // kỳ renew này phủ vào cửa sổ đang xem
-        var rowKey="MTA|"+k+"|"+rs;              // khoá auto-renew ổn định theo pkg + start
-        var man=S.plan.manual[rowKey];
-        out.push({
-          rowKey:rowKey, group:"Duy trì", account:p.account, city:p.city, tbmt:p.tbmt||"",
-          mst: man&&man.mst!=null? +man.mst : p.mst,
-          msl: man&&man.msl!=null? +man.msl : p.msl,
-          mcu: man&&man.mcu!=null? +man.mcu : p.mcu,
-          startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : rs,
-          startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(rs),
-          dur: man&&man.dur!=null? +man.dur : p.dur,
-          opp: man&&man.opp? man.opp : "Trung bình",
-          note: man&&man.note? man.note : "",
-          _auto:false, _autoRenew:true, _pkgKey:k
-        });
-      }
-      rs += p.dur;                               // sang kỳ renew kế tiếp
-    }
+    /* ⭐ 1 GÓI = 1 DÒNG DUY TRÌ (không sinh chuỗi cycle → hết lặp).
+       Renew bắt đầu NGAY SAU khi gói Existing hết hiệu lực (existEnd+1),
+       KHÔNG đè lên các tháng gói Existing đang còn (phần đó đã có dòng ① Existing lo).
+       Ví dụ Existing hiệu lực hết T02/2027 → dòng Duy trì chỉ hiện từ T03/2027. */
+    var existEnd   = p.startIdx + p.dur - 1;      // tháng cuối Existing còn hiệu lực
+    var renewStart = existEnd + 1;                // renew nối tiếp ngay sau
+    var barStart   = Math.max(renewStart, BASE);  // nếu Existing đã hết trước kỳ → phủ từ đầu kỳ
+    if(barStart>END) return;                      // renew nằm ngoài kỳ đang xem → bỏ
+    var span = END - barStart + 1;                // 1 thanh liên tục tới hết kỳ đang xem
+    var rowKey="MTA|"+k;                          // 1 khoá / gói (bỏ đuôi cycle cũ)
+    var man=S.plan.manual[rowKey];
+    out.push({
+      rowKey:rowKey, group:"Duy trì", account:p.account, city:p.city, tbmt:p.tbmt||"",
+      mst: man&&man.mst!=null? +man.mst : p.mst,
+      msl: man&&man.msl!=null? +man.msl : p.msl,
+      mcu: man&&man.mcu!=null? +man.mcu : p.mcu,
+      startIdx: man&&man.startMonth? planMoToIdx(man.startMonth) : barStart,
+      startMonth: man&&man.startMonth? man.startMonth : planIdxToMo(barStart),
+      dur: man&&man.dur!=null? +man.dur : span,   // độ dài THANH (kéo tới hết kỳ)
+      _baseDur: p.dur,                             // dur GỐC — dùng để tính $/tháng & SL/tháng
+      opp: man&&man.opp? man.opp : "Trung bình",
+      note: man&&man.note? man.note : "",
+      _auto:false, _autoRenew:true, _pkgKey:k, _existEndIdx:existEnd
+    });
   });
   return out;
 }
@@ -7613,8 +7618,8 @@ function planGanttCardInner(){
   incl.forEach(function(r){
     var hasQty=r._c.total>0;
     counts.all++; counts[r.group]++;
-    var frac = (r.dur>0)? Math.min(1, (r._c.overlap||0)/r.dur) : 1;
-    var msl=Math.round((+r.msl||0)*frac), mst=Math.round((+r.mst||0)*frac), mcu=Math.round((+r.mcu||0)*frac);
+    var pm = (r._c.priceDur>0)? ((r._c.overlap||0)/r._c.priceDur) : 0;   // số "gói-tháng" quy đổi theo dur GỐC
+    var msl=Math.round((+r.msl||0)*pm), mst=Math.round((+r.mst||0)*pm), mcu=Math.round((+r.mcu||0)*pm);
     [agg.all, agg[r.group]].forEach(function(a){ a.n++; a.usd+=r._c.usdFY68; a.msl+=msl; a.mst+=mst; a.mcu+=mcu; });
   });
   function aggKnives(a){ return a.msl+a.mst+a.mcu; }
@@ -7740,7 +7745,7 @@ function planGanttHTML(rows){
   }).map(function(r){
     var cls = r.group==="Existing"?"gx" : (r.opp==="Cao"?"gh1":r.opp==="Trung bình"?"gh2":"gh3");
     var perMo=r._c.usdPerMonth||0;
-    var qtyPerMo = (r.dur>0)? Math.round((r._c.total||0)/r.dur) : 0;   // số dao ước tính / tháng
+    var qtyPerMo = (r._c.priceDur>0)? Math.round((r._c.total||0)/r._c.priceDur) : 0;   // số dao ước tính / tháng (theo dur GỐC)
     var rivalOn=[];
     if(r._new && r._rivalStartIdx && r._rivalEndIdx){
       for(var k2=0;k2<12;k2++){ var m=BASE+k2; rivalOn.push(m>=r._rivalStartIdx && m<=r._rivalEndIdx); }

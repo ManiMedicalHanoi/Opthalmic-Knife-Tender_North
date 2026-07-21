@@ -6893,23 +6893,41 @@ function planInclude(row){
   return S.plan.oppFilter==="ALL" || row.opp===S.plan.oppFilter;      // ②③ theo mức cơ hội
 }
 
-/* Gom gói HV (status=Win, demandOK) theo pkgKey → {account,city,tbmt,mst,msl,mcu,startIdx,dur} */
+/* Gom gói HV theo BỆNH VIỆN — CHỈ giữ GÓI THẦU GẦN NHẤT (ngày phê duyệt/eff mới nhất),
+   gộp các dòng dao MST/MSL/MCU của đúng gói đó. Gói cũ hơn của cùng BV bị loại (không thổi
+   phồng doanh số) — đúng quy tắc "mỗi BV chỉ 1 dòng" của file Excel. */
 function planHVPkgs(){
-  var pkgs={};
-  (NPP_FEED.HUNGVI||[]).forEach(function(r){
-    if(r.result!=="Win" || !r.demandOK) return;
-    var si = r.approveSerial? planSerToIdx(r.approveSerial) : (r.effSerial? planSerToIdx(r.effSerial):0);
-    if(!si) return;
-    var dur=(+r.durationMonths>0)?+r.durationMonths:12;
-    var k=r.pkgKey;
-    if(!pkgs[k]) pkgs[k]={ account:r.hospitalStd||r.hospital, city:r.city, tbmt:r.tbmt||"",
-      mst:0, msl:0, mcu:0, startIdx:si, dur:dur };
-    var p=pkgs[k];
-    p.mst+=r.qtyMST||0; p.msl+=r.qtyMSL||0; p.mcu+=r.qtyMCU||0;
-    if(si>p.startIdx) p.startIdx=si;
-    if(dur) p.dur=dur;
+  var rows=(NPP_FEED.HUNGVI||[]).filter(function(r){
+    return r.result==="Win" && r.demandOK && (r.approveSerial||r.effSerial); });
+  var maxSi={};
+  rows.forEach(function(r){
+    var si=r.approveSerial?planSerToIdx(r.approveSerial):planSerToIdx(r.effSerial);
+    var h=norm(r.hospitalStd||r.hospital||""); if(!h||!si) return;
+    if(!maxSi[h] || si>maxSi[h]) maxSi[h]=si;
   });
-  return pkgs;
+  var byHosp={};
+  rows.forEach(function(r){
+    var si=r.approveSerial?planSerToIdx(r.approveSerial):planSerToIdx(r.effSerial);
+    var h=norm(r.hospitalStd||r.hospital||""); if(!h||!si) return;
+    if(si!==maxSi[h]) return;                 // chỉ gói thầu GẦN NHẤT của BV này
+    var dur=(+r.durationMonths>0)?+r.durationMonths:12;
+    if(!byHosp[h]) byHosp[h]={ account:r.hospitalStd||r.hospital, city:r.city, tbmt:r.tbmt||"",
+      mst:0, msl:0, mcu:0, startIdx:si, dur:dur, _hnorm:h };
+    var p=byHosp[h];
+    p.mst+=r.qtyMST||0; p.msl+=r.qtyMSL||0; p.mcu+=r.qtyMCU||0;
+    if(dur) p.dur=dur;
+    if(r.tbmt && !p.tbmt) p.tbmt=r.tbmt;
+  });
+  return byHosp;
+}
+
+/* BV → hãng GIỮ GÓI THẦU GẦN NHẤT trên toàn thị trường (để chống trùng nhóm ②↔③) */
+function planLatestBrandByBuyer(){
+  var pk=planTotalPkgs(), best={};
+  Object.keys(pk).forEach(function(k){ var p=pk[k];
+    if(!best[p.buyerNorm] || p.issIdx>best[p.buyerNorm].issIdx)
+      best[p.buyerNorm]={ brandNorm:p.brandNorm, issIdx:p.issIdx }; });
+  return best;
 }
 
 /* ── Nhóm ① EXISTING (xanh navy) — Mani/HV ĐANG trúng & CÒN hiệu lực trong kỳ ──
@@ -6918,13 +6936,15 @@ function planHVPkgs(){
    → KHÔNG có đoạn cơ hội (oppKind=null) nên không bao giờ tô vàng. */
 function planExistingRows(){
   var BASE=PLAN_BASE(), END=PLAN_END();
-  var pkgs=planHVPkgs();
+  var pkgs=planHVPkgs(), latest=planLatestBrandByBuyer();
   var out=[];
   Object.keys(pkgs).forEach(function(k){
     var p=pkgs[k];
     var existStart=p.startIdx, existEnd=p.startIdx+p.dur-1;
     if(existEnd < BASE) return;      // đã hết hiệu lực trước kỳ → không phải Existing
     if(existStart > END) return;     // bắt đầu sau kỳ → chưa liên quan
+    var lb=latest[k];                // nếu ĐỐI THỦ giữ gói mới hơn → BV đó thuộc ③, bỏ khỏi ①
+    if(lb && lb.brandNorm!=="mani" && lb.brandNorm && lb.issIdx>p.startIdx) return;
     out.push({
       rowKey:"EX|"+k, group:"Existing", account:p.account, city:p.city, tbmt:p.tbmt||"",
       mst:p.mst, msl:p.msl, mcu:p.mcu, dur:p.dur, _baseDur:p.dur, startIdx:existStart,
@@ -6936,22 +6956,25 @@ function planExistingRows(){
   return out;
 }
 
-/* ── Nhóm ② DUY TRÌ / RENEW (màu cơ hội) — CHỈ gói HV HẾT HẠN LƯNG CHỪNG trong kỳ ──
-   Điều kiện: BASE ≤ existEnd ≤ END-1 (gói còn hiệu lực đầu kỳ nhưng HẾT trong kỳ → có tháng
-   cần renew nằm trong kỳ). Tô màu TỪ existEnd+1 → END, các tháng TRƯỚC đó ĐỂ TRỐNG (đúng như
-   hình 2: gói hết T03 → chỉ hiện từ T04). SL điền sẵn = SL gói HV (sửa được).
+/* ── Nhóm ② DUY TRÌ / RENEW (màu cơ hội) — gói Mani/HV cần ĐẤU LẠI trong FY68 ──
+   Thanh renew bắt đầu = max(hết hạn + 1, đầu kỳ) → kéo tới hết FY68.
+   • Gói hết hạn LƯNG CHỪNG trong kỳ → tô từ tháng SAU khi hết hạn (trước đó để trống — đúng hình 2).
+   • Gói ĐÃ HẾT hiệu lực TRƯỚC kỳ (Mani từng trúng, nay hết) → tô TỪ ĐẦU KỲ (T09) để đấu lại
+     — GIỐNG file Excel (vd Đông Hưng, Nam Định hết hạn 2025/2026 → renew từ T09/2026).
    • Gói còn hiệu lực HẾT kỳ (existEnd ≥ END) → thuộc Existing, KHÔNG sinh Duy trì.
-   • Gói đã hết trước kỳ (existEnd < BASE) → không hiện (không tô từ T09). */
+   • Nếu ĐỐI THỦ đang giữ gói mới hơn của BV đó → xếp vào ③ Mở mới, KHÔNG tính ở ② (chống trùng). */
 function planRenewRows(){
   var BASE=PLAN_BASE(), END=PLAN_END();
-  var pkgs=planHVPkgs();
+  var pkgs=planHVPkgs(), latest=planLatestBrandByBuyer();
   var out=[];
   Object.keys(pkgs).forEach(function(k){
     var p=pkgs[k];
     var existEnd=p.startIdx+p.dur-1;
-    if(existEnd < BASE) return;      // đã hết trước kỳ
-    if(existEnd >= END) return;      // còn hiệu lực hết kỳ → là Existing, chưa cần renew
-    var renewStart=existEnd+1;       // ∈ [BASE+1 .. END]
+    if(existEnd >= END) return;                 // còn hiệu lực hết kỳ → là Existing, chưa cần renew
+    var renewStart=Math.max(existEnd+1, BASE);  // sau khi hết hạn; đã hết trước kỳ → từ đầu kỳ (T09)
+    if(renewStart > END) return;
+    var lb=latest[k];                           // đối thủ giữ gói mới hơn → thuộc ③, bỏ khỏi ②
+    if(lb && lb.brandNorm!=="mani" && lb.brandNorm && lb.issIdx>p.startIdx) return;
     var rowKey="MTA|"+k;
     var man=S.plan.manual[rowKey];
     out.push({
@@ -7764,7 +7787,7 @@ function planGanttHTML(rows){
           +'<span class="gk-ci"><i class="gk-rival"></i>'+(vi?"<b>Xám sọc = ③ ĐỐI THỦ đang giữ</b> (Mở mới) — hãng đối thủ ghi ở <b>tag cạnh tên BV</b> · KHÔNG tính DS Mani":"Striped grey = rival holding (brand on tag)")+'</span>'
           +'<span class="gk-ci"><i class="gk-plus-i">+</i>'+(vi?"<b>Ô có dấu + = ③ CONVERT</b> — Mani giành sau khi đối thủ hết hạn · <b>chưa điền SL</b> → bấm dòng để nhập":"+ = Convert opportunity, fill Mani qty")+'</span>'
         +'</div>'
-        +'<div class="gk-note">'+(vi?"Khác nhau ② vs ③: <b>Duy trì</b> = giữ gói Mani đang có (điền SL sẵn); <b>Convert</b> = giành gói của đối thủ (KHÔNG điền sẵn, tự nhập SL). Ví dụ: gói hết T03/2027 → dòng Duy trì chỉ hiện từ T04/2027.":"② Renew keeps a Mani package (pre-filled); ③ Convert takes a rival's (not pre-filled).")+'</div>'
+        +'<div class="gk-note">'+(vi?"② <b>Duy trì</b> = giữ gói Mani (điền SL sẵn): gói hết hạn <b>giữa kỳ</b> → tô từ tháng sau khi hết (vd hết T03 → hiện từ T04); gói Mani <b>đã hết trước kỳ</b> → đấu lại, tô <b>từ T09</b>. Gói còn hiệu lực hết kỳ → ở ① Existing, không sinh Duy trì. ③ <b>Convert</b> = giành gói đối thủ (KHÔNG điền sẵn). Mỗi BV chỉ 1 lần/nhóm theo gói thầu GẦN NHẤT.":"② Renew keeps a Mani package (pre-filled); ③ Convert takes a rival's (not pre-filled). Latest tender per hospital only.")+'</div>'
       +'</div>'
     +'</div>';
 
